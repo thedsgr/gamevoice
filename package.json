@@ -4,23 +4,20 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "npm run clean && tsc",
-    "clean": "npx rimraf dist",
     "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
-    "deploy": "tsx src/scripts/deploy-commands.ts"
+    "deploy": "tsx src/scripts/deploy-commands.ts",
+    "clean": "rimraf dist",
+
+    "dev:clean": "npm run clean && npm run dev",
+    "deploy:prod": "npm run deploy && npm run build"
   },
-  "keywords": [
-    "discord",
-    "bot",
-    "game",
-    "voice"
-  ],
+  "keywords": [ "discord", "bot", "game", "voice" ],
   "author": "Vinicius RNC",
   "license": "ISC",
   "description": "Um bot do Discord para gerenciar partidas e interações de voz.",
   "devDependencies": {
     "@types/lodash": "^4.17.16",
-    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
     "tsx": "^4.19.3",
@@ -32,9 +29,6 @@
     "discord.js": "^14.18.0",
     "dotenv": "^16.5.0",
     "lowdb": "^7.0.1"
-  },
-  "import": {
-    "ExtendedClient": "./structs/ExtendedClient.js"
   },
   "type": "commonjs"
 }
