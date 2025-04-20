@@ -1,14 +1,14 @@
 {
-    "phases": {
-      "install": {
-        "cmds": ["npm install"]
-      },
-      "build": {
-        "cmds": ["chmod -R 755 .", "npm run build"]
-      },
-      "start": {
-        "cmd": "node dist/index.js"
-      }
+  "phases": {
+    "install": {
+      "cmds": ["npm install"]
     },
-    "providers": ["node"]
-  }
+    "build": {
+      "cmds": ["npm run build"]
+    },
+    "start": {
+      "cmds": ["npm start"]
+    }
+  },
+  "providers": ["node"]
+}

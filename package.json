@@ -2,14 +2,13 @@
   "name": "game-voice",
   "version": "1.0.0",
   "main": "dist/index.js",
-"scripts": {
-  "build": "npm run clean && tsc",
-  "clean": "rimraf dist",
-  "start": "node dist/index.js",
-  "dev": "ts-node-dev src/index.ts",
-  "deploy": "tsx src/scripts/deploy-commands.ts"
-},
-
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "clean": "npx rimraf dist",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev src/index.ts",
+    "deploy": "tsx src/scripts/deploy-commands.ts"
+  },
   "keywords": [
     "discord",
     "bot",
