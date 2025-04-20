@@ -7,7 +7,7 @@
     "start": "node dist/index.js",
     "dev": "ts-node-dev src/index.ts",
     "deploy": "tsx src/scripts/deploy-commands.ts",
-    "clean": "rimraf dist",
+    "clean": "npx rimraf dist",
 
     "dev:clean": "npm run clean && npm run dev",
     "deploy:prod": "npm run deploy && npm run build"
