@@ -1,0 +1,32 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext"],
+    "rootDir": "src",
+    "outDir": "dist",
+    "target": "es2020",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "declaration": false,
+    "resolveJsonModule": true,
+    "importHelpers": true,
+    "sourceMap": true,
+    "removeComments": false,
+    "baseUrl": "./",
+    "paths": {
+      "@structs/*": ["src/structs/*"]
+    },
+    "allowImportingTsExtensions": false,
+    "noEmitOnError": false
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "**/*spec.ts"]
+}

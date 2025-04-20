@@ -1,0 +1,29 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.cleanupVoiceChannel = cleanupVoiceChannel;
+/**
+ * Limpa um canal de voz, desconectando todos os membros e deletando o canal.
+ * @param channel - O canal de voz a ser limpo.
+ */
+async function cleanupVoiceChannel(channel) {
+    console.log(`🔄 Iniciando limpeza do canal: ${channel.name}`);
+    // Desconecta todos os membros do canal
+    for (const [, member] of channel.members) {
+        try {
+            await member.voice.setChannel(null);
+            console.log(`✅ Membro ${member.user.tag} desconectado com sucesso.`);
+        }
+        catch (error) {
+            console.warn(`⚠️ Não consegui desconectar ${member.user.tag}:`, error);
+        }
+    }
+    // Deleta o canal de voz
+    try {
+        await channel.delete("Partida finalizada – canal limpo");
+        console.log(`🗑 Canal ${channel.name} removido com sucesso.`);
+    }
+    catch (error) {
+        console.error(`❌ Erro ao deletar canal ${channel.name}:`, error);
+    }
+}
+//# sourceMappingURL=cleanup.js.map

@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "discordId": "367039841176780810",
+      "riotId": "Player#BR1",
+      "autoMove": false,
+      "reports": 3,
+      "lastActive": "2025-04-19T12:34:56Z"
+    }
+  ],
+  "waitingRoomChannelId": "1363248741745954927"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "game-voice",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npm run clean && tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev src/index.ts",
+    "deploy": "tsx src/scripts/deploy-commands.ts",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "game",
+    "voice"
+  ],
+  "author": "Vinicius RNC",
+  "license": "ISC",
+  "description": "Um bot do Discord para gerenciar partidas e interações de voz.",
+  "devDependencies": {
+    "@types/lodash": "^4.17.16",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@discordjs/builders": "^1.10.1",
+    "colors": "^1.4.0",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.5.0",
+    "lowdb": "^7.0.1"
+  },
+  "import": {
+    "ExtendedClient": "./structs/ExtendedClient.js"
+  },
+  "type": "commonjs"
+}
