@@ -1,0 +1,15 @@
+{
+    "phases": {
+      "install": {
+        "cmds": ["npm install"]
+      },
+      "build": {
+        "cmds": ["npm run build"]
+      },
+      "start": {
+        "cmd": "node dist/index.js"
+      }
+    },
+    "providers": ["node"]
+  }
+  
