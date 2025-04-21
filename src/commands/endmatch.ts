@@ -1,8 +1,8 @@
 // src/commands/endmatch.ts
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ChatInputCommandInteraction, VoiceChannel } from 'discord.js';
-import { SlashCommand } from '../structs/types/SlashCommand';
-import { db } from '../utils/db';
+import { SlashCommand } from '../structs/types/SlashCommand.js';
+import { db } from '../utils/db.js';
 
 const endMatchCommand: SlashCommand = {
   data: new SlashCommandBuilder()

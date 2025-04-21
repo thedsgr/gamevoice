@@ -1,5 +1,5 @@
 // src/events/matchEnd.ts
-import { cleanupVoiceChannel } from "../utils/cleanup";
+import { cleanupVoiceChannel } from "../utils/cleanup.js";
 export default async function matchEnd(channel) {
     console.log(`🔔 Partida finalizada — iniciando limpeza do canal: ${channel.name}`);
     try {

@@ -1,7 +1,13 @@
 // src/utils/commandLoader.ts
 import fs from 'fs';
 import path from 'path';
-import { ExtendedClient } from '../structs/ExtendedClient';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import { ExtendedClient } from '../structs/ExtendedClient.js';
+
+// Recria o comportamento de __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 /**
  * Carrega todos os comandos do diretório especificado e os registra no cliente.

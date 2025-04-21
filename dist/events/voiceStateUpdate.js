@@ -1,4 +1,4 @@
-import { db } from '../utils/db';
+import { db } from '../utils/db.js';
 const deletionTimeouts = new Map();
 export default async function handleVoiceStateUpdate(oldState, newState) {
     const activeChannelId = db.data?.activeVoiceChannel;

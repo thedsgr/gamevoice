@@ -1,6 +1,6 @@
 // src/events/guildMemberAdd.ts
 import { GuildMember } from "discord.js";
-import { db } from "../utils/db";
+import { db } from "../utils/db.js";
 
 export default async function guildMemberAdd(member: GuildMember) {
   try {

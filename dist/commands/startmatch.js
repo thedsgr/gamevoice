@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ChannelType, PermissionFlagsBits, } from 'discord.js';
-import { db } from '../utils/db';
+import { db } from '../utils/db.js';
 const startMatchCommand = {
     data: new SlashCommandBuilder()
         .setName("startmatch")

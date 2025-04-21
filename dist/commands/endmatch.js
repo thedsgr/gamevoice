@@ -1,6 +1,6 @@
 // src/commands/endmatch.ts
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { db } from '../utils/db';
+import { db } from '../utils/db.js';
 const endMatchCommand = {
     data: new SlashCommandBuilder()
         .setName("endmatch")

@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { updateUser } from '../utils/db';
-import { SlashCommand } from '../structs/types/SlashCommand';
+import { updateUser } from '../utils/db.js';
+import { SlashCommand } from '../structs/types/SlashCommand.js';
 
 const vincularCommand: SlashCommand = {
   data: new SlashCommandBuilder()

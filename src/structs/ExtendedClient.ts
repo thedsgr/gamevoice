@@ -1,5 +1,5 @@
 import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
-import { SlashCommand } from '../structs/types/SlashCommand';
+import { SlashCommand } from '../structs/types/SlashCommand.js';
 import dotenv from "dotenv";
 dotenv.config();
 

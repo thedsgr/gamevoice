@@ -10,12 +10,11 @@ if (!process.env.BOT_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
   process.exit(1);
 }
 
-const commandsPromise = loadCommands();
+const commands = await loadCommands();
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 
 (async () => {
   try {
-    const commands = await commandsPromise;
     console.log(`🔁 Atualizando ${commands.length} comandos de slash...`);
 
     await rest.put(

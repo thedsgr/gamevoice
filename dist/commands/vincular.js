@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { updateUser } from '../utils/db';
+import { updateUser } from '../utils/db.js';
 const vincularCommand = {
     data: new SlashCommandBuilder()
         .setName('vincular')

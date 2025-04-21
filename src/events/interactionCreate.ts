@@ -3,7 +3,7 @@ import {
   ChatInputCommandInteraction,
   Interaction,
 } from "discord.js";
-import { ExtendedClient } from "../structs/ExtendedClient";
+import { ExtendedClient } from "../structs/ExtendedClient.js";
 
 export default async function interactionCreate(
   interaction: Interaction,

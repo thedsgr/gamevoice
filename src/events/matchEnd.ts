@@ -1,5 +1,5 @@
 // src/events/matchEnd.ts
-import { cleanupVoiceChannel } from "../utils/cleanup";
+import { cleanupVoiceChannel } from "../utils/cleanup.js";
 import { VoiceChannel } from "discord.js";
 
 export default async function matchEnd(channel: VoiceChannel) {

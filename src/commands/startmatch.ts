@@ -6,8 +6,8 @@ import {
   VoiceChannel,
   PermissionFlagsBits,
 } from 'discord.js';
-import { SlashCommand } from '../structs/types/SlashCommand';
-import { db } from '../utils/db';
+import { SlashCommand } from '../structs/types/SlashCommand.js';
+import { db } from '../utils/db.js';
 
 const startMatchCommand: SlashCommand = {
   data: new SlashCommandBuilder()

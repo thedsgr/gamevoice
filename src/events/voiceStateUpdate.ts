@@ -1,5 +1,5 @@
 import { VoiceState, VoiceChannel } from 'discord.js';
-import { db } from '../utils/db';
+import { db } from '../utils/db.js';
 
 const deletionTimeouts = new Map<string, NodeJS.Timeout>();
 
