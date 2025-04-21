@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { db } from '../utils/db.js'; // Renomeado para evitar conflito
+import { db } from '../../utils/db.js'; // Renomeado para evitar conflito
 const REPORT_THRESHOLD = 20;
 const reportCommand = {
     data: new SlashCommandBuilder()

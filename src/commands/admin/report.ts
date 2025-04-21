@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { ChatInputCommandInteraction } from 'discord.js';
-import { db, Report as DBReport } from '../utils/db.js'; // Renomeado para evitar conflito
-import { SlashCommand } from '../structs/types/SlashCommand.js';
+import { db, Report as DBReport } from '../../utils/db.js'; // Renomeado para evitar conflito
+import { SlashCommand } from '../../structs/types/SlashCommand.js';
 
 const REPORT_THRESHOLD = 20;
 

@@ -10,6 +10,15 @@ import interactionCreate from "./events/interactionCreate.js";
 import matchEnd from "./events/matchEnd.js";
 import handleVoiceStateUpdate from './events/voiceStateUpdate.js';
 
+// Tratamento de erros globais
+process.on("uncaughtException", (err) => {
+  console.error("❌ Erro não capturado:", err);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("❌ Promessa rejeitada sem tratamento:", reason);
+});
+
 async function main() {
   try {
     console.log("🔄 Inicializando o bot...");

@@ -13,12 +13,26 @@ const __dirname = dirname(__filename);
 export async function loadCommands(client) {
     const commandsPath = path.join(__dirname, '../commands');
     const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
-    // Filtra os arquivos de comando com a extensão correta
-    const commandFiles = fs
-        .readdirSync(commandsPath)
-        .filter(file => file.endsWith(extension) && file !== `SlashCommand${extension}`);
-    for (const file of commandFiles) {
-        const filePath = path.resolve(commandsPath, file);
+    // Função recursiva para percorrer subpastas
+    function getCommandFiles(dir) {
+        const files = fs.readdirSync(dir, { withFileTypes: true });
+        let commandFiles = [];
+        for (const file of files) {
+            const fullPath = path.join(dir, file.name);
+            if (file.isDirectory()) {
+                // Se for uma subpasta, chama a função recursivamente
+                commandFiles = commandFiles.concat(getCommandFiles(fullPath));
+            }
+            else if (file.isFile() && file.name.endsWith(extension)) {
+                // Adiciona o arquivo se tiver a extensão correta
+                commandFiles.push(fullPath);
+            }
+        }
+        return commandFiles;
+    }
+    // Obtém todos os arquivos de comando, incluindo os de subpastas
+    const commandFiles = getCommandFiles(commandsPath);
+    for (const filePath of commandFiles) {
         try {
             const { default: command } = await import(filePath);
             if (command && command.data && command.execute) {
@@ -26,11 +40,11 @@ export async function loadCommands(client) {
                 console.log(`✅ Comando carregado: ${command.data.name}`);
             }
             else {
-                console.warn(`⚠️ Arquivo ${file} não é um comando válido.`);
+                console.warn(`⚠️ Arquivo ${filePath} não é um comando válido.`);
             }
         }
         catch (error) {
-            console.error(`❌ Falha ao importar o comando ${file}:`, error);
+            console.error(`❌ Falha ao importar o comando ${filePath}:`, error);
         }
     }
     console.log(`📦 Total de comandos carregados: ${client.commands.size}`);

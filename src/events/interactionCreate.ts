@@ -4,6 +4,10 @@ import {
   Interaction,
 } from "discord.js";
 import { ExtendedClient } from "../structs/ExtendedClient.js";
+import { isOnCooldown, setCooldown } from '../services/security.js';
+
+const cooldownTime = 10; // Tempo de cooldown em segundos
+const commandCooldowns = new Map<string, number>(); // Cooldown por comando
 
 export default async function interactionCreate(
   interaction: Interaction,
@@ -32,6 +36,22 @@ async function handleSlashCommand(
     });
     return;
   }
+
+  const userId = interaction.user.id;
+  const commandName = interaction.commandName;
+
+  // Verifica se o comando está em cooldown
+  const cooldownKey = `${userId}-${commandName}`;
+  if (isOnCooldown(cooldownKey, cooldownTime)) {
+    await interaction.reply({
+      content: `⏳ Você precisa esperar ${cooldownTime} segundos antes de usar o comando \`${commandName}\` novamente.`,
+      ephemeral: true,
+    });
+    return;
+  }
+
+  // Define o cooldown para o comando
+  setCooldown(cooldownKey);
 
   try {
     await command.execute(interaction);

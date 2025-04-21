@@ -2,12 +2,15 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import {
   ChatInputCommandInteraction,
   GuildMember,
-  ChannelType,
-  VoiceChannel,
   PermissionFlagsBits,
 } from 'discord.js';
-import { SlashCommand } from '../structs/types/SlashCommand.js';
-import { db } from '../utils/db.js';
+import { SlashCommand } from '../../structs/types/SlashCommand.js';
+import {
+  getOrCreateVoiceChannel,
+  getOrCreateWaitingRoomChannel,
+} from '../../services/voice.js';
+import { createBackup } from '../../utils/backup.js';
+import { db } from "../../utils/db.js";
 
 const startMatchCommand: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -61,6 +64,12 @@ const startMatchCommand: SlashCommand = {
         }
       }
 
+      // Salva alterações no banco de dados
+      await db.write();
+
+      // Cria um backup do banco de dados
+      await createBackup();
+
       await interaction.editReply({
         content: `🟢 Partida iniciada! Canal de voz: **${voiceChannel.name}**. Sala de espera: **${waitingRoomChannel.name}**`,
       });
@@ -72,87 +81,5 @@ const startMatchCommand: SlashCommand = {
     }
   },
 };
-
-// Funções auxiliares (mantidas do código anterior)
-async function createVoiceChannel(guild: any, member: GuildMember): Promise<VoiceChannel> {
-  return await guild.channels.create({
-    name: `Partida do Time ${member.displayName}`,
-    type: ChannelType.GuildVoice,
-    permissionOverwrites: [
-      {
-        id: guild.roles.everyone.id,
-        deny: ['Connect'],
-      },
-      {
-        id: member.id,
-        allow: ['Connect', 'ViewChannel'],
-      },
-    ],
-  });
-}
-
-async function getOrCreateVoiceChannel(guild: any, member: GuildMember): Promise<VoiceChannel> {
-  const activeChannelId = db.data?.activeVoiceChannel;
-  let voiceChannel: VoiceChannel;
-
-  if (activeChannelId) {
-    voiceChannel = guild.channels.cache.get(activeChannelId) as VoiceChannel;
-
-    if (!voiceChannel) {
-      voiceChannel = await createVoiceChannel(guild, member);
-      await updateActiveVoiceChannel(voiceChannel.id);
-    }
-  } else {
-    voiceChannel = await createVoiceChannel(guild, member);
-    await updateActiveVoiceChannel(voiceChannel.id);
-  }
-
-  return voiceChannel;
-}
-
-async function updateActiveVoiceChannel(channelId: string) {
-  if (db.data) {
-    db.data.activeVoiceChannel = channelId;
-    await db.write();
-  }
-}
-
-async function getOrCreateWaitingRoomChannel(guild: any): Promise<VoiceChannel> {
-  const waitingRoomChannelId = db.data?.waitingRoomChannelId;
-  let waitingRoomChannel: VoiceChannel;
-
-  if (waitingRoomChannelId) {
-    waitingRoomChannel = guild.channels.cache.get(waitingRoomChannelId) as VoiceChannel;
-    if (!waitingRoomChannel) {
-      waitingRoomChannel = await createWaitingRoomChannel(guild);
-      await updateWaitingRoomChannel(waitingRoomChannel.id);
-    }
-  } else {
-    waitingRoomChannel = await createWaitingRoomChannel(guild);
-    await updateWaitingRoomChannel(waitingRoomChannel.id);
-  }
-
-  return waitingRoomChannel;
-}
-
-async function createWaitingRoomChannel(guild: any): Promise<VoiceChannel> {
-  return await guild.channels.create({
-    name: "Sala de Espera",
-    type: ChannelType.GuildVoice,
-    permissionOverwrites: [
-      {
-        id: guild.roles.everyone.id,
-        allow: ['Connect', 'ViewChannel'],
-      },
-    ],
-  });
-}
-
-async function updateWaitingRoomChannel(channelId: string) {
-  if (db.data) {
-    db.data.waitingRoomChannelId = channelId;
-    await db.write();
-  }
-}
 
 export default startMatchCommand;

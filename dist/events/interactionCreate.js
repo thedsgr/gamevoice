@@ -1,3 +1,6 @@
+import { isOnCooldown, setCooldown } from '../services/security.js';
+const cooldownTime = 10; // Tempo de cooldown em segundos
+const commandCooldowns = new Map(); // Cooldown por comando
 export default async function interactionCreate(interaction, client) {
     try {
         if (interaction.isChatInputCommand()) {
@@ -18,6 +21,19 @@ async function handleSlashCommand(interaction, client) {
         });
         return;
     }
+    const userId = interaction.user.id;
+    const commandName = interaction.commandName;
+    // Verifica se o comando está em cooldown
+    const cooldownKey = `${userId}-${commandName}`;
+    if (isOnCooldown(cooldownKey, cooldownTime)) {
+        await interaction.reply({
+            content: `⏳ Você precisa esperar ${cooldownTime} segundos antes de usar o comando \`${commandName}\` novamente.`,
+            ephemeral: true,
+        });
+        return;
+    }
+    // Define o cooldown para o comando
+    setCooldown(cooldownKey);
     try {
         await command.execute(interaction);
     }

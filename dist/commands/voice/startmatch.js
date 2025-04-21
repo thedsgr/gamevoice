@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ChannelType, PermissionFlagsBits, } from 'discord.js';
-import { db } from '../utils/db.js';
+import { PermissionFlagsBits, } from 'discord.js';
+import { getOrCreateVoiceChannel, getOrCreateWaitingRoomChannel, } from '../../services/voice.js';
 const startMatchCommand = {
     data: new SlashCommandBuilder()
         .setName("startmatch")
@@ -56,78 +56,5 @@ const startMatchCommand = {
         }
     },
 };
-// Funções auxiliares (mantidas do código anterior)
-async function createVoiceChannel(guild, member) {
-    return await guild.channels.create({
-        name: `Partida do Time ${member.displayName}`,
-        type: ChannelType.GuildVoice,
-        permissionOverwrites: [
-            {
-                id: guild.roles.everyone.id,
-                deny: ['Connect'],
-            },
-            {
-                id: member.id,
-                allow: ['Connect', 'ViewChannel'],
-            },
-        ],
-    });
-}
-async function getOrCreateVoiceChannel(guild, member) {
-    const activeChannelId = db.data?.activeVoiceChannel;
-    let voiceChannel;
-    if (activeChannelId) {
-        voiceChannel = guild.channels.cache.get(activeChannelId);
-        if (!voiceChannel) {
-            voiceChannel = await createVoiceChannel(guild, member);
-            await updateActiveVoiceChannel(voiceChannel.id);
-        }
-    }
-    else {
-        voiceChannel = await createVoiceChannel(guild, member);
-        await updateActiveVoiceChannel(voiceChannel.id);
-    }
-    return voiceChannel;
-}
-async function updateActiveVoiceChannel(channelId) {
-    if (db.data) {
-        db.data.activeVoiceChannel = channelId;
-        await db.write();
-    }
-}
-async function getOrCreateWaitingRoomChannel(guild) {
-    const waitingRoomChannelId = db.data?.waitingRoomChannelId;
-    let waitingRoomChannel;
-    if (waitingRoomChannelId) {
-        waitingRoomChannel = guild.channels.cache.get(waitingRoomChannelId);
-        if (!waitingRoomChannel) {
-            waitingRoomChannel = await createWaitingRoomChannel(guild);
-            await updateWaitingRoomChannel(waitingRoomChannel.id);
-        }
-    }
-    else {
-        waitingRoomChannel = await createWaitingRoomChannel(guild);
-        await updateWaitingRoomChannel(waitingRoomChannel.id);
-    }
-    return waitingRoomChannel;
-}
-async function createWaitingRoomChannel(guild) {
-    return await guild.channels.create({
-        name: "Sala de Espera",
-        type: ChannelType.GuildVoice,
-        permissionOverwrites: [
-            {
-                id: guild.roles.everyone.id,
-                allow: ['Connect', 'ViewChannel'],
-            },
-        ],
-    });
-}
-async function updateWaitingRoomChannel(channelId) {
-    if (db.data) {
-        db.data.waitingRoomChannelId = channelId;
-        await db.write();
-    }
-}
 export default startMatchCommand;
 //# sourceMappingURL=startmatch.js.map
