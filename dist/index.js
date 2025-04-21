@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
 import "colors";
-import { ExtendedClient } from "./structs/ExtendedClient";
-import { initDB } from "./utils/db";
-import { loadCommands } from "./utils/commandLoader";
-import guildMemberAdd from "./events/guildMemberAdd";
-import interactionCreate from "./events/interactionCreate";
-import matchEnd from "./events/matchEnd";
-import handleVoiceStateUpdate from './events/voiceStateUpdate';
+import { ExtendedClient } from "./structs/ExtendedClient.js";
+import { initDB } from "./utils/db.js";
+import { loadCommands } from "./utils/commandLoader.js";
+import guildMemberAdd from "./events/guildMemberAdd.js";
+import interactionCreate from "./events/interactionCreate.js";
+import matchEnd from "./events/matchEnd.js";
+import handleVoiceStateUpdate from './events/voiceStateUpdate.js';
 async function main() {
     try {
         console.log("🔄 Inicializando o bot...");

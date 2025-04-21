@@ -13,5 +13,5 @@ RUN npm install
 # Compila o TypeScript
 RUN npm run build
 
-# Comando padrão para iniciar o contêiner
+# Define o comando padrão para iniciar o bot
 CMD ["npm", "start"]
