@@ -1,25 +1,21 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.loadCommands = loadCommands;
-const tslib_1 = require("tslib");
 // src/utils/commandLoader.ts
-const fs_1 = tslib_1.__importDefault(require("fs"));
-const path_1 = tslib_1.__importDefault(require("path"));
+import fs from 'fs';
+import path from 'path';
 /**
  * Carrega todos os comandos do diretório especificado e os registra no cliente.
  * @param client - A instância do cliente estendido.
  */
-async function loadCommands(client) {
-    const commandsPath = path_1.default.join(__dirname, '../commands');
+export async function loadCommands(client) {
+    const commandsPath = path.join(__dirname, '../commands');
     const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
     // Filtra os arquivos de comando com a extensão correta
-    const commandFiles = fs_1.default
+    const commandFiles = fs
         .readdirSync(commandsPath)
         .filter(file => file.endsWith(extension) && file !== `SlashCommand${extension}`);
     for (const file of commandFiles) {
-        const filePath = path_1.default.resolve(commandsPath, file);
+        const filePath = path.resolve(commandsPath, file);
         try {
-            const { default: command } = await Promise.resolve(`${filePath}`).then(s => tslib_1.__importStar(require(s)));
+            const { default: command } = await import(filePath);
             if (command && command.data && command.execute) {
                 client.commands.set(command.data.name, command);
                 console.log(`✅ Comando carregado: ${command.data.name}`);

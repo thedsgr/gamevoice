@@ -1,12 +1,9 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = matchEnd;
 // src/events/matchEnd.ts
-const cleanup_1 = require("../utils/cleanup");
-async function matchEnd(channel) {
+import { cleanupVoiceChannel } from "../utils/cleanup";
+export default async function matchEnd(channel) {
     console.log(`🔔 Partida finalizada — iniciando limpeza do canal: ${channel.name}`);
     try {
-        await (0, cleanup_1.cleanupVoiceChannel)(channel);
+        await cleanupVoiceChannel(channel);
         console.log(`✅ Canal ${channel.name} limpo com sucesso.`);
     }
     catch (error) {

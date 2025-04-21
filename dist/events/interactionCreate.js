@@ -1,7 +1,4 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = interactionCreate;
-async function interactionCreate(interaction, client) {
+export default async function interactionCreate(interaction, client) {
     try {
         if (interaction.isChatInputCommand()) {
             await handleSlashCommand(interaction, client);

@@ -1,18 +1,21 @@
-const { REST, Routes } = require('discord.js');
-const fs = require('fs');
-const path = require('path');
-require('dotenv').config();
+import { REST, Routes } from 'discord.js';
+import dotenv from 'dotenv';
+import path from 'path';
+import fs from 'fs';
+
+dotenv.config();
 
 if (!process.env.BOT_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
   console.error('❌ Variáveis de ambiente não configuradas corretamente.');
   process.exit(1);
 }
 
-const commands = loadCommands();
+const commandsPromise = loadCommands();
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 
 (async () => {
   try {
+    const commands = await commandsPromise;
     console.log(`🔁 Atualizando ${commands.length} comandos de slash...`);
 
     await rest.put(
@@ -32,7 +35,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
 /**
  * Carrega os comandos do diretório especificado.
  */
-function loadCommands() {
+async function loadCommands() {
   const commandsPath = path.join(__dirname, '../commands');
   const commandFiles = fs
     .readdirSync(commandsPath)
@@ -43,7 +46,7 @@ function loadCommands() {
   for (const file of commandFiles) {
     const filePath = path.join(commandsPath, file);
     try {
-      const commandModule = require(filePath);
+      const commandModule = await import(filePath);
       const command = commandModule?.default;
 
       if (command && 'data' in command && 'execute' in command) {

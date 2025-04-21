@@ -1,18 +1,15 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = guildMemberAdd;
-const db_1 = require("../utils/db");
-async function guildMemberAdd(member) {
+import { db } from "../utils/db";
+export default async function guildMemberAdd(member) {
     try {
         // Garante que o banco de dados está inicializado
-        if (!db_1.db.data) {
+        if (!db.data) {
             throw new Error("O banco de dados não foi inicializado.");
         }
         // Verifica se o usuário já existe no banco de dados
-        const exists = db_1.db.data.users.some(u => u.discordId === member.id);
+        const exists = db.data.users.some(u => u.discordId === member.id);
         if (!exists) {
-            db_1.db.data.users.push({ discordId: member.id });
-            await db_1.db.write();
+            db.data.users.push({ discordId: member.id });
+            await db.write();
             console.log(`👤 Novo usuário salvo no banco: ${member.user.username}`);
         }
         // Envia DM de boas-vindas

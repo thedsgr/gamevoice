@@ -1,30 +1,26 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.ExtendedClient = void 0;
-const tslib_1 = require("tslib");
-const discord_js_1 = require("discord.js");
-const dotenv_1 = tslib_1.__importDefault(require("dotenv"));
-dotenv_1.default.config();
-class ExtendedClient extends discord_js_1.Client {
+import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
+import dotenv from "dotenv";
+dotenv.config();
+export class ExtendedClient extends Client {
+    commands = new Collection();
     constructor() {
         super({
             intents: [
-                discord_js_1.GatewayIntentBits.Guilds,
-                discord_js_1.GatewayIntentBits.GuildMembers,
-                discord_js_1.GatewayIntentBits.GuildMessages,
-                discord_js_1.GatewayIntentBits.MessageContent,
-                discord_js_1.GatewayIntentBits.GuildVoiceStates,
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildMembers,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.MessageContent,
+                GatewayIntentBits.GuildVoiceStates,
             ],
             partials: [
-                discord_js_1.Partials.Channel,
-                discord_js_1.Partials.GuildMember,
-                discord_js_1.Partials.Message,
-                discord_js_1.Partials.Reaction,
-                discord_js_1.Partials.User,
-                discord_js_1.Partials.ThreadMember,
+                Partials.Channel,
+                Partials.GuildMember,
+                Partials.Message,
+                Partials.Reaction,
+                Partials.User,
+                Partials.ThreadMember,
             ],
         });
-        this.commands = new discord_js_1.Collection();
     }
     async start() {
         try {
@@ -37,5 +33,4 @@ class ExtendedClient extends discord_js_1.Client {
         }
     }
 }
-exports.ExtendedClient = ExtendedClient;
 //# sourceMappingURL=ExtendedClient.js.map

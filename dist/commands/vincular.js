@@ -1,9 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const builders_1 = require("@discordjs/builders");
-const db_1 = require("../utils/db");
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { updateUser } from '../utils/db';
 const vincularCommand = {
-    data: new builders_1.SlashCommandBuilder()
+    data: new SlashCommandBuilder()
         .setName('vincular')
         .setDescription('Vincula sua conta Riot ao seu Discord')
         .addStringOption(option => option
@@ -35,8 +33,8 @@ const vincularCommand = {
  * Atualiza o banco de dados para vincular a conta Riot ao Discord ID.
  */
 async function linkRiotAccount(discordId, riotId) {
-    await (0, db_1.updateUser)({ discordId, riotId });
+    await updateUser({ discordId, riotId });
     console.log(`🔗 Conta Riot ${riotId} vinculada ao Discord ID ${discordId}`);
 }
-exports.default = vincularCommand;
+export default vincularCommand;
 //# sourceMappingURL=vincular.js.map

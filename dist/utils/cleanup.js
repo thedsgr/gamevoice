@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.cleanupVoiceChannel = cleanupVoiceChannel;
 /**
  * Limpa um canal de voz, desconectando todos os membros e deletando o canal.
  * @param channel - O canal de voz a ser limpo.
  */
-async function cleanupVoiceChannel(channel) {
+export async function cleanupVoiceChannel(channel) {
     console.log(`🔄 Iniciando limpeza do canal: ${channel.name}`);
     // Desconecta todos os membros do canal
     for (const [, member] of channel.members) {

@@ -36,16 +36,16 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var dotenv_1 = require("dotenv");
+var dotenv_1 = import("dotenv");
 dotenv_1.default.config();
-require("colors");
-var ExtendedClient_1 = require("./structs/ExtendedClient");
-var db_1 = require("./utils/db");
-var commandLoader_1 = require("./utils/commandLoader");
-var guildMemberAdd_1 = require("./events/guildMemberAdd");
-var interactionCreate_1 = require("./events/interactionCreate");
-var matchEnd_1 = require("./events/matchEnd");
-var voiceStateUpdate_1 = require("./events/voiceStateUpdate");
+import("colors");
+var ExtendedClient_1 = import("./structs/ExtendedClient");
+var db_1 = import("./utils/db");
+var commandLoader_1 = import("./utils/commandLoader");
+var guildMemberAdd_1 = import("./events/guildMemberAdd");
+var interactionCreate_1 = import("./events/interactionCreate");
+var matchEnd_1 = import("./events/matchEnd");
+var voiceStateUpdate_1 = import("./events/voiceStateUpdate");
 function main() {
     return __awaiter(this, void 0, void 0, function () {
         var client_1, error_1;

@@ -1,28 +1,25 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const dotenv_1 = tslib_1.__importDefault(require("dotenv"));
-dotenv_1.default.config();
-require("colors");
-const ExtendedClient_1 = require("./structs/ExtendedClient");
-const db_1 = require("./utils/db");
-const commandLoader_1 = require("./utils/commandLoader");
-const guildMemberAdd_1 = tslib_1.__importDefault(require("./events/guildMemberAdd"));
-const interactionCreate_1 = tslib_1.__importDefault(require("./events/interactionCreate"));
-const matchEnd_1 = tslib_1.__importDefault(require("./events/matchEnd"));
-const voiceStateUpdate_1 = tslib_1.__importDefault(require("./events/voiceStateUpdate"));
+import dotenv from "dotenv";
+dotenv.config();
+import "colors";
+import { ExtendedClient } from "./structs/ExtendedClient";
+import { initDB } from "./utils/db";
+import { loadCommands } from "./utils/commandLoader";
+import guildMemberAdd from "./events/guildMemberAdd";
+import interactionCreate from "./events/interactionCreate";
+import matchEnd from "./events/matchEnd";
+import handleVoiceStateUpdate from './events/voiceStateUpdate';
 async function main() {
     try {
         console.log("🔄 Inicializando o bot...");
         // Inicializa o banco de dados
         console.log("📂 Inicializando o banco de dados...");
-        await (0, db_1.initDB)();
+        await initDB();
         console.log("✅ Banco de dados inicializado.");
         // Cria a instância do cliente
-        const client = new ExtendedClient_1.ExtendedClient();
+        const client = new ExtendedClient();
         // Carrega os comandos
         console.log("📦 Carregando comandos...");
-        await (0, commandLoader_1.loadCommands)(client);
+        await loadCommands(client);
         console.log(`✅ Comandos carregados: ${client.commands.size}`);
         // Inicia o bot
         console.log("🚀 Iniciando o bot...");
@@ -31,18 +28,18 @@ async function main() {
         client.on("ready", () => {
             console.log("✅ Bot online!".green);
         });
-        client.on("matchEnd", matchEnd_1.default);
-        client.on("guildMemberAdd", guildMemberAdd_1.default);
+        client.on("matchEnd", matchEnd);
+        client.on("guildMemberAdd", guildMemberAdd);
         client.on("interactionCreate", async (interaction) => {
             try {
-                await (0, interactionCreate_1.default)(interaction, client);
+                await interactionCreate(interaction, client);
             }
             catch (err) {
                 console.error("❌ Erro no evento interactionCreate:", err);
             }
         });
         client.on('voiceStateUpdate', (oldState, newState) => {
-            (0, voiceStateUpdate_1.default)(oldState, newState);
+            handleVoiceStateUpdate(oldState, newState);
         });
     }
     catch (error) {

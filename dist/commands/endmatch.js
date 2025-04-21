@@ -1,10 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 // src/commands/endmatch.ts
-const builders_1 = require("@discordjs/builders");
-const db_1 = require("../utils/db");
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { db } from '../utils/db';
 const endMatchCommand = {
-    data: new builders_1.SlashCommandBuilder()
+    data: new SlashCommandBuilder()
         .setName("endmatch")
         .setDescription("Finaliza a partida e limpa o canal de voz"),
     async execute(interaction) {
@@ -17,7 +15,7 @@ const endMatchCommand = {
             return;
         }
         try {
-            const activeChannelId = db_1.db.data?.activeVoiceChannel;
+            const activeChannelId = db.data?.activeVoiceChannel;
             if (!activeChannelId) {
                 await interaction.reply({
                     content: "❌ Não há nenhuma partida ativa no momento.",
@@ -31,13 +29,13 @@ const endMatchCommand = {
                     content: "❌ O canal de voz não foi encontrado. Ele pode ter sido excluído.",
                     ephemeral: true,
                 });
-                db_1.db.data.activeVoiceChannel = undefined;
-                await db_1.db.write();
+                db.data.activeVoiceChannel = undefined;
+                await db.write();
                 return;
             }
             await voiceChannel.delete("Partida finalizada");
-            db_1.db.data.activeVoiceChannel = undefined;
-            await db_1.db.write();
+            db.data.activeVoiceChannel = undefined;
+            await db.write();
             await interaction.reply({
                 content: "✅ Partida finalizada e canal de voz limpo.",
                 ephemeral: true,
@@ -52,5 +50,5 @@ const endMatchCommand = {
         }
     },
 };
-exports.default = endMatchCommand;
+export default endMatchCommand;
 //# sourceMappingURL=endmatch.js.map

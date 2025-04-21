@@ -1,11 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = handleVoiceStateUpdate;
-const db_1 = require("../utils/db");
+import { db } from '../utils/db';
 const deletionTimeouts = new Map();
-async function handleVoiceStateUpdate(oldState, newState) {
-    const activeChannelId = db_1.db.data?.activeVoiceChannel;
-    const waitingRoomChannelId = db_1.db.data?.waitingRoomChannelId;
+export default async function handleVoiceStateUpdate(oldState, newState) {
+    const activeChannelId = db.data?.activeVoiceChannel;
+    const waitingRoomChannelId = db.data?.waitingRoomChannelId;
     // ✅ Move quem entrar na sala de espera
     if (newState.channelId === waitingRoomChannelId) {
         const member = newState.member;
@@ -30,16 +27,16 @@ async function handleVoiceStateUpdate(oldState, newState) {
                     try {
                         await channel.delete();
                         console.log(`🗑️ Canal de voz ${channel.name} excluído por inatividade.`);
-                        if (db_1.db.data) {
-                            db_1.db.data.activeVoiceChannel = undefined;
-                            await db_1.db.write();
+                        if (db.data) {
+                            db.data.activeVoiceChannel = undefined;
+                            await db.write();
                         }
                     }
                     catch (err) {
                         console.error("❌ Erro ao excluir canal de voz:", err);
                     }
                     deletionTimeouts.delete(channel.id);
-                }, 60000); // 1 minuto
+                }, 60_000); // 1 minuto
                 deletionTimeouts.set(channel.id, timeout);
                 console.log(`⏳ Canal ${channel.name} será excluído em 1 minuto se permanecer vazio.`);
             }
