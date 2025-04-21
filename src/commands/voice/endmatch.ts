@@ -8,29 +8,17 @@ import {
 import { SlashCommand } from '../../structs/types/SlashCommand.js';
 import { db } from '../../utils/db.js';
 import { createBackup } from '../../utils/backup.js';
+import { hasAdminPermissions, replyNoPermission } from '../../utils/permissions.js';
 
 const endMatchCommand: SlashCommand = {
   data: new SlashCommandBuilder()
     .setName("endmatch")
-    .setDescription("Finaliza a partida e limpa os canais de voz")
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator), // Apenas administradores podem usar
+    .setDescription("Finaliza a partida e limpa os canais de voz"),
 
   async execute(interaction: ChatInputCommandInteraction) {
-    const guild = interaction.guild;
-
-    if (!guild) {
-      await interaction.reply({
-        content: "❌ Este comando só pode ser usado em um servidor.",
-        ephemeral: true,
-      });
-      return;
-    }
-
-    if (!interaction.memberPermissions?.has(PermissionFlagsBits.Administrator)) {
-      await interaction.reply({
-        content: "❌ Você não tem permissão para usar este comando.",
-        ephemeral: true,
-      });
+    // Verifica permissões
+    if (!hasAdminPermissions(interaction)) {
+      await replyNoPermission(interaction);
       return;
     }
 
@@ -41,6 +29,13 @@ const endMatchCommand: SlashCommand = {
       // Exemplo: deletar o canal de voz ativo
       const activeChannelId = db.data?.activeVoiceChannel;
       if (activeChannelId) {
+        const guild = interaction.guild;
+        if (!guild) {
+          await interaction.editReply({
+            content: "⚠️ Não foi possível encontrar o servidor (guild).",
+          });
+          return;
+        }
         const activeChannel = guild.channels.cache.get(activeChannelId);
         if (activeChannel?.isVoiceBased()) {
           await activeChannel.delete();

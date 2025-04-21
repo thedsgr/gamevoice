@@ -1,12 +1,18 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { PermissionFlagsBits, } from 'discord.js';
 import { getOrCreateVoiceChannel, getOrCreateWaitingRoomChannel, } from '../../services/voice.js';
+import { hasAdminPermissions, replyNoPermission } from '../../utils/permissions.js';
+import { createBackup } from '../../utils/backup.js';
+import { db } from "../../utils/db.js";
 const startMatchCommand = {
     data: new SlashCommandBuilder()
         .setName("startmatch")
-        .setDescription("Inicia uma partida e configura a sala de espera")
-        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+        .setDescription("Inicia uma partida e configura a sala de espera"),
     async execute(interaction) {
+        // Verifica permissões
+        if (!hasAdminPermissions(interaction)) {
+            await replyNoPermission(interaction);
+            return;
+        }
         const guild = interaction.guild;
         if (!guild) {
             await interaction.reply({
@@ -44,6 +50,10 @@ const startMatchCommand = {
                     }
                 }
             }
+            // Salva alterações no banco de dados
+            await db.write();
+            // Cria um backup do banco de dados
+            await createBackup();
             await interaction.editReply({
                 content: `🟢 Partida iniciada! Canal de voz: **${voiceChannel.name}**. Sala de espera: **${waitingRoomChannel.name}**`,
             });

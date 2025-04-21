@@ -2,23 +2,28 @@ import { SlashCommandBuilder } from '@discordjs/builders';
 import {
   ChatInputCommandInteraction,
   GuildMember,
-  PermissionFlagsBits,
 } from 'discord.js';
 import { SlashCommand } from '../../structs/types/SlashCommand.js';
 import {
   getOrCreateVoiceChannel,
   getOrCreateWaitingRoomChannel,
 } from '../../services/voice.js';
+import { hasAdminPermissions, replyNoPermission } from '../../utils/permissions.js';
 import { createBackup } from '../../utils/backup.js';
 import { db } from "../../utils/db.js";
 
 const startMatchCommand: SlashCommand = {
   data: new SlashCommandBuilder()
     .setName("startmatch")
-    .setDescription("Inicia uma partida e configura a sala de espera")
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
+    .setDescription("Inicia uma partida e configura a sala de espera"),
 
   async execute(interaction: ChatInputCommandInteraction) {
+    // Verifica permissões
+    if (!hasAdminPermissions(interaction)) {
+      await replyNoPermission(interaction);
+      return;
+    }
+
     const guild = interaction.guild;
 
     if (!guild) {

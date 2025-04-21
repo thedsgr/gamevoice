@@ -56,24 +56,20 @@ export async function initDB() {
 export async function updateUser({
   discordId,
   riotId,
-}: Readonly<{
+}: {
   discordId: string;
-  riotId: string;
-}>) {
+  riotId: string | null;
+}) {
   ensureDBInitialized();
-  log(`Atualizando usuário: discordId=${discordId}, riotId=${riotId}`);
 
-  const existing = db.data!.users.find(u => u.discordId === discordId);
-  if (existing) {
-    log(`Usuário existente encontrado: ${discordId}. Atualizando Riot ID.`);
-    existing.riotId = riotId;
+  const existingUser = db.data!.users.find(user => user.discordId === discordId);
+  if (existingUser) {
+    existingUser.riotId = riotId ?? undefined; // Converte null para undefined
   } else {
-    log(`Criando novo usuário: ${discordId}`);
-    db.data!.users.push({ discordId, riotId, autoMove: false, activeVoiceChannel: null });
+    db.data!.users.push({ discordId, riotId: riotId ?? undefined }); // Converte null para undefined
   }
 
   await db.write();
-  log(`Usuário atualizado com sucesso: ${discordId}`);
 }
 
 /** Adiciona uma denúncia ao banco, preenchendo o timestamp automaticamente */

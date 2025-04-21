@@ -1,5 +1,5 @@
-import type { ChatInputCommandInteraction } from "discord.js";
-import type { SlashCommandBuilder } from "@discordjs/builders";
+import { SlashCommandBuilder } from '@discordjs/builders';
+import { ChatInputCommandInteraction } from 'discord.js';
 
 /**
  * Representa um comando de slash no Discord.
