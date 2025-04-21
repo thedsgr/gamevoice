@@ -4,10 +4,10 @@
       "cmds": ["npm install"]
     },
     "build": {
-      "cmds": ["chmod -R 755 .", "npm run build"]
+      "cmds": ["npm run build"]
     },
     "start": {
-      "cmds": ["npm start"]
+      "cmd": "node dist/index.js"
     }
   },
   "providers": ["node"]
