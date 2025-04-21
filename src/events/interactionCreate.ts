@@ -2,9 +2,11 @@
 import {
   ChatInputCommandInteraction,
   Interaction,
+  ButtonInteraction,
 } from "discord.js";
 import { ExtendedClient } from "../structs/ExtendedClient.js";
 import { isOnCooldown, setCooldown } from '../services/security.js';
+import { handleButtonInteraction } from '../commands/admin/painel.js';
 
 const cooldownTime = 10; // Tempo de cooldown em segundos
 const commandCooldowns = new Map<string, number>(); // Cooldown por comando
@@ -16,6 +18,8 @@ export default async function interactionCreate(
   try {
     if (interaction.isChatInputCommand()) {
       await handleSlashCommand(interaction, client);
+    } else if (interaction.isButton()) {
+      await handleButtonInteraction(interaction);
     }
   } catch (error) {
     console.error("❌ Erro no evento interactionCreate:", error);

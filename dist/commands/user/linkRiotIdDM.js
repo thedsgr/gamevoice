@@ -1,7 +1,8 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { sendLog } from '../../utils/log.js';
 const linkRiotIdDMCommand = {
     data: new SlashCommandBuilder()
-        .setName('vincular')
+        .setName('linkriotiddm')
         .setDescription('Receba um link para vincular seu Riot ID via DM.'),
     async execute(interaction) {
         const user = interaction.user;
@@ -14,6 +15,8 @@ const linkRiotIdDMCommand = {
                 content: '✅ Verifique sua DM para o link de vinculação!',
                 ephemeral: true,
             });
+            // Log de envio de link
+            await sendLog(interaction.client, `📝 [LOG] ${interaction.user.tag} solicitou o link de vinculação via DM.`, 'LOG');
         }
         catch (error) {
             console.error(`❌ Erro ao enviar DM para o usuário ${user.tag}:`, error);

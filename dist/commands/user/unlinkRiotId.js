@@ -1,27 +1,20 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { updateUser } from '../../utils/db.js';
+import { sendLog } from '../../utils/log.js';
 const unlinkRiotIdCommand = {
     data: new SlashCommandBuilder()
-        .setName('desvincular')
-        .setDescription('Desvincula seu Riot ID do seu Discord.'),
+        .setName('unlinkriotid')
+        .setDescription('Remove a vinculação do seu Riot ID.'),
     async execute(interaction) {
         const discordId = interaction.user.id;
-        try {
-            // Atualiza o usuário no banco de dados, removendo o Riot ID
-            await updateUser({ discordId, riotId: null });
-            // Responde ao usuário
-            await interaction.reply({
-                content: '✅ Seu Riot ID foi desvinculado com sucesso!',
-                ephemeral: true,
-            });
-        }
-        catch (error) {
-            console.error(`❌ Erro ao desvincular Riot ID para o usuário ${discordId}:`, error);
-            await interaction.reply({
-                content: '❌ Ocorreu um erro ao tentar desvincular seu Riot ID. Tente novamente mais tarde.',
-                ephemeral: true,
-            });
-        }
+        // Remove o Riot ID do banco de dados
+        await updateUser({ discordId, riotId: null });
+        await interaction.reply({
+            content: '✅ Seu Riot ID foi removido com sucesso!',
+            ephemeral: true,
+        });
+        // Log de remoção
+        await sendLog(interaction.client, `📝 [LOG] ${interaction.user.tag} desvinculou o Riot ID.`, 'LOG');
     },
 };
 export default unlinkRiotIdCommand;

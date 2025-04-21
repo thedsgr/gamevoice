@@ -3,6 +3,7 @@ import { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommand } from '../../structs/types/SlashCommand.js';
 import { updateUser } from '../../utils/db.js';
 import { isValidRiotId } from '../../utils/riotIdValidator.js';
+import { sendLog } from '../../utils/log.js'; // Importação da função sendLog
 
 const riotIdCommand: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -38,6 +39,13 @@ const riotIdCommand: SlashCommand = {
       content: `✅ Seu Riot ID \`${riotId}\` foi vinculado com sucesso!`,
       ephemeral: true,
     });
+
+    // Log de vinculação
+    await sendLog(
+      interaction.client,
+      `📝 [LOG] ${interaction.user.tag} vinculou o Riot ID: ${riotId}.`,
+      'LOG'
+    );
   },
 };
 

@@ -1,6 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { updateUser } from '../../utils/db.js';
 import { isValidRiotId } from '../../utils/riotIdValidator.js';
+import { sendLog } from '../../utils/log.js'; // Importação da função sendLog
 const riotIdCommand = {
     data: new SlashCommandBuilder()
         .setName('linkriotid')
@@ -31,6 +32,8 @@ const riotIdCommand = {
             content: `✅ Seu Riot ID \`${riotId}\` foi vinculado com sucesso!`,
             ephemeral: true,
         });
+        // Log de vinculação
+        await sendLog(interaction.client, `📝 [LOG] ${interaction.user.tag} vinculou o Riot ID: ${riotId}.`, 'LOG');
     },
 };
 export default riotIdCommand;

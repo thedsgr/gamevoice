@@ -1,10 +1,14 @@
 import { isOnCooldown, setCooldown } from '../services/security.js';
+import { handleButtonInteraction } from '../commands/admin/painel.js';
 const cooldownTime = 10; // Tempo de cooldown em segundos
 const commandCooldowns = new Map(); // Cooldown por comando
 export default async function interactionCreate(interaction, client) {
     try {
         if (interaction.isChatInputCommand()) {
             await handleSlashCommand(interaction, client);
+        }
+        else if (interaction.isButton()) {
+            await handleButtonInteraction(interaction);
         }
     }
     catch (error) {

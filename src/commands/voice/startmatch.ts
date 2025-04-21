@@ -11,6 +11,7 @@ import {
 import { ensureInGuild, ensureAdmin } from '../../services/security.js';
 import { createBackup } from '../../utils/backup.js';
 import { db } from "../../utils/db.js";
+import { sendLog } from '../../utils/log.js';
 
 const startMatchCommand: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -52,6 +53,13 @@ const startMatchCommand: SlashCommand = {
 
       // Cria um backup do banco de dados
       await createBackup();
+
+      // Log de partida iniciada
+      await sendLog(
+        interaction.client,
+        `🎮 [MATCH] Partida iniciada por ${interaction.user.tag}.`,
+        'MATCH'
+      );
 
       await interaction.editReply({
         content: `🟢 Partida iniciada! Canal de voz: **${voiceChannel.name}**. Sala de espera: **${waitingRoomChannel.name}**`,

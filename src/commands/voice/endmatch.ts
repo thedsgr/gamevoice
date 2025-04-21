@@ -9,6 +9,7 @@ import { SlashCommand } from '../../structs/types/SlashCommand.js';
 import { db } from '../../utils/db.js';
 import { createBackup } from '../../utils/backup.js';
 import { hasAdminPermissions, replyNoPermission } from '../../utils/permissions.js';
+import { sendLog } from '../../utils/log.js';
 
 const endMatchCommand: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -42,6 +43,11 @@ const endMatchCommand: SlashCommand = {
           db.data.activeVoiceChannel = undefined;
           await db.write();
           await createBackup();
+          await sendLog(
+            interaction.client,
+            `🎮 [MATCH] Partida encerrada por ${interaction.user.tag}.`,
+            'MATCH'
+          );
           await interaction.editReply({
             content: "✅ Partida finalizada e canal de voz limpo.",
           });

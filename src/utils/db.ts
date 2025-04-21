@@ -8,6 +8,7 @@ export type UserData = {
   riotId?: string;
   autoMove?: boolean;
   activeVoiceChannel?: string | null;
+  lastInteraction?: number;
 };
 
 /** Cada denúncia feita */
@@ -22,14 +23,44 @@ export interface Report {
 export interface DatabaseSchema {
   users: UserData[];
   reports: Report[];
+  matches: { isActive: boolean; players: string[] }[];
+  errors: { timestamp: number; message: string }[];
+  stats: {
+    totalMatchesCreated: number;
+    totalMatchesEndedByInactivity: number;
+    playersKickedByReports: number;
+  };
   activeVoiceChannel?: string;
   waitingRoomChannelId?: string;
+  logChannelId?: string;
 }
 
 // Configura o adapter para um arquivo JSON
 const adapter = new JSONFile<DatabaseSchema>('db.json');
 // Cria a instância do banco
-export const db = new Low(adapter, { reports: [], users: [] });
+export const db = new Low(adapter, {
+  users: [
+    { discordId: '123', riotId: 'Player#1234', lastInteraction: 1680000000000 },
+    // ...
+  ],
+  stats: {
+    totalMatchesCreated: 83,
+    totalMatchesEndedByInactivity: 19,
+    playersKickedByReports: 3,
+  },
+  reports: [
+    { targetId: '456', reporterId: '123', reason: 'toxicidade', timestamp: 1680000000000 },
+    // ...
+  ],
+  matches: [
+    { isActive: true, players: ['123', '456'] },
+    // ...
+  ],
+  errors: [
+    { timestamp: 1680000000000, message: 'Falha ao mover Fulano (DM bloqueada)' },
+    // ...
+  ],
+});
 
 /** Função utilitária para garantir que o banco está inicializado */
 function ensureDBInitialized() {
@@ -47,7 +78,17 @@ function log(message: string) {
 export async function initDB() {
   log("Inicializando o banco de dados...");
   await db.read();
-  db.data ||= { users: [], reports: [] };
+  db.data ||= {
+    users: [],
+    reports: [],
+    matches: [],
+    errors: [],
+    stats: {
+      totalMatchesCreated: 0,
+      totalMatchesEndedByInactivity: 0,
+      playersKickedByReports: 0,
+    },
+  };
   await db.write();
   log("Banco de dados inicializado com sucesso.");
 }
