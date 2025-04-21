@@ -1,0 +1,9 @@
+builder = "DOCKERFILE"
+dockerfilePath = "./Dockerfile"
+
+# opcional, para redeploy automático ao mudar estes arquivos
+watchPatterns = [
+  "src/**",
+  "package.json",
+  "Dockerfile",
+]
