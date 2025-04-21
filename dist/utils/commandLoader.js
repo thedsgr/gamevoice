@@ -3,6 +3,8 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { REST, Routes } from 'discord.js';
+import 'dotenv/config';
 // Recria o comportamento de __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -49,4 +51,21 @@ export async function loadCommands(client) {
     }
     console.log(`📦 Total de comandos carregados: ${client.commands.size}`);
 }
+const commands = [
+    {
+        name: 'startmatch',
+        description: 'Inicia uma nova partida.',
+    },
+];
+const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
+(async () => {
+    try {
+        console.log('🔄 Registrando comandos...');
+        await rest.put(Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID), { body: commands });
+        console.log('✅ Comandos registrados com sucesso!');
+    }
+    catch (error) {
+        console.error('❌ Erro ao registrar comandos:', error);
+    }
+})();
 //# sourceMappingURL=commandLoader.js.map

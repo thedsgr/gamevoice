@@ -1,3 +1,5 @@
+// src/events/interactionCreate.ts
+import { MessageFlags, } from "discord.js";
 import { isOnCooldown, setCooldown } from '../services/security.js';
 import { handleButtonInteraction } from '../commands/admin/painel.js';
 const cooldownTime = 10; // Tempo de cooldown em segundos
@@ -9,6 +11,12 @@ export default async function interactionCreate(interaction, client) {
         }
         else if (interaction.isButton()) {
             await handleButtonInteraction(interaction);
+        }
+        else if (interaction.isCommand() && interaction.commandName === 'startmatch') {
+            await interaction.reply({
+                content: 'Esta mensagem é apenas para você.',
+                flags: MessageFlags.Ephemeral, // Substitua "ephemeral: true"
+            });
         }
     }
     catch (error) {

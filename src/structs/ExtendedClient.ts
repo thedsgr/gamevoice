@@ -1,30 +1,17 @@
-import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
+import { Client, ClientOptions, Collection, GatewayIntentBits, Partials } from "discord.js";
 import { SlashCommand } from '../structs/types/SlashCommand.js';
 import dotenv from "dotenv";
 dotenv.config();
 
 export class ExtendedClient extends Client {
-  public commands = new Collection<string, SlashCommand>();
+  public commands: Collection<string, SlashCommand>;
 
-  constructor() {
-    super({
-      intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.GuildVoiceStates,
-      ],
-      partials: [
-        Partials.Channel,
-        Partials.GuildMember,
-        Partials.Message,
-        Partials.Reaction,
-        Partials.User,
-        Partials.ThreadMember,
-      ],
-    });
+  constructor(options: ClientOptions) {
+    super(options); // Passa as opções para o construtor da classe base (Client)
+    this.commands = new Collection();
   }
+
+  // Adicione métodos ou propriedades personalizadas aqui, se necessário
 
   public async start() {
     try {

@@ -1,13 +1,14 @@
-import dotenv from "dotenv";
-dotenv.config();
+import 'dotenv/config';
 import "colors";
 import { ExtendedClient } from "./structs/ExtendedClient.js";
-import { initDB } from "./utils/db.js";
+import { initDB, db } from "./utils/db.js";
 import { loadCommands } from "./utils/commandLoader.js";
 import guildMemberAdd from "./events/guildMemberAdd.js";
 import interactionCreate from "./events/interactionCreate.js";
-import matchEnd from "./events/matchEnd.js";
 import handleVoiceStateUpdate from './events/voiceStateUpdate.js';
+import matchEnd from './events/matchEnd.js';
+import { GatewayIntentBits } from 'discord.js';
+import { monitorEmptyChannels } from "./services/voice.js";
 // Tratamento de erros globais
 process.on("uncaughtException", (err) => {
     console.error("❌ Erro não capturado:", err);
@@ -22,20 +23,44 @@ async function main() {
         console.log("📂 Inicializando o banco de dados...");
         await initDB();
         console.log("✅ Banco de dados inicializado.");
-        // Cria a instância do cliente
-        const client = new ExtendedClient();
+        // Inicializa o cliente do Discord
+        const client = new ExtendedClient({
+            intents: [
+                GatewayIntentBits.Guilds,
+                GatewayIntentBits.GuildVoiceStates,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.MessageContent,
+            ],
+        });
         // Carrega os comandos
         console.log("📦 Carregando comandos...");
         await loadCommands(client);
         console.log(`✅ Comandos carregados: ${client.commands.size}`);
         // Inicia o bot
         console.log("🚀 Iniciando o bot...");
-        client.start();
-        // Eventos do cliente
-        client.on("ready", () => {
-            console.log("✅ Bot online!".green);
+        client.login(process.env.BOT_TOKEN);
+        // Evento "ready" do bot
+        client.once("ready", () => {
+            console.log(`✅ Bot iniciado como ${client.user?.tag}`);
+            // Inicializa o monitoramento de canais vazios
+            monitorEmptyChannels(client);
+            // Garante que o banco de dados está inicializado
+            if (!db.data) {
+                db.data = {
+                    users: [],
+                    reports: [],
+                    matches: [],
+                    errors: [],
+                    stats: {
+                        totalMatchesCreated: 0,
+                        totalMatchesEndedByInactivity: 0,
+                        playersKickedByReports: 0,
+                    },
+                };
+                db.write();
+            }
         });
-        client.on("matchEnd", matchEnd);
+        // Eventos do cliente
         client.on("guildMemberAdd", guildMemberAdd);
         client.on("interactionCreate", async (interaction) => {
             try {
@@ -45,9 +70,8 @@ async function main() {
                 console.error("❌ Erro no evento interactionCreate:", err);
             }
         });
-        client.on('voiceStateUpdate', (oldState, newState) => {
-            handleVoiceStateUpdate(oldState, newState);
-        });
+        client.on('voiceStateUpdate', handleVoiceStateUpdate);
+        client.on("matchEnd", (matchId) => matchEnd(matchId, client));
     }
     catch (error) {
         console.error("❌ Erro durante a inicialização do bot:", error);

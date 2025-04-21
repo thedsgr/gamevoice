@@ -1,4 +1,5 @@
 import { db } from '../utils/db.js';
+const EMPTY_CHANNEL_TIMEOUT = 60 * 1000; // 1 minuto
 /**
  * Retorna o número de usuários ativos nas últimas 24 horas.
  */
@@ -52,5 +53,34 @@ export function getRecentErrors() {
     const now = Date.now();
     const recentErrors = db.data?.errors.filter(error => now - error.timestamp < 24 * 60 * 60 * 1000);
     return recentErrors?.map(error => `${new Date(error.timestamp).toLocaleTimeString()} - ${error.message}`) || [];
+}
+/**
+ * Monitora canais de voz vazios e os exclui após um período de inatividade.
+ */
+export function monitorEmptyChannels(client) {
+    setInterval(async () => {
+        const now = Date.now();
+        // Itera sobre os canais de voz ativos no banco de dados
+        const activeMatches = db.data?.matches.filter(match => match.isActive) || [];
+        for (const match of activeMatches) {
+            const channel = client.channels.cache.get(match.channelId);
+            // Verifica se o canal está vazio
+            if (channel && channel.members.size === 0) {
+                const timeSinceLastActivity = now - (match.lastActivity || now);
+                if (timeSinceLastActivity >= EMPTY_CHANNEL_TIMEOUT) {
+                    try {
+                        await channel.delete();
+                        console.log(`🗑️ Canal ${channel.name} excluído por inatividade.`);
+                        match.isActive = false;
+                        db.data.stats.totalMatchesEndedByInactivity++;
+                        await db.write();
+                    }
+                    catch (err) {
+                        console.error("❌ Erro ao excluir canal de voz:", err);
+                    }
+                }
+            }
+        }
+    }, 10 * 1000); // Verifica a cada 10 segundos
 }
 //# sourceMappingURL=monitor.js.map

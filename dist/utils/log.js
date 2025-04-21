@@ -8,21 +8,46 @@ import { db } from './db.js';
 export async function sendLog(client, message, type = 'LOG') {
     const logChannelId = db.data?.logChannelId;
     if (!logChannelId) {
-        console.warn("⚠️ Canal de logs não definido. Use o comando /setlog para configurá-lo.");
+        logToConsole("⚠️ Canal de logs não definido. Use o comando /setlog para configurá-lo.", 'WARN');
         return;
     }
     const logChannel = client.channels.cache.get(logChannelId);
     if (!logChannel || !logChannel.isTextBased()) {
-        console.error("❌ O canal de logs configurado não é válido ou não é um canal de texto.");
+        logToConsole("❌ O canal de logs configurado não é válido ou não é um canal de texto.", 'ERROR');
         return;
     }
-    const emoji = type === 'LOG' ? '📝' : type === 'MOD' ? '⚠️' : type === 'MATCH' ? '🎮' : 'ℹ️';
-    const formattedMessage = `${emoji} [${type}] ${message}`;
+    const formattedMessage = formatLogMessage(message, type);
     try {
         await logChannel.send(formattedMessage);
     }
     catch (error) {
-        console.error("❌ Erro ao enviar mensagem para o canal de logs:", error);
+        logToConsole("❌ Erro ao enviar mensagem para o canal de logs:", 'ERROR');
+        console.error(error);
     }
+}
+/**
+ * Registra uma mensagem no console com um prefixo.
+ */
+export function logToConsole(message, type = 'INFO') {
+    const emoji = type === 'INFO' ? 'ℹ️' : type === 'WARN' ? '⚠️' : '❌';
+    console.log(`${emoji} [${type}] ${message}`);
+}
+/**
+ * Registra um erro no banco de dados.
+ */
+export async function logErrorToDB(message) {
+    db.data?.errors.push({
+        timestamp: Date.now(),
+        message,
+    });
+    await db.write();
+    logToConsole(`Erro registrado no banco de dados: ${message}`, 'ERROR');
+}
+/**
+ * Formata uma mensagem de log com emoji e tipo.
+ */
+export function formatLogMessage(message, type = 'LOG') {
+    const emoji = type === 'LOG' ? '📝' : type === 'MOD' ? '⚠️' : type === 'MATCH' ? '🎮' : 'ℹ️';
+    return `${emoji} [${type}] ${message}`;
 }
 //# sourceMappingURL=log.js.map

@@ -1,20 +1,30 @@
 import { ChannelType } from 'discord.js';
 import { db } from '../utils/db.js';
 /**
+ * Cria um canal de voz genérico.
+ * @param guild - O servidor onde o canal será criado.
+ * @param name - O nome do canal.
+ * @param permissions - As permissões do canal.
+ * @returns O canal de voz criado.
+ */
+async function createGenericVoiceChannel(guild, name, permissions) {
+    return guild.channels.create({
+        name,
+        type: ChannelType.GuildVoice,
+        permissionOverwrites: permissions,
+    });
+}
+/**
  * Cria um canal de voz para o membro especificado.
  * @param guild - O servidor onde o canal será criado.
  * @param member - O membro que será o dono do canal.
  * @returns O canal de voz criado.
  */
 export async function createVoiceChannel(guild, member) {
-    return guild.channels.create({
-        name: `Partida do Time ${member.displayName}`,
-        type: ChannelType.GuildVoice,
-        permissionOverwrites: [
-            { id: guild.roles.everyone.id, deny: ['Connect'] },
-            { id: member.id, allow: ['Connect', 'ViewChannel'] },
-        ],
-    });
+    return createGenericVoiceChannel(guild, `Partida do Time ${member.displayName}`, [
+        { id: guild.roles.everyone.id, deny: ['Connect'] },
+        { id: member.id, allow: ['Connect', 'ViewChannel'] },
+    ]);
 }
 /**
  * Atualiza o ID do canal de voz ativo no banco de dados.
@@ -75,13 +85,9 @@ export async function getOrCreateWaitingRoomChannel(guild) {
  * @returns A sala de espera criada.
  */
 export async function createWaitingRoomChannel(guild) {
-    return guild.channels.create({
-        name: "Sala de Espera",
-        type: ChannelType.GuildVoice,
-        permissionOverwrites: [
-            { id: guild.roles.everyone.id, allow: ['Connect', 'ViewChannel'] },
-        ],
-    });
+    return createGenericVoiceChannel(guild, "Sala de Espera", [
+        { id: guild.roles.everyone.id, allow: ['Connect', 'ViewChannel'] },
+    ]);
 }
 /**
  * Atualiza o ID da sala de espera no banco de dados.
@@ -92,5 +98,25 @@ export async function updateWaitingRoomChannel(channelId) {
         db.data.waitingRoomChannelId = channelId;
         await db.write();
     }
+}
+/**
+ * Monitora canais de voz vazios e realiza ações, como exclusão automática.
+ * @param client - O cliente do bot.
+ */
+export function monitorEmptyChannels(client) {
+    const CHECK_INTERVAL = 60000; // 1 minuto
+    setInterval(() => {
+        client.guilds.cache.forEach((guild) => {
+            const voiceChannels = guild.channels.cache.filter((channel) => channel.type === ChannelType.GuildVoice);
+            voiceChannels.forEach((channel) => {
+                const voiceChannel = channel;
+                if (voiceChannel.members.size === 0) {
+                    console.log(`🔇 Canal de voz vazio detectado: ${voiceChannel.name} (ID: ${voiceChannel.id}) no servidor ${guild.name}`);
+                    // Exemplo: Excluir o canal vazio (opcional)
+                    // voiceChannel.delete().catch(console.error);
+                }
+            });
+        });
+    }, CHECK_INTERVAL);
 }
 //# sourceMappingURL=voice.js.map

@@ -2,16 +2,24 @@
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
 
-/** Dados de usuário */
-export type UserData = {
+/** Estrutura do banco de dados */
+export interface DatabaseSchema {
+  users: UserData[];
+  reports: Report[];
+  matches: Match[];
+  errors: ErrorLog[];
+  stats: Stats;
+  waitingRoomChannelId?: string;
+  logChannelId?: string;
+  activeVoiceChannel?: string; // Adicione esta propriedade
+}
+
+export interface UserData {
   discordId: string;
   riotId?: string;
-  autoMove?: boolean;
-  activeVoiceChannel?: string | null;
   lastInteraction?: number;
-};
+}
 
-/** Cada denúncia feita */
 export interface Report {
   targetId: string;
   reporterId: string;
@@ -19,20 +27,23 @@ export interface Report {
   timestamp: number;
 }
 
-/** Estrutura do JSON */
-export interface DatabaseSchema {
-  users: UserData[];
-  reports: Report[];
-  matches: { isActive: boolean; players: string[] }[];
-  errors: { timestamp: number; message: string }[];
-  stats: {
-    totalMatchesCreated: number;
-    totalMatchesEndedByInactivity: number;
-    playersKickedByReports: number;
-  };
-  activeVoiceChannel?: string;
-  waitingRoomChannelId?: string;
-  logChannelId?: string;
+export interface Match {
+  id: string; // Adiciona a propriedade 'id'
+  channelId: string;
+  isActive: boolean;
+  lastActivity: number;
+  players: string[]; // IDs dos jogadores
+}
+
+export interface ErrorLog {
+  timestamp: number;
+  message: string;
+}
+
+export interface Stats {
+  totalMatchesCreated: number;
+  totalMatchesEndedByInactivity: number;
+  playersKickedByReports: number;
 }
 
 // Configura o adapter para um arquivo JSON
@@ -40,26 +51,31 @@ const adapter = new JSONFile<DatabaseSchema>('db.json');
 // Cria a instância do banco
 export const db = new Low(adapter, {
   users: [
-    { discordId: '123', riotId: 'Player#1234', lastInteraction: 1680000000000 },
-    // ...
+    {
+      discordId: "123456789",
+      riotId: "player#BR1"
+    }
   ],
   stats: {
-    totalMatchesCreated: 83,
-    totalMatchesEndedByInactivity: 19,
-    playersKickedByReports: 3,
+    totalMatchesCreated: 10,
+    totalMatchesEndedByInactivity: 2,
+    playersKickedByReports: 1
   },
   reports: [
     { targetId: '456', reporterId: '123', reason: 'toxicidade', timestamp: 1680000000000 },
     // ...
   ],
   matches: [
-    { isActive: true, players: ['123', '456'] },
-    // ...
+    {
+      id: "1",
+      channelId: "987654321",
+      isActive: true,
+      lastActivity: 1680000000000,
+      players: ["player1", "player2"]
+    }
   ],
-  errors: [
-    { timestamp: 1680000000000, message: 'Falha ao mover Fulano (DM bloqueada)' },
-    // ...
-  ],
+  errors: [],
+  activeVoiceChannel: "123456789012345678" // Adicione esta propriedade
 });
 
 /** Função utilitária para garantir que o banco está inicializado */

@@ -3,6 +3,7 @@ import {
   ChatInputCommandInteraction,
   Interaction,
   ButtonInteraction,
+  MessageFlags,
 } from "discord.js";
 import { ExtendedClient } from "../structs/ExtendedClient.js";
 import { isOnCooldown, setCooldown } from '../services/security.js';
@@ -20,6 +21,11 @@ export default async function interactionCreate(
       await handleSlashCommand(interaction, client);
     } else if (interaction.isButton()) {
       await handleButtonInteraction(interaction);
+    } else if (interaction.isCommand() && interaction.commandName === 'startmatch') {
+      await interaction.reply({
+        content: 'Esta mensagem é apenas para você.',
+        flags: MessageFlags.Ephemeral, // Substitua "ephemeral: true"
+      });
     }
   } catch (error) {
     console.error("❌ Erro no evento interactionCreate:", error);

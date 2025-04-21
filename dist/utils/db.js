@@ -6,26 +6,31 @@ const adapter = new JSONFile('db.json');
 // Cria a instância do banco
 export const db = new Low(adapter, {
     users: [
-        { discordId: '123', riotId: 'Player#1234', lastInteraction: 1680000000000 },
-        // ...
+        {
+            discordId: "123456789",
+            riotId: "player#BR1"
+        }
     ],
     stats: {
-        totalMatchesCreated: 83,
-        totalMatchesEndedByInactivity: 19,
-        playersKickedByReports: 3,
+        totalMatchesCreated: 10,
+        totalMatchesEndedByInactivity: 2,
+        playersKickedByReports: 1
     },
     reports: [
         { targetId: '456', reporterId: '123', reason: 'toxicidade', timestamp: 1680000000000 },
         // ...
     ],
     matches: [
-        { isActive: true, players: ['123', '456'] },
-        // ...
+        {
+            id: "1",
+            channelId: "987654321",
+            isActive: true,
+            lastActivity: 1680000000000,
+            players: ["player1", "player2"]
+        }
     ],
-    errors: [
-        { timestamp: 1680000000000, message: 'Falha ao mover Fulano (DM bloqueada)' },
-        // ...
-    ],
+    errors: [],
+    activeVoiceChannel: "123456789012345678" // Adicione esta propriedade
 });
 /** Função utilitária para garantir que o banco está inicializado */
 function ensureDBInitialized() {

@@ -1,27 +1,13 @@
-import { Client, Collection, GatewayIntentBits, Partials } from "discord.js";
+import { Client, Collection } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 export class ExtendedClient extends Client {
-    commands = new Collection();
-    constructor() {
-        super({
-            intents: [
-                GatewayIntentBits.Guilds,
-                GatewayIntentBits.GuildMembers,
-                GatewayIntentBits.GuildMessages,
-                GatewayIntentBits.MessageContent,
-                GatewayIntentBits.GuildVoiceStates,
-            ],
-            partials: [
-                Partials.Channel,
-                Partials.GuildMember,
-                Partials.Message,
-                Partials.Reaction,
-                Partials.User,
-                Partials.ThreadMember,
-            ],
-        });
+    commands;
+    constructor(options) {
+        super(options); // Passa as opções para o construtor da classe base (Client)
+        this.commands = new Collection();
     }
+    // Adicione métodos ou propriedades personalizadas aqui, se necessário
     async start() {
         try {
             console.log("🔑 Token carregado:", process.env.BOT_TOKEN);
