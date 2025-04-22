@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import 'dotenv/config'; // Configuração do ambiente
 
 import "colors";
 import { ExtendedClient } from "./structs/ExtendedClient.js";
@@ -39,14 +39,13 @@ async function main() {
       ],
     });
 
-    // Carrega os comandos
     console.log("📦 Carregando comandos...");
-    await loadCommands(client);
-    console.log(`✅ Comandos carregados: ${client.commands.size}`);
+    await client.loadCommands(loadCommands);
+    console.log("✅ Comandos carregados.");
 
-    // Inicia o bot
-    console.log("🚀 Iniciando o bot...");
-    client.login(process.env.BOT_TOKEN);
+    console.log("🔑 Conectando ao Discord...");
+    await client.start();
+    console.log("✅ Bot conectado com sucesso!");
 
     // Evento "ready" do bot
     client.once("ready", () => {

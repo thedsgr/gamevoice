@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "lib": ["ESNext"],
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": "src",
+    "outDir": "dist",
     "target": "ESNext",
     "module": "ESNext",
     "moduleResolution": "node",
@@ -27,6 +27,6 @@
     "allowImportingTsExtensions": false,
     "noEmitOnError": false
   },
-  "include": ["src/**/*"],
+  "include": ["src"],
   "exclude": ["node_modules", "dist"]
 }

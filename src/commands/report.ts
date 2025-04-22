@@ -1,9 +1,9 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import type { ChatInputCommandInteraction, TextChannel } from 'discord.js';
-import { db, Report as DBReport } from '../../utils/db.js'; // Renomeado para evitar conflito
-import { SlashCommand } from '../../structs/types/SlashCommand.js';
-import { isOnCooldown, setCooldown } from '../../services/security.js';
-import { sendLog } from '../../utils/log.js';
+import { db, Report as DBReport } from '../utils/db.js'; // Renomeado para evitar conflito
+import { SlashCommand } from '../structs/types/SlashCommand.js';
+import { isOnCooldown, setCooldown } from '../services/security.js';
+import { sendLog } from '../utils/log.js';
 
 const REPORT_THRESHOLD = 20;
 

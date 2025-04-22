@@ -1,7 +1,7 @@
 // src/utils/commandLoader.ts
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname } from 'path';
 import { ExtendedClient } from '../structs/ExtendedClient.js';
 import { REST, Routes } from 'discord.js';
@@ -16,56 +16,89 @@ const __dirname = dirname(__filename);
  * @param client - A instância do cliente estendido.
  */
 export async function loadCommands(client: ExtendedClient) {
-  const commandsPath = path.join(__dirname, '../commands');
-  const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
-
-  // Função recursiva para percorrer subpastas
-  function getCommandFiles(dir: string): string[] {
-    const files = fs.readdirSync(dir, { withFileTypes: true });
-    let commandFiles: string[] = [];
-
-    for (const file of files) {
-      const fullPath = path.join(dir, file.name);
-      if (file.isDirectory()) {
-        // Se for uma subpasta, chama a função recursivamente
-        commandFiles = commandFiles.concat(getCommandFiles(fullPath));
-      } else if (file.isFile() && file.name.endsWith(extension)) {
-        // Adiciona o arquivo se tiver a extensão correta
-        commandFiles.push(fullPath);
-      }
-    }
-
-    return commandFiles;
-  }
-
+  const commandsPath = process.env.NODE_ENV === 'production'
+    ? path.join(__dirname, '../../dist/commands') // Diretório em produção
+    : path.join(__dirname, '../commands'); // Diretório em desenvolvimento
   const commandFiles = getCommandFiles(commandsPath);
+
+  console.log('📂 Verificando diretório:', commandsPath);
+  console.log('📂 Arquivos encontrados:', commandFiles.map(f => path.basename(f)));
+  
 
   for (const filePath of commandFiles) {
     try {
-      const { default: command } = await import(filePath);
+      const { default: command } = await import(pathToFileURL(filePath).href);
 
       if (command && command.data && command.execute) {
         client.commands.set(command.data.name, command);
         console.log(`✅ Comando carregado: ${command.data.name}`);
       } else {
-        console.warn(`⚠️ Arquivo ${filePath} não é um comando válido.`);
+        console.warn(`⚠️ Arquivo ${filePath} ignorado: não é um comando válido.`);
       }
     } catch (error) {
-      console.error(`❌ Falha ao importar o comando ${filePath}:`, error);
+      console.error(`❌ Erro ao importar o comando ${filePath}:`, error);
     }
   }
 
   console.log(`📦 Total de comandos carregados: ${client.commands.size}`);
 }
 
+/**
+ * Registra todos os comandos no Discord.
+ * @param client - A instância do cliente estendido.
+ */
+export async function registerCommands(client: ExtendedClient) {
+  const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN!);
+
+  try {
+    console.log('🔄 Registrando comandos...');
+    const commands = client.commands.map(command => command.data.toJSON());
+
+    await rest.put(
+      Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID!),
+      { body: commands }
+    );
+
+    console.log('✅ Comandos registrados com sucesso!');
+  } catch (error) {
+    console.error('❌ Erro ao registrar comandos:', error);
+  }
+}
+
+function getCommandFiles(dir: string): string[] {
+  const files = fs.readdirSync(dir, { withFileTypes: true });
+  const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
+
+  return files
+    .filter(file => file.isFile() && file.name.endsWith(extension))
+    .map(file => path.join(dir, file.name));
+}
+
+
 const commands = [
   {
     name: 'startmatch',
     description: 'Inicia uma nova partida.',
   },
+  {
+    name: 'endmatch',
+    description: 'Finaliza a partida e limpa os canais de voz.',
+  },
+  {
+    name: 'report',
+    description: 'Reporta um problema ou jogador.',
+  },
 ];
 
 const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN!);
+
+if (!process.env.BOT_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
+  console.error('❌ Variáveis de ambiente não configuradas corretamente.');
+  if (!process.env.BOT_TOKEN) console.error('❌ BOT_TOKEN está ausente.');
+  if (!process.env.CLIENT_ID) console.error('❌ CLIENT_ID está ausente.');
+  if (!process.env.GUILD_ID) console.error('❌ GUILD_ID está ausente.');
+  process.exit(1);
+}
 
 (async () => {
   try {

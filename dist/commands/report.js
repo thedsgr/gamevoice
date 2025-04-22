@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { db } from '../../utils/db.js'; // Renomeado para evitar conflito
-import { isOnCooldown, setCooldown } from '../../services/security.js';
-import { sendLog } from '../../utils/log.js';
+import { db } from '../utils/db.js'; // Renomeado para evitar conflito
+import { isOnCooldown, setCooldown } from '../services/security.js';
+import { sendLog } from '../utils/log.js';
 const REPORT_THRESHOLD = 20;
 const reportCommand = {
     data: new SlashCommandBuilder()

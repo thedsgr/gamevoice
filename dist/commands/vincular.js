@@ -12,19 +12,20 @@ const vincularCommand = {
         const discordId = interaction.user.id;
         const riotId = interaction.options.getString('riotid', true);
         try {
+            // Defer a resposta para evitar timeout
+            await interaction.deferReply({ ephemeral: true });
             // Atualiza o usuário no banco de dados
             await linkRiotAccount(discordId, riotId);
-            // Responde ao usuário
-            await interaction.reply({
+            // Edita a resposta após o processamento
+            await interaction.editReply({
                 content: `✅ Sua conta Riot \`${riotId}\` foi vinculada com sucesso!`,
-                ephemeral: true,
             });
         }
         catch (error) {
             console.error('❌ Erro ao vincular conta Riot:', error);
-            await interaction.reply({
+            // Edita a resposta em caso de erro
+            await interaction.editReply({
                 content: '❌ Ocorreu um erro ao tentar vincular sua conta Riot. Tente novamente mais tarde.',
-                ephemeral: true,
             });
         }
     },
