@@ -38,7 +38,6 @@ export async function loadCommands(client: ExtendedClient) {
     return commandFiles;
   }
 
-  // Obtém todos os arquivos de comando, incluindo os de subpastas
   const commandFiles = getCommandFiles(commandsPath);
 
   for (const filePath of commandFiles) {

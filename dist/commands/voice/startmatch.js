@@ -1,13 +1,14 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
+import { MessageFlags, } from 'discord.js';
 import { getOrCreateVoiceChannel, getOrCreateWaitingRoomChannel, } from '../../services/voice.js';
 import { ensureInGuild, ensureAdmin } from '../../services/security.js';
 import { createBackup } from '../../utils/backup.js';
-import { db } from "../../utils/db.js";
+import { db } from '../../utils/db.js';
 import { sendLog } from '../../utils/log.js';
 const startMatchCommand = {
     data: new SlashCommandBuilder()
-        .setName("startmatch")
-        .setDescription("Inicia uma partida e configura a sala de espera"),
+        .setName('startmatch')
+        .setDescription('Inicia uma partida e configura a sala de espera'),
     async execute(interaction) {
         // Verifica se a interação é em um servidor
         if (!ensureInGuild(interaction))
@@ -16,13 +17,13 @@ const startMatchCommand = {
         if (!ensureAdmin(interaction))
             return;
         try {
-            await interaction.deferReply({ ephemeral: true });
+            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
             const guild = interaction.guild;
             const me = guild.members.me;
             // Verifica se o bot tem permissões necessárias
             if (!me || !me.permissions.has(['ManageChannels', 'MoveMembers'])) {
                 await interaction.editReply({
-                    content: "❌ Não tenho permissões suficientes para criar canais ou mover usuários.",
+                    content: '❌ Não tenho permissões suficientes para criar canais ou mover usuários.',
                 });
                 return;
             }
@@ -43,9 +44,9 @@ const startMatchCommand = {
             });
         }
         catch (error) {
-            console.error("❌ Erro ao executar o comando startmatch:", error);
+            console.error('❌ Erro ao executar o comando startmatch:', error);
             await interaction.editReply({
-                content: "❌ Ocorreu um erro ao iniciar a partida.",
+                content: '❌ Ocorreu um erro ao iniciar a partida.',
             });
         }
     },
@@ -67,7 +68,7 @@ async function moveMembersToChannel(waitingRoomChannel, voiceChannel) {
         catch (err) {
             console.error(`❌ Erro ao mover ${member.user.tag}:`, err);
             // Caso o envio da DM falhe
-            if (err.code === 50007) { // Código de erro para "Cannot send messages to this user"
+            if (err.code === 50007) {
                 console.warn(`⚠️ Não foi possível enviar uma DM para ${member.user.tag}.`);
             }
         }
