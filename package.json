@@ -4,10 +4,12 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "npm run clean && npx tsc",
     "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true });\"",
-    "start": "node dist/index.js",
-    "deploy": "tsx src/scripts/deploy-commands.ts"
+    "build": "npm run clean && tsc",
+    "deploy": "cross-env NODE_ENV=production tsx src/scripts/deploy-commands.ts",
+    "register": "cross-env NODE_ENV=production REGISTER_COMMANDS=true node dist/index.js",
+    "start": "cross-env NODE_ENV=production node dist/index.js",
+    "dev": "cross-env NODE_ENV=development tsx src/index.ts"
   },
   "dependencies": {
     "@discordjs/builders": "^1.10.1",
@@ -19,6 +21,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.17.16",
+    "cross-env": "^7.0.3",
     "glob": "^11.0.1",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",

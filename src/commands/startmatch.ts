@@ -48,8 +48,6 @@ const startMatchCommand: SlashCommand = {
   },
 };
 
-export default startMatchCommand;
-
 /**
  * Move todos os membros de um canal de espera para o canal de voz.
  * @param waitingRoomChannel - O canal de espera.
@@ -73,3 +71,5 @@ async function moveMembersToChannel(waitingRoomChannel: any, voiceChannel: any) 
     }
   }
 }
+
+export default startMatchCommand;

@@ -4,6 +4,9 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname } from 'path';
+import { loadCommands } from '../utils/commandLoader.js';
+import { ExtendedClient } from '../structs/ExtendedClient.js';
+import 'dotenv/config';
 
 // Recria o comportamento de __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -19,7 +22,12 @@ if (!process.env.BOT_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
   process.exit(1);
 }
 
-async function loadCommands() {
+// Inicializa o cliente estendido
+const client = new ExtendedClient({
+  intents: [], // Add the required intents here
+}) as ExtendedClient;
+
+async function loadCommandsLocally() {
   const commandsPath = process.env.NODE_ENV === 'production'
     ? path.join(__dirname, '../../dist/commands')
     : path.join(__dirname, '../commands');
@@ -66,48 +74,55 @@ function getAllCommandFiles(dir: string): string[] {
   console.log(`📂 Arquivos encontrados: ${files.map(file => file.name)}`);
   const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
 
-  return files.flatMap((file) => {
-    const fullPath = path.join(dir, file.name);
-    if (file.isDirectory()) {
-      return getAllCommandFiles(fullPath);
-    } else if (file.isFile() && file.name.endsWith(extension)) {
-      return [fullPath];
-    } else {
-      console.warn(`⚠️ Arquivo ignorado (extensão não corresponde): ${file.name}`);
-      return [];
-    }
-  });
+const commandFiles: string[] = [];
+
+for (const file of files) {
+  const fullPath = path.join(dir, file.name);
+  if (file.isDirectory()) {
+    commandFiles.push(...getAllCommandFiles(fullPath));
+  } else if (file.isFile() && file.name.endsWith(extension)) {
+    commandFiles.push(fullPath);
+  }
 }
 
+return commandFiles;
+}
+
+
 (async () => {
-  console.log('📂 Carregando comandos...');
-  const commands = await loadCommands();
-
-  if (commands.length === 0) {
-    console.warn('⚠️ Nenhum comando carregado. O registro de comandos será ignorado.');
-    return;
-  }
-
-  console.log(`✅ ${commands.length} comandos carregados.`);
-
-  const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
-
   try {
-    console.log(`🔁 Atualizando ${commands.length} comandos de slash...`);
+    console.log('📂 Carregando comandos...');
+    await loadCommandsLocally();
 
-    await rest.put(
-      Routes.applicationGuildCommands(
-        process.env.CLIENT_ID,
-        process.env.GUILD_ID
-      ),
-      { body: commands }
-    );
+    const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN!);
+    const commands = await loadCommandsLocally();
 
-    console.log('✅ Comandos registrados com sucesso!');
-  } catch (error) {
-    console.error('❌ Falha ao registrar comandos:', error);
-    if (error instanceof Error && 'rawError' in error) {
-      console.error('Detalhes do erro:', (error as any).rawError);
+    if (commands.length === 0) {
+      console.warn('⚠️ Nenhum comando carregado. O registro de comandos será ignorado.');
+      return;
     }
+
+    console.log(`✅ ${commands.length} comandos carregados.`);
+
+    try {
+      console.log(`🔁 Atualizando ${commands.length} comandos de slash...`);
+
+      await rest.put(
+        Routes.applicationGuildCommands(
+          process.env.CLIENT_ID,
+          process.env.GUILD_ID
+        ),
+        { body: commands }
+      );
+
+      console.log('✅ Comandos registrados com sucesso!');
+    } catch (error) {
+      console.error('❌ Falha ao registrar comandos:', error);
+      if (error instanceof Error && 'rawError' in error) {
+        console.error('Detalhes do erro:', (error as any).rawError);
+      }
+    }
+  } catch (error) {
+    console.error('❌ Erro ao carregar comandos:', error);
   }
 })();

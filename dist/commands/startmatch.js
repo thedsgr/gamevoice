@@ -29,7 +29,6 @@ const startMatchCommand = {
         }
     },
 };
-export default startMatchCommand;
 /**
  * Move todos os membros de um canal de espera para o canal de voz.
  * @param waitingRoomChannel - O canal de espera.
@@ -52,4 +51,5 @@ async function moveMembersToChannel(waitingRoomChannel, voiceChannel) {
         }
     }
 }
+export default startMatchCommand;
 //# sourceMappingURL=startmatch.js.map

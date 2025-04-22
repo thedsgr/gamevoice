@@ -2,7 +2,7 @@ import 'dotenv/config'; // Configuração do ambiente
 import "colors";
 import { ExtendedClient } from "./structs/ExtendedClient.js";
 import { initDB, db } from "./utils/db.js";
-import { loadCommands } from "./utils/commandLoader.js";
+import { loadCommands, registerCommands } from "./utils/commandLoader.js";
 import guildMemberAdd from "./events/guildMemberAdd.js";
 import interactionCreate from "./events/interactionCreate.js";
 import handleVoiceStateUpdate from './events/voiceStateUpdate.js';
@@ -32,9 +32,15 @@ async function main() {
                 GatewayIntentBits.MessageContent,
             ],
         });
+        // Substituição da parte de carregamento de comandos
         console.log("📦 Carregando comandos...");
-        await client.loadCommands(loadCommands);
-        console.log("✅ Comandos carregados.");
+        await loadCommands(client);
+        console.log(`✅ ${client.commands.size} comandos carregados.`);
+        // Opcional: Registrar comandos no Discord (executar apenas quando necessário)
+        if (process.env.REGISTER_COMMANDS === 'true') {
+            console.log("🔄 Registrando comandos no Discord...");
+            await registerCommands(client);
+        }
         console.log("🔑 Conectando ao Discord...");
         await client.start();
         console.log("✅ Bot conectado com sucesso!");
