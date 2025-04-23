@@ -1,10 +1,9 @@
-// src/utils/db.ts
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
-// Caminho para o arquivo JSON do banco de dados
+/** Estrutura completa do banco de dados */
 const adapter = new JSONFile('db.json');
-// Dados padrão para inicialização
 const defaultData = {
+    restrictedUsers: [],
     users: [],
     reports: [],
     matches: [],
@@ -13,23 +12,41 @@ const defaultData = {
         totalMatchesCreated: 0,
         totalMatchesEndedByInactivity: 0,
         playersKickedByReports: 0,
+        totalMatchesEndedByPlayers: 0,
     },
+    logChannelId: undefined,
+    waitingRoomChannelId: undefined,
+    activeVoiceChannel: undefined,
+    logs: [],
+    systemLogs: [],
 };
 // Instância do banco de dados
 export const db = new Low(adapter, defaultData);
 /** Inicializa o banco de dados */
 export async function initDB() {
     console.log('[DB] Inicializando o banco de dados...');
-    await db.read();
-    db.data || (db.data = defaultData);
-    await db.write();
-    console.log('[DB] Banco de dados inicializado com sucesso.');
+    try {
+        await db.read();
+        db.data || (db.data = defaultData);
+        await db.write();
+        console.log('[DB] Banco de dados inicializado com sucesso.');
+    }
+    catch (error) {
+        console.error('Erro ao inicializar o banco de dados:', error);
+    }
 }
 /** Função utilitária para garantir que o banco está inicializado */
-function ensureDBInitialized() {
+export function ensureDBInitialized() {
     if (!db.data) {
         throw new Error('❌ Banco de dados não inicializado.');
     }
+}
+/** Função utilitária para executar uma função com o banco de dados inicializado */
+function withDBInitialized(fn) {
+    if (!db.data) {
+        throw new Error('❌ Banco de dados não inicializado.');
+    }
+    return fn();
 }
 /**
  * Recupera o estado do bot após reinício.
@@ -58,74 +75,10 @@ export async function recoverState(client) {
     await db.write();
     console.log('[DB] Estado do bot recuperado com sucesso.');
 }
-// OPERAÇÕES PARA PARTIDAS (MATCHES)
-/** Cria uma nova partida no banco de dados */
-export async function createMatch(matchData) {
-    ensureDBInitialized();
-    const newMatch = {
-        ...matchData,
-        id: Date.now().toString(), // ID baseado em timestamp
-    };
-    db.data.matches.push(newMatch);
-    db.data.stats.totalMatchesCreated += 1;
-    await db.write();
-    return newMatch;
-}
-/** Finaliza uma partida */
-export async function endMatch(matchId, endedBy) {
-    ensureDBInitialized();
-    const match = db.data.matches.find((m) => m.id === matchId);
-    if (match) {
-        match.isActive = false;
-        match.endedAt = new Date().toISOString();
-        match.endedBy = endedBy;
-        match.lastActivity = Date.now();
-        await db.write();
-        return true;
-    }
-    return false;
-}
-/** Atualiza atividade da partida */
-export async function updateMatchActivity(matchId) {
-    ensureDBInitialized();
-    const match = db.data.matches.find((m) => m.id === matchId);
-    if (match) {
-        match.lastActivity = Date.now();
-        await db.write();
-    }
-}
-/** Obtém partidas ativas de um servidor */
-export async function getActiveMatches(guildId) {
-    ensureDBInitialized();
-    return db.data.matches.filter((m) => m.guildId === guildId && m.isActive);
-}
-// OPERAÇÕES PARA USUÁRIOS (mantidas do original)
-export async function updateUser({ discordId, riotId, }) {
-    ensureDBInitialized();
-    const existingUser = db.data.users.find((user) => user.discordId === discordId);
-    if (existingUser) {
-        existingUser.riotId = riotId ?? undefined;
-    }
-    else {
-        db.data.users.push({ discordId, riotId: riotId ?? undefined });
-    }
-    await db.write();
-}
-// OPERAÇÕES PARA DENÚNCIAS (mantidas do original)
-export async function addReport({ targetId, reporterId, reason, matchId, }) {
-    ensureDBInitialized();
-    db.data.reports.push({
-        targetId,
-        reporterId,
-        reason,
-        timestamp: Date.now(),
-        matchId,
-    });
-    await db.write();
-}
 /** Função para logar erros com contexto de partida */
 export async function logError(error, context) {
     ensureDBInitialized();
+    const match = db.data.matches.find((m) => m.id === context?.matchId);
     db.data.errors.push({
         timestamp: Date.now(),
         message: error.message,
@@ -134,3 +87,63 @@ export async function logError(error, context) {
     });
     await db.write();
 }
+/** Função para obter estatísticas do bot */
+export function getBotStatistics() {
+    const data = db.data;
+    if (!data)
+        return {
+            activeUsers: 0,
+            totalMatches: 0,
+            inactiveMatches: 0,
+            reports: 0,
+            kicksByReports: 0,
+            linkedAccounts: 0,
+            currentPlayers: 0,
+            recentErrors: []
+        };
+    const now = Date.now();
+    const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
+    return {
+        activeUsers: data.users.filter(user => (user.lastInteraction ?? 0) > twentyFourHoursAgo).length,
+        totalMatches: data.stats.totalMatchesCreated || 0,
+        inactiveMatches: data.stats.totalMatchesEndedByInactivity || 0,
+        reports: data.reports.length || 0,
+        kicksByReports: data.stats.playersKickedByReports || 0,
+        linkedAccounts: data.users.filter(user => (user.riotAccounts?.length ?? 0) > 0).length,
+        currentPlayers: data.matches.find(match => match.isActive)?.players.length || 0,
+        recentErrors: data.errors.filter(error => error.timestamp > twentyFourHoursAgo).map(error => ({
+            time: new Date(error.timestamp).toLocaleTimeString(),
+            message: error.message
+        }))
+    };
+}
+export const getTotalMatchesCreated = () => {
+    return db.data?.stats.totalMatchesCreated || 0;
+};
+export const getPlayersKickedByReports = () => {
+    return db.data?.stats.playersKickedByReports || 0;
+};
+export const getTotalMatchesEndedByInactivity = () => {
+    return db.data?.stats.totalMatchesEndedByInactivity || 0;
+};
+export const getLinkedRiotIds = () => {
+    return db.data?.users.filter(user => (user.riotAccounts?.length ?? 0) > 0).length || 0;
+};
+export const getPlayersInCurrentMatch = () => {
+    return db.data?.matches.find(match => match.isActive)?.players.length || 0;
+};
+export const getRecentErrors = () => {
+    const now = Date.now();
+    const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
+    return db.data?.errors
+        .filter(error => error.timestamp > twentyFourHoursAgo)
+        .map(error => `${new Date(error.timestamp).toLocaleTimeString()} - ${error.message}`) || [];
+};
+export const getTotalMatchesEndedByPlayers = () => {
+    return db.data?.stats.totalMatchesEndedByPlayers || 0;
+};
+export const getActiveUsers = () => {
+    const now = Date.now();
+    const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
+    return db.data?.users.filter(user => (user.lastInteraction ?? 0) > twentyFourHoursAgo).length || 0;
+};

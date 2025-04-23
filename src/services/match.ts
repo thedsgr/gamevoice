@@ -1,5 +1,6 @@
 import { db } from '../utils/db.js';
 import { Logger } from '../utils/log.js';
+import {Match} from '../utils/match.js';    
 
 /**
  * Cria uma nova partida no banco de dados.
@@ -10,7 +11,7 @@ import { Logger } from '../utils/log.js';
  * @returns ID da partida criada.
  */
 export async function createMatch(guildId: string, channelId: string, players: string[], startedBy: string): Promise<string> {
-    if (!guildId || !channelId || !players.length || !startedBy) {
+    if (!guildId || (!channelId && channelId !== null) || !players.length || !startedBy) {
         throw new Error('Todos os parâmetros são obrigatórios.');
     }
 
@@ -42,7 +43,7 @@ export async function createMatch(guildId: string, channelId: string, players: s
  * @returns `true` se a partida foi encerrada, caso contrário `false`.
  */
 export async function endMatch(matchId: string, endedBy: string): Promise<boolean> {
-    const match = db.data!.matches.find(m => m.id === matchId);
+    const match = db.data!.matches.find((m: Match) => m.id === matchId);
     if (!match || !match.isActive) {
         throw new Error(`Partida com ID ${matchId} não encontrada ou já encerrada.`);
     }

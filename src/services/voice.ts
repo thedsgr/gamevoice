@@ -1,6 +1,12 @@
-import { Guild, GuildMember, VoiceChannel, ChannelType, OverwriteResolvable } from 'discord.js';
+import { Guild, GuildMember, VoiceChannel, OverwriteResolvable } from 'discord.js';
+import { ChannelType } from 'discord-api-types/v10';
 import { db } from '../utils/db.js';
 import { ExtendedClient } from "../structs/ExtendedClient.js";
+
+function getVoiceChannel(guild: Guild, channelId: string): VoiceChannel | null {
+  const channel = guild.channels.cache.get(channelId);
+  return channel?.type === ChannelType.GuildVoice ? (channel as VoiceChannel) : null;
+}
 
 /**
  * Cria um canal de voz genérico.
@@ -14,11 +20,18 @@ async function createGenericVoiceChannel(
   name: string,
   permissions: OverwriteResolvable[]
 ): Promise<VoiceChannel> {
-  return guild.channels.create({
+  const channel = await guild.channels.create({
     name,
     type: ChannelType.GuildVoice,
     permissionOverwrites: permissions,
   });
+
+  // Verifica se o canal criado é do tipo VoiceChannel
+  if (channel instanceof VoiceChannel) {
+    return channel as unknown as VoiceChannel;
+  }
+
+  throw new Error(`O canal criado não é do tipo VoiceChannel: ${channel.name}`);
 }
 
 /**
@@ -53,21 +66,15 @@ export async function updateActiveVoiceChannel(channelId: string): Promise<void>
  */
 export async function getOrCreateVoiceChannel(guild: Guild, member: GuildMember): Promise<VoiceChannel> {
   const activeChannelId = db.data?.activeVoiceChannel;
-  let voiceChannel: VoiceChannel;
 
   if (activeChannelId) {
-    voiceChannel = guild.channels.cache.get(activeChannelId) as VoiceChannel;
-
-    if (!voiceChannel) {
-      voiceChannel = await createVoiceChannel(guild, member);
-      await updateActiveVoiceChannel(voiceChannel.id);
-    }
-  } else {
-    voiceChannel = await createVoiceChannel(guild, member);
-    await updateActiveVoiceChannel(voiceChannel.id);
+    const channel = getVoiceChannel(guild, activeChannelId);
+    if (channel) return channel;
   }
 
-  return voiceChannel;
+  const newChannel = await createVoiceChannel(guild, member);
+  await updateActiveVoiceChannel(newChannel.id);
+  return newChannel;
 }
 
 /**
@@ -77,20 +84,15 @@ export async function getOrCreateVoiceChannel(guild: Guild, member: GuildMember)
  */
 export async function getOrCreateWaitingRoomChannel(guild: Guild): Promise<VoiceChannel> {
   const waitingRoomChannelId = db.data?.waitingRoomChannelId;
-  let waitingRoomChannel: VoiceChannel;
 
   if (waitingRoomChannelId) {
-    waitingRoomChannel = guild.channels.cache.get(waitingRoomChannelId) as VoiceChannel;
-    if (!waitingRoomChannel) {
-      waitingRoomChannel = await createWaitingRoomChannel(guild);
-      await updateWaitingRoomChannel(waitingRoomChannel.id);
-    }
-  } else {
-    waitingRoomChannel = await createWaitingRoomChannel(guild);
-    await updateWaitingRoomChannel(waitingRoomChannel.id);
+    const channel = getVoiceChannel(guild, waitingRoomChannelId);
+    if (channel) return channel;
   }
 
-  return waitingRoomChannel;
+  const newChannel = await createWaitingRoomChannel(guild);
+  await updateWaitingRoomChannel(newChannel.id);
+  return newChannel;
 }
 
 /**
@@ -149,7 +151,9 @@ export function monitorEmptyChannels(client: ExtendedClient): void {
  * @param guild - O servidor onde os canais serão verificados.
  */
 export async function cleanupOrphanedChannels(guild: Guild): Promise<void> {
-  const dbChannels = db.data?.matches.filter(m => m.isActive).map(m => m.channelId) || [];
+  const dbChannels: string[] = db.data?.matches
+    .filter((m: { isActive: boolean; channelId: string }) => m.isActive)
+    .map((m: { channelId: string }) => m.channelId) || [];
   const voiceChannels = guild.channels.cache.filter(c => 
     c.type === ChannelType.GuildVoice && 
     c.name.startsWith('Partida do Time') &&

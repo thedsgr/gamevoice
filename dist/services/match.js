@@ -9,7 +9,7 @@ import { Logger } from '../utils/log.js';
  * @returns ID da partida criada.
  */
 export async function createMatch(guildId, channelId, players, startedBy) {
-    if (!guildId || !channelId || !players.length || !startedBy) {
+    if (!guildId || (!channelId && channelId !== null) || !players.length || !startedBy) {
         throw new Error('Todos os parâmetros são obrigatórios.');
     }
     const matchId = generateMatchId();
@@ -37,7 +37,7 @@ export async function createMatch(guildId, channelId, players, startedBy) {
  * @returns `true` se a partida foi encerrada, caso contrário `false`.
  */
 export async function endMatch(matchId, endedBy) {
-    const match = db.data.matches.find(m => m.id === matchId);
+    const match = db.data.matches.find((m) => m.id === matchId);
     if (!match || !match.isActive) {
         throw new Error(`Partida com ID ${matchId} não encontrada ou já encerrada.`);
     }

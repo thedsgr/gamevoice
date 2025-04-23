@@ -6,17 +6,17 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
+    "allowJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "paths": {
-      "@commands/*": ["./commands/*"],
-      "@events/*": ["./events/*"],
-      "@services/*": ["./services/*"],
-      "@utils/*": ["./utils/*"]
+      "../../utils/*": ["src/utils/*"],
+      "@services/*": ["./src/services/*"],
+      "@structs/*": ["./src/structs/*"]
     }
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "src/utils/**/*"],
   "exclude": ["node_modules"]
 }

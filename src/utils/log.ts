@@ -89,15 +89,16 @@ export class Logger {
             level,
             message,
             context,
-            action: typeof context?.action === 'string' ? context.action : 'default_action' // Ensure action is always a string
+            action: typeof context?.action === 'string' ? context.action : 'default_action'
         };
 
         db.data.logs = db.data.logs || [];
         db.data.logs.push({
-            ...logEntry,
-            action: logEntry.action || 'default_action', // Ensure action is always a string
-            details: logEntry.details || {} // Ensure details is always defined
-        });
+                                    ...logEntry,
+                                    timestamp: logEntry.timestamp.getTime(), // Convert Date to number
+                                    action: logEntry.action || 'default_action',
+                                    details: logEntry.details || {}
+                                });
 
         db.write().catch((err) => {
             console.error('❌ Failed to save log to DB:', err);
@@ -162,11 +163,15 @@ export function logSystemAction(action: string, details: Record<string, unknown>
         action,
         userId,
         details,
-        message: `Action: ${action}` // Ensure message is always a string
+        message: `Action: ${action}`
     };
 
     db.data.systemLogs = db.data.systemLogs || [];
-    db.data.systemLogs.push(entry);
+    db.data.systemLogs.push({
+            ...entry,
+            timestamp: entry.timestamp.getTime(),
+            level: 'info'
+        });
 
     db.write().catch(err => {
         Logger.error("Falha ao registrar ação no sistema:", err);

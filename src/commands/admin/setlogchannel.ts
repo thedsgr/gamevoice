@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ChannelType } from 'discord-api-types/v10';
+import { ChannelType, PermissionsBitField, ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommand } from '../../structs/types/SlashCommand.js';
 import { db } from '../../utils/db.js';
 
@@ -15,12 +15,21 @@ const setLogChannel: SlashCommand = {
         .setRequired(true)
     ) as SlashCommandBuilder, // Cast explícito para corrigir o tipo
 
-  async execute(interaction) {
+  async execute(interaction: ChatInputCommandInteraction) {
     try {
       // Verifica se o usuário tem permissão de administrador
-      if (!interaction.memberPermissions?.has("Administrator")) {
+      if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator)) {
         await interaction.reply({
           content: "❌ Você não tem permissão para usar este comando.",
+          ephemeral: true,
+        });
+        return;
+      }
+
+      // Verifica se o banco de dados está inicializado
+      if (!db.data) {
+        await interaction.reply({
+          content: "❌ O banco de dados não está inicializado. Tente novamente mais tarde.",
           ephemeral: true,
         });
         return;
@@ -39,7 +48,7 @@ const setLogChannel: SlashCommand = {
       }
 
       // Salva o ID do canal no banco de dados
-      db.data!.logChannelId = channel.id;
+      db.data.logChannelId = channel.id;
       await db.write();
 
       // Responde ao usuário
@@ -48,7 +57,11 @@ const setLogChannel: SlashCommand = {
         ephemeral: true,
       });
     } catch (error) {
-      console.error("Erro ao executar o comando setlog:", error);
+      if (error instanceof Error) {
+        console.error(`[setlog] Erro ao definir o canal de logs: ${error.message}`, error);
+      } else {
+        console.error(`[setlog] Erro ao definir o canal de logs:`, error);
+      }
       await interaction.reply({
         content: "❌ Ocorreu um erro ao tentar definir o canal de logs. Tente novamente mais tarde.",
         ephemeral: true,

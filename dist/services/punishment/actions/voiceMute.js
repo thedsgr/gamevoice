@@ -1,5 +1,5 @@
-import { MuteRoleManager } from '@utils/muteRoleManager.js';
-import { Logger } from '@utils/log.js';
+import { MuteRoleManager } from '../../../utils/muteRoleManager.js';
+import { Logger } from '../../../utils/log.js';
 // Helper function to format duration in a human-readable way
 function formatDuration(duration) {
     const seconds = Math.floor((duration / 1000) % 60);

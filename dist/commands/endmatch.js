@@ -1,6 +1,5 @@
 // src/commands/endmatch.ts
-import { SlashCommandBuilder } from 'discord.js';
-import { PermissionsBitField } from 'discord.js';
+import { SlashCommandBuilder, PermissionsBitField } from 'discord.js';
 const endMatchCommand = {
     data: new SlashCommandBuilder()
         .setName("endmatch")
@@ -11,6 +10,8 @@ const endMatchCommand = {
             const member = interaction.member;
             if (!member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
                 console.log("O membro não tem permissão para gerenciar canais ou é nulo.");
+                await interaction.editReply('❌ Você não tem permissão para finalizar a partida.');
+                return;
             }
             // Lógica do comando
             await interaction.editReply('✅ Partida finalizada com sucesso!');

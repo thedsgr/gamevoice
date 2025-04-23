@@ -2,14 +2,23 @@ import 'dotenv/config';
 import 'colors';
 import { GatewayIntentBits } from 'discord.js';
 import { ExtendedClient } from './structs/ExtendedClient.js';
-import { initDB, db } from '@utils/db.js';
-import { loadCommands } from '@utils/commandLoader.js';
+import { initDB, db } from './utils/db.js';
+import { loadCommands } from './utils/commandLoader.js';
 import handleGuildMemberAdd from './events/guildMemberAdd.js';
 import handleInteractionCreate from './events/interactionCreate.js';
 import { handleVoiceStateUpdate } from './events/voiceStateUpdate.js';
 import handleMatchEnd from './events/matchEnd.js';
 import { monitorEmptyChannels } from './services/voice.js';
-import { Logger } from '@utils/log.js';
+import { Logger } from './utils/log.js';
+const client = new ExtendedClient({
+    intents: [
+        'Guilds',
+        'GuildMessages',
+        'GuildVoiceStates',
+        'MessageContent',
+    ],
+});
+client.start();
 // Configuração de inicialização
 const BOT_CONFIG = {
     intents: [
@@ -56,7 +65,11 @@ class BotApplication {
                 totalMatchesCreated: 0,
                 totalMatchesEndedByInactivity: 0,
                 playersKickedByReports: 0,
+                totalMatchesEndedByPlayers: 0,
             },
+            restrictedUsers: [],
+            logs: [],
+            systemLogs: [],
         };
     }
     async loadAndRegisterCommands() {

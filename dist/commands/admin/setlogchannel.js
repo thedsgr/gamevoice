@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ChannelType } from 'discord-api-types/v10';
+import { ChannelType, PermissionsBitField } from 'discord.js';
 import { db } from '../../utils/db.js';
 const setLogChannel = {
     data: new SlashCommandBuilder()
@@ -13,9 +13,17 @@ const setLogChannel = {
     async execute(interaction) {
         try {
             // Verifica se o usuário tem permissão de administrador
-            if (!interaction.memberPermissions?.has("Administrator")) {
+            if (!interaction.memberPermissions?.has(PermissionsBitField.Flags.Administrator)) {
                 await interaction.reply({
                     content: "❌ Você não tem permissão para usar este comando.",
+                    ephemeral: true,
+                });
+                return;
+            }
+            // Verifica se o banco de dados está inicializado
+            if (!db.data) {
+                await interaction.reply({
+                    content: "❌ O banco de dados não está inicializado. Tente novamente mais tarde.",
                     ephemeral: true,
                 });
                 return;
@@ -40,7 +48,12 @@ const setLogChannel = {
             });
         }
         catch (error) {
-            console.error("Erro ao executar o comando setlog:", error);
+            if (error instanceof Error) {
+                console.error(`[setlog] Erro ao definir o canal de logs: ${error.message}`, error);
+            }
+            else {
+                console.error(`[setlog] Erro ao definir o canal de logs:`, error);
+            }
             await interaction.reply({
                 content: "❌ Ocorreu um erro ao tentar definir o canal de logs. Tente novamente mais tarde.",
                 ephemeral: true,

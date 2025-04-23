@@ -1,6 +1,7 @@
 // src/events/matchEnd.ts
 import { ExtendedClient } from "../structs/ExtendedClient.js";
 import { endMatch, getMatchById } from "../services/match.js";
+import { findMemberInGuilds } from "../utils/members.js";
 
 /**
  * Evento para encerrar uma partida.
@@ -11,7 +12,7 @@ export default async function matchEnd(matchId: string, client: ExtendedClient):
   try {
     console.log(`🏁 Encerrando a partida ${matchId}...`);
 
-    // Busca os dados da partida usando a função de services/match.ts
+    // Busca os dados da partida
     const match = getMatchById(matchId);
     if (!match) {
       console.warn(`⚠️ Partida ${matchId} não encontrada no banco de dados.`);
@@ -19,15 +20,9 @@ export default async function matchEnd(matchId: string, client: ExtendedClient):
     }
 
     // Realiza ações de limpeza para a partida
-    for (const playerId of match.players) {
-      const member = findMemberInGuilds(client, playerId);
-      if (member) {
-        console.log(`👋 Removendo jogador ${member.user.tag} da partida ${matchId}.`);
-        // Opcional: Enviar mensagem ao jogador ou realizar outras ações
-      }
-    }
+    await cleanUpMatchPlayers(match.players, matchId, client);
 
-    // Encerra a partida usando a função de services/match.ts
+    // Encerra a partida
     await endMatch(matchId, client.user?.id || "unknown");
     console.log(`✅ Partida ${matchId} encerrada com sucesso.`);
   } catch (error) {
@@ -36,15 +31,17 @@ export default async function matchEnd(matchId: string, client: ExtendedClient):
 }
 
 /**
- * Busca um membro em todos os servidores do bot.
+ * Realiza ações de limpeza para os jogadores de uma partida.
+ * @param players - IDs dos jogadores.
+ * @param matchId - O ID da partida.
  * @param client - O cliente do bot.
- * @param playerId - O ID do jogador.
- * @returns O membro encontrado ou null.
  */
-function findMemberInGuilds(client: ExtendedClient, playerId: string) {
-  for (const guild of client.guilds.cache.values()) {
-    const member = guild.members.cache.get(playerId);
-    if (member) return member;
+async function cleanUpMatchPlayers(players: string[], matchId: string, client: ExtendedClient) {
+  for (const playerId of players) {
+    const member = findMemberInGuilds(client, playerId);
+    if (member) {
+      console.log(`👋 Removendo jogador ${member.user.tag} da partida ${matchId}.`);
+      // Opcional: Enviar mensagem ao jogador ou realizar outras ações
+    }
   }
-  return null;
 }

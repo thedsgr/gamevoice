@@ -1,6 +1,6 @@
 import { GuildMember } from 'discord.js';
 import { PunishmentResult } from '../types/punishmentTypes.js';
-import { Logger } from '@utils/log.js';
+import { Logger } from '../../../utils/log.js';
 
 export async function applyBan(
   target: GuildMember,

@@ -4,12 +4,12 @@ import {
   getActiveUsers,
   getTotalMatchesCreated,
   getTotalMatchesEndedByInactivity,
-  getTotalReports,
+  getTotalMatchesEndedByPlayers,
   getPlayersKickedByReports,
   getLinkedRiotIds,
   getPlayersInCurrentMatch,
   getRecentErrors,
-} from '../../services/monitor.js';
+} from '../../utils/db.js';
 
 const painelCommand: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -45,28 +45,43 @@ const painelCommand: SlashCommand = {
 
 export async function handleButtonInteraction(interaction: ButtonInteraction) {
   if (interaction.customId === 'status_bot') {
-    const statusMessage = `
+    try {
+      const activeUsers = await getActiveUsers();
+      const totalMatchesCreated = await getTotalMatchesCreated();
+      const totalMatchesEndedByInactivity = await getTotalMatchesEndedByInactivity();
+      const playersInCurrentMatch = await getPlayersInCurrentMatch();
+      const linkedRiotIds = await getLinkedRiotIds();
+      const playersKickedByReports = await getPlayersKickedByReports();
+      const recentErrors = (await getRecentErrors()) || [];
+
+      const statusMessage = `
 🧠 **Status do Bot**
 
-- Usuários ativos (24h): ${getActiveUsers()}
-- Partidas criadas: ${getTotalMatchesCreated()}
-- Partidas encerradas por inatividade: ${getTotalMatchesEndedByInactivity()}
-- Jogadores na call atual: ${getPlayersInCurrentMatch()}
+- Usuários ativos (24h): ${activeUsers}
+- Partidas criadas: ${totalMatchesCreated}
+- Partidas encerradas por inatividade: ${totalMatchesEndedByInactivity}
+- Jogadores na call atual: ${playersInCurrentMatch}
 
 🎯 **Monitoramento de Conta**
 
-- Usuários com Riot ID: ${getLinkedRiotIds()}
-- Total de denúncias: ${getTotalReports()}
-- Jogadores expulsos: ${getPlayersKickedByReports()}
+- Usuários com Riot ID: ${linkedRiotIds}
+- Jogadores expulsos: ${playersKickedByReports}
 
 ⚠️ **Últimos Erros**
-${getRecentErrors().join('\n') || 'Nenhum erro registrado.'}
-    `;
+${recentErrors.join('\n') || 'Nenhum erro registrado.'}
+      `;
 
-    await interaction.reply({
-      content: statusMessage,
-      ephemeral: true,
-    });
+      await interaction.reply({
+        content: statusMessage,
+        ephemeral: true,
+      });
+    } catch (error) {
+      console.error('Erro ao obter status do bot:', error);
+      await interaction.reply({
+        content: '❌ Ocorreu um erro ao obter o status do bot. Tente novamente mais tarde.',
+        ephemeral: true,
+      });
+    }
   }
 }
 

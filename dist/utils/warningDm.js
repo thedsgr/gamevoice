@@ -1,5 +1,9 @@
 export async function sendWarningDM(member, options = {}) {
     try {
+        if (!member.user) {
+            console.error('O membro fornecido não possui um usuário associado.');
+            return false;
+        }
         let message = '⚠️ **Aviso Formal**\n\n';
         message += 'Você recebeu um aviso por comportamento inadequado no servidor.\n';
         if (options.reason) {
@@ -13,8 +17,10 @@ export async function sendWarningDM(member, options = {}) {
             message += '\n\nPor favor, revise as regras do servidor.';
         }
         await member.send(message);
+        return true; // Indica que o envio foi bem-sucedido
     }
     catch (error) {
-        console.error(`Failed to send DM to ${member.user.tag}:`, error);
+        console.error(`Falha ao enviar DM para ${member.user.tag} (ID: ${member.id}):`, error);
+        return false; // Indica que o envio falhou
     }
 }

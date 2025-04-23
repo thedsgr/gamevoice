@@ -1,7 +1,7 @@
 import { Client, GuildMember } from 'discord.js';
-import { MuteRoleManager } from '@utils/muteRoleManager.js';
+import { MuteRoleManager } from '../../../utils/muteRoleManager.js';
 import { PunishmentResult } from '../types/punishmentTypes.js';
-import { Logger } from '@utils/log.js';
+import { Logger } from '../../../utils/log.js';
 
 // Helper function to format duration in a human-readable way
 function formatDuration(duration: number): string {

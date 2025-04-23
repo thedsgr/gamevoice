@@ -12,7 +12,7 @@ export default async function guildMemberAdd(member: GuildMember) {
     // Verifica se o usuário já existe no banco de dados
     const exists = db.data.users.some(u => u.discordId === member.id);
     if (!exists) {
-      db.data.users.push({ discordId: member.id });
+      db.data.users.push({ discordId: member.id, lastInteraction: Date.now(), riotAccounts: [] });
       await db.write();
       console.log(`👤 Novo usuário salvo no banco: ${member.user.username}`);
     }

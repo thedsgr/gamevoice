@@ -9,7 +9,8 @@
     },
     {
       "discordId": "775848939073044480",
-      "riotId": "⁦Jhin⁩#⁦9056⁩"
+      "riotId": "⁦Jhin⁩#⁦9056⁩",
+      "lastInteraction": 1745434476410
     }
   ],
   "waitingRoomChannelId": "1364364228869226496",
@@ -285,6 +286,398 @@
     },
     {
       "timestamp": "2025-04-23T02:45:39.955Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T04:50:33.818Z",
+      "level": "error",
+      "message": "Interaction handling failed",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:727:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:831:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1272:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async interactionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:21:13)\n    at async BotApplication.handleInteraction (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:95:13)"
+      },
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T04:55:46.214Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T04:55:46.215Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T04:55:46.279Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T04:55:47.051Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T04:55:47.051Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:13:56.929Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:13:56.930Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:13:56.998Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:13:57.726Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:13:57.727Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:17:01.386Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:17:01.387Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:17:01.454Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:17:02.194Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T05:17:02.195Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T16:51:15.885Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T16:51:15.885Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T16:51:16.017Z",
+      "level": "info",
+      "message": "Successfully loaded 4 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T16:51:17.270Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T16:51:17.271Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T17:02:48.640Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T17:02:48.641Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T17:02:48.756Z",
+      "level": "info",
+      "message": "Successfully loaded 4 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T17:02:50.314Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T17:02:50.314Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T17:03:05.618Z",
+      "level": "error",
+      "message": "Interaction handling failed",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:727:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:831:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1272:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async handleInteractionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:51:13)\n    at async BotApplication.handleInteraction (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:107:13)"
+      },
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T17:03:32.252Z",
+      "level": "error",
+      "message": "Interaction handling failed",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:727:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:831:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1272:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async handleInteractionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:51:13)\n    at async BotApplication.handleInteraction (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:107:13)"
+      },
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T17:23:37.898Z",
+      "level": "error",
+      "message": "Interaction handling failed",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:727:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:831:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1272:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async handleInteractionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:51:13)\n    at async BotApplication.handleInteraction (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:107:13)"
+      },
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T18:13:29.194Z",
+      "level": "error",
+      "message": "Interaction handling failed",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:727:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:831:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1272:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async handleInteractionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:51:13)\n    at async BotApplication.handleInteraction (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:107:13)"
+      },
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T18:32:43.273Z",
+      "level": "error",
+      "message": "Interaction handling failed",
+      "context": {
+        "error": "ENOENT: no such file or directory, rename 'C:\\Users\\conta\\Downloads\\Game Voice\\.db.json.tmp' -> 'C:\\Users\\conta\\Downloads\\Game Voice\\db.json'",
+        "stack": "Error: ENOENT: no such file or directory, rename 'C:\\Users\\conta\\Downloads\\Game Voice\\.db.json.tmp' -> 'C:\\Users\\conta\\Downloads\\Game Voice\\db.json'\n    at async rename (node:internal/fs/promises:782:10)\n    at async file:///C:/Users/conta/Downloads/Game%20Voice/node_modules/steno/lib/index.js:55:17\n    at async retryAsyncOperation (file:///C:/Users/conta/Downloads/Game%20Voice/node_modules/steno/lib/index.js:14:20)\n    at async #write (file:///C:/Users/conta/Downloads/Game%20Voice/node_modules/steno/lib/index.js:54:13)\n    at async Low.write (file:///C:/Users/conta/Downloads/Game%20Voice/node_modules/lowdb/lib/core/Low.js:22:13)\n    at async handleInteractionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:28:9)\n    at async BotApplication.handleInteraction (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:107:13)"
+      },
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T18:54:37.929Z",
+      "level": "error",
+      "message": "Interaction handling failed",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:727:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:831:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1272:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async handleInteractionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:51:13)\n    at async BotApplication.handleInteraction (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:107:13)"
+      },
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T19:03:41.979Z",
+      "level": "warning",
+      "message": "Unhandled Rejection: TypeError: Cannot read properties of undefined (reading 'find')",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T19:13:38.655Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T19:13:38.656Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T19:13:39.252Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T19:13:46.059Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T19:13:46.061Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T20:23:38.389Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T20:23:38.390Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T20:23:39.108Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T20:23:44.747Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T20:23:44.747Z",
       "level": "info",
       "message": "Serving 1 guilds",
       "action": "default_action",

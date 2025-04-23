@@ -1,4 +1,4 @@
-import { Logger } from '@utils/log.js';
+import { Logger } from '../../../utils/log.js';
 export async function applyBan(target, reason) {
     try {
         await target.ban({

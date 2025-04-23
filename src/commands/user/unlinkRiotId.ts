@@ -1,12 +1,12 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommand } from '../../structs/types/SlashCommand.js';
-import { updateUser } from '../../utils/db.js';
+import { updateUser } from '../../services/users.js';
 import { sendLog } from '../../utils/log.js';
 
 const unlinkRiotIdCommand: SlashCommand = {
   data: new SlashCommandBuilder()
-    .setName('unlinkriotid')
+    .setName('Desvincular-RiotID')
     .setDescription('Remove a vinculação do seu Riot ID.'),
 
   async execute(interaction: ChatInputCommandInteraction) {

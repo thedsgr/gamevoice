@@ -1,5 +1,10 @@
-import { ChannelType } from 'discord.js';
+import { VoiceChannel } from 'discord.js';
+import { ChannelType } from 'discord-api-types/v10';
 import { db } from '../utils/db.js';
+function getVoiceChannel(guild, channelId) {
+    const channel = guild.channels.cache.get(channelId);
+    return channel?.type === ChannelType.GuildVoice ? channel : null;
+}
 /**
  * Cria um canal de voz genérico.
  * @param guild - O servidor onde o canal será criado.
@@ -8,11 +13,16 @@ import { db } from '../utils/db.js';
  * @returns O canal de voz criado.
  */
 async function createGenericVoiceChannel(guild, name, permissions) {
-    return guild.channels.create({
+    const channel = await guild.channels.create({
         name,
         type: ChannelType.GuildVoice,
         permissionOverwrites: permissions,
     });
+    // Verifica se o canal criado é do tipo VoiceChannel
+    if (channel instanceof VoiceChannel) {
+        return channel;
+    }
+    throw new Error(`O canal criado não é do tipo VoiceChannel: ${channel.name}`);
 }
 /**
  * Cria um canal de voz para o membro especificado.
@@ -44,19 +54,14 @@ export async function updateActiveVoiceChannel(channelId) {
  */
 export async function getOrCreateVoiceChannel(guild, member) {
     const activeChannelId = db.data?.activeVoiceChannel;
-    let voiceChannel;
     if (activeChannelId) {
-        voiceChannel = guild.channels.cache.get(activeChannelId);
-        if (!voiceChannel) {
-            voiceChannel = await createVoiceChannel(guild, member);
-            await updateActiveVoiceChannel(voiceChannel.id);
-        }
+        const channel = getVoiceChannel(guild, activeChannelId);
+        if (channel)
+            return channel;
     }
-    else {
-        voiceChannel = await createVoiceChannel(guild, member);
-        await updateActiveVoiceChannel(voiceChannel.id);
-    }
-    return voiceChannel;
+    const newChannel = await createVoiceChannel(guild, member);
+    await updateActiveVoiceChannel(newChannel.id);
+    return newChannel;
 }
 /**
  * Cria ou obtém a sala de espera.
@@ -65,19 +70,14 @@ export async function getOrCreateVoiceChannel(guild, member) {
  */
 export async function getOrCreateWaitingRoomChannel(guild) {
     const waitingRoomChannelId = db.data?.waitingRoomChannelId;
-    let waitingRoomChannel;
     if (waitingRoomChannelId) {
-        waitingRoomChannel = guild.channels.cache.get(waitingRoomChannelId);
-        if (!waitingRoomChannel) {
-            waitingRoomChannel = await createWaitingRoomChannel(guild);
-            await updateWaitingRoomChannel(waitingRoomChannel.id);
-        }
+        const channel = getVoiceChannel(guild, waitingRoomChannelId);
+        if (channel)
+            return channel;
     }
-    else {
-        waitingRoomChannel = await createWaitingRoomChannel(guild);
-        await updateWaitingRoomChannel(waitingRoomChannel.id);
-    }
-    return waitingRoomChannel;
+    const newChannel = await createWaitingRoomChannel(guild);
+    await updateWaitingRoomChannel(newChannel.id);
+    return newChannel;
 }
 /**
  * Cria a sala de espera.
@@ -124,7 +124,9 @@ export function monitorEmptyChannels(client) {
  * @param guild - O servidor onde os canais serão verificados.
  */
 export async function cleanupOrphanedChannels(guild) {
-    const dbChannels = db.data?.matches.filter(m => m.isActive).map(m => m.channelId) || [];
+    const dbChannels = db.data?.matches
+        .filter((m) => m.isActive)
+        .map((m) => m.channelId) || [];
     const voiceChannels = guild.channels.cache.filter(c => c.type === ChannelType.GuildVoice &&
         c.name.startsWith('Partida do Time') &&
         !dbChannels.includes(c.id));

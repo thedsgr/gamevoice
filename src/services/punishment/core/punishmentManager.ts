@@ -4,8 +4,8 @@ import { applyVoiceMute } from '../actions/voiceMute.js';
 import { applyCommandRestriction } from '../actions/commandRestriction.js';
 import { applyBan } from '../actions/banAction.js';
 import { PunishmentCore } from './punishmentCore.js';
-import { sendLog } from '@utils/log.js';
-import { sendWarningDM } from '@utils/warningDm.js';
+import { sendLog } from '../../../utils/log.js';
+import { sendWarningDM } from '../../../utils/warningDm.js';
 
 export class PunishmentManager {
   private static readonly STAGES = [
