@@ -4,13 +4,14 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc",
-    "start": "node -r ./paths.cjs dist/index.js",
+    "build": "tsc && cp -r src/commands/ src/events/ src/services/ src/utils/ dist/",
+    "start": "node dist/index.js",
     "dev": "tsc-watch --onSuccess \"node --no-warnings --loader ./paths-loader.js dist/index.js\"",
     "deploy": "npm run build"
   },
   "dependencies": {
     "@discordjs/builders": "^1.10.1",
+    "@types/node": "^22.14.1",
     "axios": "^1.8.4",
     "colors": "^1.4.0",
     "discord.js": "^14.18.0",

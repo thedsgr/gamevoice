@@ -11,8 +11,10 @@
     "resolveJsonModule": true,
     "baseUrl": "./src",
     "paths": {
-      "@utils/*": ["utils/*"],
-      "@services/*": ["./src/services/*"]
+      "@commands/*": ["./commands/*"],
+      "@events/*": ["./events/*"],
+      "@services/*": ["./services/*"],
+      "@utils/*": ["./utils/*"]
     }
   },
   "include": ["src/**/*"],
