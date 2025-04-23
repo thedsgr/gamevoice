@@ -34,4 +34,3 @@ Para usar o Game Voice, conecte sua conta da Riot aqui: [https://login.gamevoice
         console.error(`❌ Não foi possível enviar DM para ${member.user.username}:`, error);
     }
 }
-//# sourceMappingURL=guildMemberAdd.js.map

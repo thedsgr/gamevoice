@@ -22,7 +22,7 @@ export default async function matchEnd(matchId, client) {
             }
         }
         // Encerra a partida usando a função de services/match.ts
-        await endMatch(matchId);
+        await endMatch(matchId, client.user?.id || "unknown");
         console.log(`✅ Partida ${matchId} encerrada com sucesso.`);
     }
     catch (error) {
@@ -43,4 +43,3 @@ function findMemberInGuilds(client, playerId) {
     }
     return null;
 }
-//# sourceMappingURL=matchEnd.js.map

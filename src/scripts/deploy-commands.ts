@@ -22,10 +22,38 @@ if (!process.env.BOT_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
   process.exit(1);
 }
 
+// Configuração do REST com timeout
+const REST_CONFIG = { 
+  version: '10',
+  timeout: 15000 // Timeout aumentado para 15 segundos
+};
+
+const rest = new REST(REST_CONFIG).setToken(process.env.BOT_TOKEN!);
+
 // Inicializa o cliente estendido
 const client = new ExtendedClient({
   intents: [], // Add the required intents here
 }) as ExtendedClient;
+
+function getAllCommandFiles(dir: string): string[] {
+  console.log(`📂 Verificando diretório: ${dir}`);
+  const files = fs.readdirSync(dir, { withFileTypes: true });
+  console.log(`📂 Arquivos encontrados: ${files.map(file => file.name)}`);
+  const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
+
+  const commandFiles: string[] = [];
+
+  for (const file of files) {
+    const fullPath = path.join(dir, file.name);
+    if (file.isDirectory()) {
+      commandFiles.push(...getAllCommandFiles(fullPath));
+    } else if (file.isFile() && file.name.endsWith(extension)) {
+      commandFiles.push(fullPath);
+    }
+  }
+
+  return commandFiles;
+}
 
 async function loadCommandsLocally() {
   const commandsPath = process.env.NODE_ENV === 'production'
@@ -68,33 +96,9 @@ async function loadCommandsLocally() {
   return loadedCommands;
 }
 
-function getAllCommandFiles(dir: string): string[] {
-  console.log(`📂 Verificando diretório: ${dir}`);
-  const files = fs.readdirSync(dir, { withFileTypes: true });
-  console.log(`📂 Arquivos encontrados: ${files.map(file => file.name)}`);
-  const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
-
-const commandFiles: string[] = [];
-
-for (const file of files) {
-  const fullPath = path.join(dir, file.name);
-  if (file.isDirectory()) {
-    commandFiles.push(...getAllCommandFiles(fullPath));
-  } else if (file.isFile() && file.name.endsWith(extension)) {
-    commandFiles.push(fullPath);
-  }
-}
-
-return commandFiles;
-}
-
-
 (async () => {
   try {
     console.log('📂 Carregando comandos...');
-    await loadCommandsLocally();
-
-    const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN!);
     const commands = await loadCommandsLocally();
 
     if (commands.length === 0) {
@@ -109,8 +113,8 @@ return commandFiles;
 
       await rest.put(
         Routes.applicationGuildCommands(
-          process.env.CLIENT_ID,
-          process.env.GUILD_ID
+          process.env.CLIENT_ID!,
+          process.env.GUILD_ID!
         ),
         { body: commands }
       );

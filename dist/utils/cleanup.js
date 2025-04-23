@@ -23,4 +23,3 @@ export async function cleanupVoiceChannel(channel) {
         console.error(`❌ Erro ao deletar canal ${channel.name}:`, error);
     }
 }
-//# sourceMappingURL=cleanup.js.map

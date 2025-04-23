@@ -28,4 +28,3 @@ const linkRiotIdDMCommand = {
     },
 };
 export default linkRiotIdDMCommand;
-//# sourceMappingURL=linkRiotIdDM.js.map

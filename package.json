@@ -4,28 +4,31 @@
   "main": "dist/index.js",
   "type": "module",
   "scripts": {
-    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true });\"",
-    "build": "npm run clean && tsc",
-    "deploy": "cross-env NODE_ENV=production tsx src/scripts/deploy-commands.ts",
-    "register": "cross-env NODE_ENV=production REGISTER_COMMANDS=true node dist/index.js",
-    "start": "cross-env NODE_ENV=production node dist/index.js",
-    "dev": "cross-env NODE_ENV=development tsx src/index.ts"
+    "build": "tsc",
+    "start": "node -r ./paths.cjs dist/index.js",
+    "dev": "tsc-watch --onSuccess \"node --no-warnings --loader ./paths-loader.js dist/index.js\"",
+    "deploy": "npm run build"
   },
   "dependencies": {
     "@discordjs/builders": "^1.10.1",
+    "axios": "^1.8.4",
     "colors": "^1.4.0",
     "discord.js": "^14.18.0",
     "dotenv": "^16.5.0",
     "ExtendedClient": "file:./structs/ExtendedClient",
-    "lowdb": "^7.0.1"
+    "lowdb": "^7.0.1",
+    "lru-cache": "^11.1.0"
   },
   "devDependencies": {
+    "@types/axios": "^0.9.36",
     "@types/lodash": "^4.17.16",
     "cross-env": "^7.0.3",
     "glob": "^11.0.1",
     "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
+    "tsc-watch": "^6.2.1",
+    "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.3",
     "typescript": "^5.8.3"
   }

@@ -20,10 +20,33 @@ if (!process.env.BOT_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
         console.error('❌ GUILD_ID está ausente. Verifique o arquivo .env.');
     process.exit(1);
 }
+// Configuração do REST com timeout
+const REST_CONFIG = {
+    version: '10',
+    timeout: 15000 // Timeout aumentado para 15 segundos
+};
+const rest = new REST(REST_CONFIG).setToken(process.env.BOT_TOKEN);
 // Inicializa o cliente estendido
 const client = new ExtendedClient({
     intents: [], // Add the required intents here
 });
+function getAllCommandFiles(dir) {
+    console.log(`📂 Verificando diretório: ${dir}`);
+    const files = fs.readdirSync(dir, { withFileTypes: true });
+    console.log(`📂 Arquivos encontrados: ${files.map(file => file.name)}`);
+    const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
+    const commandFiles = [];
+    for (const file of files) {
+        const fullPath = path.join(dir, file.name);
+        if (file.isDirectory()) {
+            commandFiles.push(...getAllCommandFiles(fullPath));
+        }
+        else if (file.isFile() && file.name.endsWith(extension)) {
+            commandFiles.push(fullPath);
+        }
+    }
+    return commandFiles;
+}
 async function loadCommandsLocally() {
     const commandsPath = process.env.NODE_ENV === 'production'
         ? path.join(__dirname, '../../dist/commands')
@@ -58,28 +81,9 @@ async function loadCommandsLocally() {
     console.log(`📦 Total de comandos carregados: ${loadedCommands.length}`);
     return loadedCommands;
 }
-function getAllCommandFiles(dir) {
-    console.log(`📂 Verificando diretório: ${dir}`);
-    const files = fs.readdirSync(dir, { withFileTypes: true });
-    console.log(`📂 Arquivos encontrados: ${files.map(file => file.name)}`);
-    const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
-    const commandFiles = [];
-    for (const file of files) {
-        const fullPath = path.join(dir, file.name);
-        if (file.isDirectory()) {
-            commandFiles.push(...getAllCommandFiles(fullPath));
-        }
-        else if (file.isFile() && file.name.endsWith(extension)) {
-            commandFiles.push(fullPath);
-        }
-    }
-    return commandFiles;
-}
 (async () => {
     try {
         console.log('📂 Carregando comandos...');
-        await loadCommandsLocally();
-        const rest = new REST({ version: '10' }).setToken(process.env.BOT_TOKEN);
         const commands = await loadCommandsLocally();
         if (commands.length === 0) {
             console.warn('⚠️ Nenhum comando carregado. O registro de comandos será ignorado.');
@@ -102,4 +106,3 @@ function getAllCommandFiles(dir) {
         console.error('❌ Erro ao carregar comandos:', error);
     }
 })();
-//# sourceMappingURL=deploy-commands.js.map

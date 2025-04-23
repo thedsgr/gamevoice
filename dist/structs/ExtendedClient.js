@@ -2,7 +2,6 @@ import { Client, Collection } from "discord.js";
 import dotenv from "dotenv";
 dotenv.config();
 export class ExtendedClient extends Client {
-    commands;
     constructor(options) {
         super(options); // Passa as opções para o construtor da classe base (Client)
         this.commands = new Collection();
@@ -40,4 +39,3 @@ export class ExtendedClient extends Client {
         }
     }
 }
-//# sourceMappingURL=ExtendedClient.js.map

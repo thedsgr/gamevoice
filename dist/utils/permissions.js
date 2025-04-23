@@ -23,4 +23,3 @@ export async function replyNoPermission(interaction) {
         ephemeral: true,
     });
 }
-//# sourceMappingURL=permissions.js.map

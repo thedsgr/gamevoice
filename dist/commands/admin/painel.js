@@ -49,4 +49,3 @@ ${getRecentErrors().join('\n') || 'Nenhum erro registrado.'}
     }
 }
 export default painelCommand;
-//# sourceMappingURL=painel.js.map

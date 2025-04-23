@@ -37,4 +37,3 @@ const riotIdCommand = {
     },
 };
 export default riotIdCommand;
-//# sourceMappingURL=riotId.js.map

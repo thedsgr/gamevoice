@@ -1,17 +1,30 @@
 import { VoiceState, VoiceChannel, Client } from 'discord.js';
 import { db } from '../utils/db.js';
-// Removed duplicate import of voiceStateUpdateHandler
-import { ExtendedClient } from "../structs/ExtendedClient.js";
+import { ExtendedClient } from '../structs/ExtendedClient.js';
 
 const deletionTimeouts = new Map<string, NodeJS.Timeout>();
 const EMPTY_CHANNEL_TIMEOUT = 60 * 1000; // 1 minuto
 
-export default async function handleVoiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
+/**
+ * Manipula o evento de atualização de estado de voz.
+ */
+export async function handleVoiceStateUpdate(
+  oldState: VoiceState,
+  newState: VoiceState,
+  client: ExtendedClient
+): Promise<void> {
+  const waitingRoomId = process.env.WAITING_ROOM_ID;
+
+  // Valida se a variável de ambiente está definida
+  if (!waitingRoomId) {
+    console.error('❌ WAITING_ROOM_ID não está definido.');
+    return;
+  }
+
   const activeMatches = db.data?.matches || [];
 
   // ✅ Move quem entrar na sala de espera
-  const waitingRoomChannelId = db.data?.waitingRoomChannelId;
-  if (newState.channelId === waitingRoomChannelId) {
+  if (newState.channelId === waitingRoomId) {
     const member = newState.member;
     const guild = newState.guild;
     const activeMatch = activeMatches.find(match => match.isActive);
@@ -49,7 +62,7 @@ export default async function handleVoiceStateUpdate(oldState: VoiceState, newSt
 /**
  * Agenda a exclusão de um canal vazio após o timeout.
  */
-function scheduleChannelDeletion(channel: VoiceChannel) {
+function scheduleChannelDeletion(channel: VoiceChannel): void {
   if (!deletionTimeouts.has(channel.id)) {
     const timeout = setTimeout(async () => {
       try {
@@ -62,7 +75,7 @@ function scheduleChannelDeletion(channel: VoiceChannel) {
           await db.write();
         }
       } catch (err) {
-        console.error("❌ Erro ao excluir canal de voz:", err);
+        console.error('❌ Erro ao excluir canal de voz:', err);
       }
       deletionTimeouts.delete(channel.id);
     }, EMPTY_CHANNEL_TIMEOUT);
@@ -75,7 +88,7 @@ function scheduleChannelDeletion(channel: VoiceChannel) {
 /**
  * Cancela a exclusão de um canal se ele não estiver mais vazio.
  */
-function cancelChannelDeletion(channel: VoiceChannel) {
+function cancelChannelDeletion(channel: VoiceChannel): void {
   const timeout = deletionTimeouts.get(channel.id);
   if (timeout) {
     clearTimeout(timeout);
@@ -84,20 +97,10 @@ function cancelChannelDeletion(channel: VoiceChannel) {
   }
 }
 
-export async function voiceStateUpdate(oldState: VoiceState, newState: VoiceState) {
-  const channel = oldState.channel || newState.channel;
-
-  if (!channel) return;
-
-  // Atualiza o timestamp de última atividade no banco de dados
-  const match = db.data?.matches.find(match => match.channelId === channel.id);
-  if (match) {
-    match.lastActivity = Date.now();
-    await db.write();
-  }
-}
-
-export function monitorEmptyChannels(client: Client) {
+/**
+ * Monitora canais vazios e exclui os inativos.
+ */
+export function monitorEmptyChannels(client: Client): void {
   setInterval(async () => {
     const now = Date.now();
 
@@ -111,21 +114,25 @@ export function monitorEmptyChannels(client: Client) {
         const timeSinceLastActivity = now - (match.lastActivity || now);
 
         if (timeSinceLastActivity >= EMPTY_CHANNEL_TIMEOUT) {
-          // Exclui o canal e atualiza o banco de dados
-          await channel.delete().catch(console.error);
-          match.isActive = false;
-          db.data!.stats.totalMatchesEndedByInactivity++;
-          await db.write();
-
-          console.log(`🗑️ Canal ${channel.name} excluído por inatividade.`);
+          try {
+            await channel.delete();
+            match.isActive = false;
+            db.data!.stats.totalMatchesEndedByInactivity++;
+            await db.write();
+            console.log(`🗑️ Canal ${channel.name} excluído por inatividade.`);
+          } catch (err) {
+            console.error('❌ Erro ao excluir canal de voz:', err);
+          }
         }
       }
     }
-  }, 10 * 1000); // Verifica a cada 10 segundos
+  }, 30 * 1000); // Verifica a cada 30 segundos
 }
-
-import voiceStateUpdateHandler from './voiceStateUpdate.js';
 
 const client = new ExtendedClient({ intents: [] }); // Adicione os intents necessários
 
-client.on('voiceStateUpdate', voiceStateUpdateHandler);
+client.on('voiceStateUpdate', (oldState, newState) => {
+  handleVoiceStateUpdate(oldState, newState, client);
+});
+
+client.login(process.env.BOT_TOKEN);

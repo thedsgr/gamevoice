@@ -28,7 +28,7 @@ export default async function matchEnd(matchId: string, client: ExtendedClient):
     }
 
     // Encerra a partida usando a função de services/match.ts
-    await endMatch(matchId);
+    await endMatch(matchId, client.user?.id || "unknown");
     console.log(`✅ Partida ${matchId} encerrada com sucesso.`);
   } catch (error) {
     console.error(`❌ Erro ao encerrar a partida ${matchId}:`, error);

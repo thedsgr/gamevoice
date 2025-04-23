@@ -23,4 +23,3 @@ export function isValidRiotId(riotId) {
     }
     return isValid;
 }
-//# sourceMappingURL=riotIdValidator.js.map

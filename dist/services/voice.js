@@ -119,4 +119,22 @@ export function monitorEmptyChannels(client) {
         });
     }, CHECK_INTERVAL);
 }
-//# sourceMappingURL=voice.js.map
+/**
+ * Limpa canais de voz órfãos que não estão mais associados a partidas ativas.
+ * @param guild - O servidor onde os canais serão verificados.
+ */
+export async function cleanupOrphanedChannels(guild) {
+    const dbChannels = db.data?.matches.filter(m => m.isActive).map(m => m.channelId) || [];
+    const voiceChannels = guild.channels.cache.filter(c => c.type === ChannelType.GuildVoice &&
+        c.name.startsWith('Partida do Time') &&
+        !dbChannels.includes(c.id));
+    for (const [_, channel] of voiceChannels) {
+        try {
+            await channel.delete('Limpeza de canais órfãos');
+            console.log(`🗑️ Canal órfão deletado: ${channel.name}`);
+        }
+        catch (error) {
+            console.error(`❌ Erro ao deletar canal ${channel.name}:`, error);
+        }
+    }
+}

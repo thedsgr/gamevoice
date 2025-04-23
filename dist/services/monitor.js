@@ -83,4 +83,3 @@ export function monitorEmptyChannels(client) {
         }
     }, 10 * 1000); // Verifica a cada 10 segundos
 }
-//# sourceMappingURL=monitor.js.map

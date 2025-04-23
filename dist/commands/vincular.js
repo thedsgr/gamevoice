@@ -38,4 +38,3 @@ async function linkRiotAccount(discordId, riotId) {
     console.log(`🔗 Conta Riot ${riotId} vinculada ao Discord ID ${discordId}`);
 }
 export default vincularCommand;
-//# sourceMappingURL=vincular.js.map

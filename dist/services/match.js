@@ -1,101 +1,79 @@
 import { db } from '../utils/db.js';
-import { logToConsole } from '../utils/log.js';
+import { Logger } from '../utils/log.js';
 /**
- * Cria uma nova partida.
+ * Cria uma nova partida no banco de dados.
+ * @param guildId - ID do servidor Discord.
+ * @param channelId - ID do canal de voz principal.
+ * @param players - IDs dos jogadores participantes.
+ * @param startedBy - ID do usuário que iniciou a partida.
+ * @returns ID da partida criada.
  */
-export async function createMatch(channelId, players) {
-    logToConsole(`Criando partida para o canal ${channelId} com jogadores: ${players.join(', ')}`, 'INFO');
-    // Valida se o channelId foi fornecido
-    if (!channelId) {
-        throw new Error("O ID do canal não pode estar vazio.");
+export async function createMatch(guildId, channelId, players, startedBy) {
+    if (!guildId || !channelId || !players.length || !startedBy) {
+        throw new Error('Todos os parâmetros são obrigatórios.');
     }
-    // Verifica se já existe uma partida ativa para o canal
-    const existingMatch = db.data.matches.find((m) => m.channelId === channelId && m.isActive);
-    if (existingMatch) {
-        throw new Error(`Já existe uma partida ativa para o canal ${channelId}.`);
-    }
-    // Valida se o array de players não está vazio
-    if (!players || players.length === 0) {
-        throw new Error("A lista de jogadores não pode estar vazia.");
-    }
-    // Opcional: Limite de jogadores
-    const MAX_PLAYERS = 10;
-    if (players.length > MAX_PLAYERS) {
-        throw new Error(`O número máximo de jogadores por partida é ${MAX_PLAYERS}.`);
-    }
-    // Cria a partida
     const matchId = generateMatchId();
-    db.data.matches.push({
+    const newMatch = {
         id: matchId,
+        guildId,
         channelId,
         isActive: true,
         lastActivity: Date.now(),
         players,
-    });
+        startedAt: new Date().toISOString(),
+        startedBy
+    };
+    db.data.matches.push(newMatch);
     db.data.stats.totalMatchesCreated += 1;
     await db.write();
+    const logger = new Logger();
+    logger.log(`Partida criada: ${matchId}`, 'INFO');
     return matchId;
 }
 /**
- * Encerra uma partida existente.
- * @param matchId - O ID da partida a ser encerrada.
+ * Encerra uma partida existente no banco de dados.
+ * @param matchId - ID da partida.
+ * @param endedBy - ID do usuário que finalizou.
+ * @returns `true` se a partida foi encerrada, caso contrário `false`.
  */
-export async function endMatch(matchId) {
-    // Valida se o matchId foi fornecido
-    if (!matchId) {
-        throw new Error("O ID da partida não pode estar vazio.");
+export async function endMatch(matchId, endedBy) {
+    const match = db.data.matches.find(m => m.id === matchId);
+    if (!match || !match.isActive) {
+        throw new Error(`Partida com ID ${matchId} não encontrada ou já encerrada.`);
     }
-    // Busca a partida no banco de dados
-    const matchIndex = db.data.matches.findIndex((m) => m.id === matchId);
-    if (matchIndex === -1) {
-        throw new Error(`Partida com ID ${matchId} não encontrada.`);
-    }
-    const match = db.data.matches[matchIndex];
-    // Verifica se a partida já foi encerrada
-    if (!match.isActive) {
-        throw new Error(`A partida com ID ${matchId} já foi encerrada.`);
-    }
-    // Remove a partida do banco de dados
-    db.data.matches.splice(matchIndex, 1);
+    match.isActive = false;
+    match.endedAt = new Date().toISOString();
+    match.endedBy = endedBy;
     db.data.stats.totalMatchesEndedByInactivity += 1;
     await db.write();
+    const logger = new Logger();
+    logger.log(`Partida encerrada: ${matchId}`, 'INFO');
+    return true;
 }
 /**
- * Atualiza o timestamp de última atividade de uma partida.
+ * Atualiza a atividade de uma partida.
+ * @param matchId - ID da partida.
  */
 export async function updateMatchActivity(matchId) {
-    // Valida se o matchId foi fornecido
-    if (!matchId) {
-        throw new Error("O ID da partida não pode estar vazio.");
+    const match = db.data.matches.find(m => m.id === matchId);
+    if (!match || !match.isActive) {
+        throw new Error(`Partida com ID ${matchId} não encontrada ou não está ativa.`);
     }
-    // Busca a partida no banco de dados
-    const match = db.data.matches.find((m) => m.id === matchId);
-    if (!match) {
-        throw new Error(`Partida com ID ${matchId} não encontrada.`);
-    }
-    // Verifica se a partida está ativa
-    if (!match.isActive) {
-        throw new Error(`A partida com ID ${matchId} não está ativa.`);
-    }
-    // Atualiza o timestamp de última atividade
     match.lastActivity = Date.now();
     await db.write();
 }
 /**
- * Busca uma partida pelo ID.
- * @param matchId - O ID da partida.
- * @returns A partida encontrada ou null.
+ * Obtém uma partida pelo ID.
+ * @param matchId - ID da partida.
+ * @returns Objeto Match ou null se não encontrado.
  */
 export function getMatchById(matchId) {
-    if (!matchId) {
-        throw new Error("O ID da partida não pode estar vazio.");
-    }
-    return db.data.matches.find((m) => m.id === matchId) || null;
+    return db.data.matches.find(m => m.id === matchId) || null;
 }
 /**
- * Gera um ID único para uma partida.
+ * Gera um ID único para a partida.
+ * @returns ID único.
  */
 function generateMatchId() {
-    return Math.random().toString(36).substring(2, 15);
+    return Date.now().toString(36) + Math.random().toString(36).substring(2);
 }
-//# sourceMappingURL=match.js.map

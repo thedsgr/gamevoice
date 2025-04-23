@@ -1,4 +1,5 @@
 import { ChatInputCommandInteraction, PermissionsBitField, PermissionFlagsBits } from 'discord.js';
+import { db } from '../utils/db.js'; // Certifique-se de que o banco de dados está importado corretamente
 
 // src/services/security.ts
 
@@ -60,22 +61,16 @@ export function ensureAdmin(interaction: ChatInputCommandInteraction): boolean {
 }
 
 /**
- * Verifica se a interação é em um servidor.
- * @param interaction - A interação do comando.
- * @returns `true` se a interação for em um servidor, caso contrário `false`.
+ * Verifica se o usuário tem um Riot ID válido.
+ * @param riotId - O Riot ID do usuário.
+ * @returns `true` se o Riot ID for válido, caso contrário `false`.
  */
-export function isInGuild(interaction: any): boolean {
-  return !!interaction.guild;
-}
+export function validateRiotId(riotId: string): boolean {
+  const regex = /^[a-zA-Z0-9\u00C0-\u017F][a-zA-Z0-9\u00C0-\u017F ]{2,15}#[a-zA-Z0-9]{2,5}$/;
+  if (!regex.test(riotId)) return false;
 
-/**
- * Verifica se o usuário tem permissão de administrador.
- * @param interaction - A interação do comando.
- * @returns `true` se o usuário for administrador, caso contrário `false`.
- */
-export function hasAdminPermissions(interaction: any): boolean {
-  const member = interaction.member;
-  return member?.permissions?.has('ADMINISTRATOR') ?? false;
+  const [name, tag] = riotId.split('#');
+  return name.length >= 3 && tag.length >= 2;
 }
 
 /**
@@ -87,4 +82,20 @@ export function hasAdminPermissions(interaction: any): boolean {
 export function hasLinkedRiotId(discordId: string, db: any): boolean {
   const user = db.data?.users.find((u: any) => u.discordId === discordId);
   return !!user?.riotId;
+}
+
+/**
+ * Verifica se o usuário pode realizar uma denúncia.
+ * @param userId - O ID do usuário que está denunciando.
+ * @param targetId - O ID do usuário alvo da denúncia.
+ * @returns `true` se o usuário puder realizar a denúncia, caso contrário `false`.
+ */
+export function canReport(userId: string, targetId: string): boolean {
+  const lastHour = Date.now() - 3600000; // Última hora em milissegundos
+  const recentReports = db.data?.reports.filter(r => 
+    r.reporterId === userId && 
+    r.timestamp > lastHour
+  ) || [];
+  
+  return recentReports.length < 5; // Máximo de 5 denúncias por hora
 }

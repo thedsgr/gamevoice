@@ -2,14 +2,14 @@
 import { SlashCommandBuilder } from 'discord.js';
 import {
   ChatInputCommandInteraction,
-  PermissionFlagsBits,
-  VoiceChannel
+  PermissionsBitField,
+  GuildMember
 } from 'discord.js';
 import { SlashCommand } from '../structs/types/SlashCommand.js';
-import { db } from '../utils/db.js';
-import { createBackup } from '../utils/backup.js';
-import { hasAdminPermissions, replyNoPermission } from '../utils/permissions.js';
-import { sendLog } from '../utils/log.js';
+import { db } from '@utils/db.js';
+import { createBackup } from '@utils/backup.js';
+import { hasAdminPermissions, replyNoPermission } from '@utils/permissions.js';
+import { sendLog } from '@utils/log.js';
 
 const endMatchCommand: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -19,6 +19,11 @@ const endMatchCommand: SlashCommand = {
   async execute(interaction: ChatInputCommandInteraction) {
     try {
       await interaction.deferReply({ ephemeral: true });
+
+      const member = interaction.member as GuildMember;
+      if (!member.permissions.has(PermissionsBitField.Flags.ManageChannels)) {
+        console.log("O membro não tem permissão para gerenciar canais ou é nulo.");
+      }
 
       // Lógica do comando
       await interaction.editReply('✅ Partida finalizada com sucesso!');

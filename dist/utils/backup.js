@@ -26,4 +26,3 @@ export async function createBackup() {
         console.error("❌ Erro ao criar backup:", err);
     }
 }
-//# sourceMappingURL=backup.js.map

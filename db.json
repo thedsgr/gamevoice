@@ -6,7 +6,289 @@
       "autoMove": false,
       "reports": 3,
       "lastActive": "2025-04-19T12:34:56Z"
+    },
+    {
+      "discordId": "775848939073044480",
+      "riotId": "⁦Jhin⁩#⁦9056⁩"
     }
   ],
-  "waitingRoomChannelId": "1363248741745954927"
+  "waitingRoomChannelId": "1364364228869226496",
+  "activeVoiceChannel": "1364364229725130775",
+  "logs": [
+    {
+      "timestamp": "2025-04-23T02:13:42.395Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:13:42.396Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:13:42.407Z",
+      "level": "info",
+      "message": "Successfully loaded 0 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:13:43.514Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:13:43.515Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:26:03.209Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:26:03.209Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:26:03.331Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:26:04.927Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:26:04.927Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:31:20.243Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:31:20.244Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:31:20.364Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:31:21.949Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:31:21.950Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:31:48.468Z",
+      "level": "error",
+      "message": "Interaction handling failed",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:727:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:831:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1272:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async interactionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:21:13)\n    at async BotApplication.handleInteraction (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:95:13)"
+      },
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:42:50.484Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:42:50.485Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:42:50.574Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:42:52.176Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:42:52.176Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:44:06.726Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:44:06.727Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:44:06.822Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:44:08.406Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:44:08.407Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:45:38.662Z",
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:45:38.662Z",
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:45:38.756Z",
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:45:39.954Z",
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": "2025-04-23T02:45:39.955Z",
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    }
+  ]
 }

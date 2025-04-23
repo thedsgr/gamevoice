@@ -49,4 +49,3 @@ const setLogChannel = {
     },
 };
 export default setLogChannel;
-//# sourceMappingURL=setlogchannel.js.map

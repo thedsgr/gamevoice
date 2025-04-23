@@ -18,4 +18,3 @@ const unlinkRiotIdCommand = {
     },
 };
 export default unlinkRiotIdCommand;
-//# sourceMappingURL=unlinkRiotId.js.map

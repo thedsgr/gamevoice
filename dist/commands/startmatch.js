@@ -1,55 +1,60 @@
-import { SlashCommandBuilder } from 'discord.js';
-import { getOrCreateVoiceChannel, getOrCreateWaitingRoomChannel, } from '../services/voice.js';
+import { SlashCommandBuilder, ChannelType } from 'discord.js';
 import { ensureInGuild, ensureAdmin } from '../services/security.js';
-const startMatchCommand = {
+import { MatchManager } from '../services/matchManagement.js';
+export default {
     data: new SlashCommandBuilder()
         .setName('startmatch')
-        .setDescription('Inicia uma nova partida.'),
+        .setDescription('Inicia uma nova partida com canais dinâmicos para times'),
     async execute(interaction) {
+        await interaction.deferReply({ flags: 64 }); // 64 é o valor para mensagens efêmeras
         try {
-            // Defer a resposta para evitar timeout
-            await interaction.deferReply({ ephemeral: true });
-            // Garante que o usuário está em um servidor e é administrador
             ensureInGuild(interaction);
             ensureAdmin(interaction);
-            // Cria ou obtém os canais necessários
-            const waitingRoomChannel = await getOrCreateWaitingRoomChannel(interaction.guild);
-            const voiceChannel = await getOrCreateVoiceChannel(interaction.guild, interaction.member);
-            console.log(`🔄 Iniciando a partida no servidor ${interaction.guild?.name}`);
-            console.log(`📂 Canal de espera: ${waitingRoomChannel.name}`);
-            console.log(`📂 Canal de voz: ${voiceChannel.name}`);
-            // Move os membros do canal de espera para o canal de voz
-            await moveMembersToChannel(waitingRoomChannel, voiceChannel);
-            // Envia uma mensagem de sucesso
-            await interaction.editReply(`✅ Partida iniciada com sucesso! Os membros foram movidos para o canal **${voiceChannel.name}**.`);
+            const guild = interaction.guild;
+            // Verifica permissões do bot
+            const botMember = await guild.members.fetchMe();
+            if (!botMember.permissions.has('MoveMembers') || !botMember.permissions.has('ManageChannels')) {
+                await interaction.editReply('❌ O bot precisa das permissões "Mover Membros" e "Gerenciar Canais"');
+                return;
+            }
+            const waitingRoom = await getWaitingRoom(guild);
+            if (waitingRoom.members.size === 0) {
+                await interaction.editReply('⚠️ Não há jogadores na sala de espera!');
+                return;
+            }
+            const players = Array.from(waitingRoom.members.values());
+            const matchId = await MatchManager.startMatch(guild, players);
+            await interaction.editReply({
+                content: `✅ **Partida Iniciada** (ID: ${matchId})`,
+                embeds: [{
+                        color: 0x00ff00,
+                        fields: [
+                            { name: 'Jogadores', value: `${players.length} participantes`, inline: true },
+                            { name: 'Status', value: 'Canais criados e times formados', inline: true }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }]
+            });
         }
         catch (error) {
-            console.error('❌ Erro ao executar o comando startmatch:', error);
-            await interaction.editReply('❌ Ocorreu um erro ao iniciar a partida.');
-        }
-    },
-};
-/**
- * Move todos os membros de um canal de espera para o canal de voz.
- * @param waitingRoomChannel - O canal de espera.
- * @param voiceChannel - O canal de voz.
- */
-async function moveMembersToChannel(waitingRoomChannel, voiceChannel) {
-    for (const [_, member] of waitingRoomChannel.members) {
-        try {
-            await member.voice.setChannel(voiceChannel);
-            console.log(`✅ ${member.user.tag} foi movido para ${voiceChannel.name}`);
-            // Envia uma mensagem privada (DM) para o usuário
-            await member.send(`✅ Você foi movido para a call **${voiceChannel.name}**. Boa partida!`);
-        }
-        catch (err) {
-            console.error(`❌ Erro ao mover ${member.user.tag}:`, err);
-            // Caso o envio da DM falhe
-            if (err.code === 50007) {
-                console.warn(`⚠️ Não foi possível enviar uma DM para ${member.user.tag}.`);
+            console.error('Erro no comando /startmatch:', error);
+            let errorMessage = '❌ Ocorreu um erro ao iniciar a partida';
+            if (error instanceof Error) {
+                errorMessage += `: ${error.message}`;
             }
+            await interaction.editReply(errorMessage).catch(console.error);
         }
     }
+};
+async function getWaitingRoom(guild) {
+    let waitingRoom = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice &&
+        (c.name.toLowerCase() === 'sala de espera' || c.name.toLowerCase() === 'waiting room'));
+    if (!waitingRoom) {
+        waitingRoom = await guild.channels.create({
+            name: 'Sala de Espera',
+            type: ChannelType.GuildVoice,
+            reason: 'Criado automaticamente para o comando /startmatch'
+        });
+    }
+    return waitingRoom;
 }
-export default startMatchCommand;
-//# sourceMappingURL=startmatch.js.map
