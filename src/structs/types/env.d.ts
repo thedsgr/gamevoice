@@ -4,7 +4,7 @@ declare namespace NodeJS {
      * Token do bot do Discord.
      * Obtido no portal de desenvolvedores do Discord.
      */
-    BOT_TOKEN: string;
+    DISCORD_TOKEN: string;
 
     /**
      * ID do cliente do bot (application ID).

@@ -136,7 +136,7 @@ class BotApplication {
       await this.loadAndRegisterCommands();
       this.registerEventHandlers();
       
-      await this.client.login(process.env.BOT_TOKEN);
+      await this.client.login(process.env.DISCORD_TOKEN);
     } catch (error) {
       Logger.error('Bot startup failed', error as Error);
       process.exit(1);

@@ -1,7 +1,7 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ChatInputCommandInteraction } from 'discord.js';
 import { linkRiotAccount } from '../services/users.js';
-import { fetchRiotPuuid } from '../utils/riotAPI.js'; // Ajuste o caminho conforme necessário
+import { fetchRiotPuuid } from '../utils/riotAPI.js';
 import { SlashCommand } from '../structs/types/SlashCommand.js';
 
 export default {

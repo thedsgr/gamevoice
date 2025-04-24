@@ -115,4 +115,4 @@ const client = new ExtendedClient({ intents: [] }); // Adicione os intents neces
 client.on('voiceStateUpdate', (oldState, newState) => {
     handleVoiceStateUpdate(oldState, newState, client);
 });
-client.login(process.env.BOT_TOKEN);
+client.login(process.env.DISCORD_TOKEN);

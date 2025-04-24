@@ -14,9 +14,9 @@ const __dirname = dirname(__filename);
 
 dotenv.config();
 
-if (!process.env.BOT_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
+if (!process.env.DISCORD_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
   console.error('❌ Variáveis de ambiente não configuradas corretamente.');
-  if (!process.env.BOT_TOKEN) console.error('❌ BOT_TOKEN está ausente. Verifique o arquivo .env.');
+  if (!process.env.DISCORD_TOKEN) console.error('❌ DISCORD_TOKEN está ausente. Verifique o arquivo .env.');
   if (!process.env.CLIENT_ID) console.error('❌ CLIENT_ID está ausente. Verifique o arquivo .env.');
   if (!process.env.GUILD_ID) console.error('❌ GUILD_ID está ausente. Verifique o arquivo .env.');
   process.exit(1);
@@ -28,7 +28,7 @@ const REST_CONFIG = {
   timeout: 15000 // Timeout aumentado para 15 segundos
 };
 
-const rest = new REST(REST_CONFIG).setToken(process.env.BOT_TOKEN!);
+const rest = new REST(REST_CONFIG).setToken(process.env.DISCORD_TOKEN!);
 
 // Inicializa o cliente estendido
 const client = new ExtendedClient({

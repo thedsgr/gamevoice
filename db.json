@@ -682,6 +682,284 @@
       "message": "Serving 1 guilds",
       "action": "default_action",
       "details": {}
+    },
+    {
+      "timestamp": 1745451469587,
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745451469589,
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745451470183,
+      "level": "info",
+      "message": "Successfully loaded 2 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745451476224,
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745451476229,
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745453371663,
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745453371663,
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745453372080,
+      "level": "info",
+      "message": "Successfully loaded 2 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745453378104,
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745453378105,
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745454223266,
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745454223267,
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745454223660,
+      "level": "info",
+      "message": "Successfully loaded 2 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745454229543,
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745454229543,
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745455773388,
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745455773389,
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745455773918,
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745455774074,
+      "level": "warning",
+      "message": "Unhandled Rejection: Error: getaddrinfo ENOTFOUND api.example.com",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745455785494,
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745455785494,
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745457092669,
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745457092672,
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745457093160,
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745457093226,
+      "level": "warning",
+      "message": "Unhandled Rejection: Error: getaddrinfo ENOTFOUND api.example.com",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745457098868,
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745457098869,
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459263873,
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459263875,
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459264735,
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459270079,
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459270080,
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
     }
   ]
 }

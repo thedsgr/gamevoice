@@ -6,7 +6,8 @@ export class MatchManager {
     static async startMatch(guild, summonerNames) {
         try {
             // Busca informações da API da Riot
-            const { teamPlayers, matchId, summoners } = await getTeamFromRiotAPI(summonerNames);
+            const { teamPlayers, matchId } = await getTeamFromRiotAPI(summonerNames);
+            const summoners = teamPlayers.map(player => ({ id: player.discordId || player.puuid, name: player.riotName })); // Adjust based on actual structure
             if (teamPlayers.length === 0) {
                 Logger.warn('Nenhum jogador válido encontrado no mesmo time');
                 return null;

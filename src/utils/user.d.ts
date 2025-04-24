@@ -4,14 +4,14 @@ export interface User {
   riotAccounts: RiotAccount[]; // Contas Riot vinculadas
   lastInteraction: number; // Timestamp da última interação
   riotId?: string; // Riot ID no formato Nome#1234
-  riotPuuid?: string; // Identificador único da Riot
+  riotPuuid?: string; // Identificador único da Riot (PUUID)
   severeOffenses?: number; // Número de infrações graves
 }
 
 /** Representa uma conta Riot vinculada */
 export interface RiotAccount {
   riotId: string; // Riot ID no formato Nome#1234
-  puuid: string; // Identificador único da Riot
+  puuid: string; // Identificador único da Riot (PUUID)
 }
 
 /** Representa um usuário restrito */
@@ -19,4 +19,11 @@ export interface RestrictedUser {
   userId: string; // ID do usuário restrito
   until: number; // Timestamp até quando a restrição é válida
   reason?: string; // Motivo da restrição
+}
+
+/** Resposta da API da Riot para informações de conta */
+export interface RiotAccountResponse {
+  puuid: string; // Identificador único da Riot (PUUID)
+  gameName: string; // Nome do jogador no jogo
+  tagLine: string; // Tagline do jogador (ex: #BR1)
 }

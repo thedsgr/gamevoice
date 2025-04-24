@@ -1,6 +1,6 @@
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { linkRiotAccount } from '../services/users.js';
-import { fetchRiotPuuid } from '../utils/riotAPI.js'; // Ajuste o caminho conforme necessário
+import { fetchRiotPuuid } from '../utils/riotAPI.js';
 export default {
     data: new SlashCommandBuilder()
         .setName('vincular')
