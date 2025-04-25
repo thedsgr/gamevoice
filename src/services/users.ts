@@ -1,10 +1,27 @@
 import { Guild, VoiceChannel } from 'discord.js';
 import { db, ensureDBInitialized } from '../utils/db.js';
 import { ExtendedClient } from '../structs/ExtendedClient.js';
-import { movePlayersToTeamRooms } from '../utils/discordUtils.js';
-import { TeamPlayers, ActiveMatch } from '../utils/match.d.js';
-import { User, RiotAccount } from '../utils/user.d.js';
+import { movePlayersToTeamRooms } from './matchChannels.js';
+import { TeamPlayer, ActiveMatch } from '../utils/match.d.js';
+import { RiotAccount } from '../utils/shared.js';
+import { User } from '../utils/user.js';
 
+/**
+ * Verifica se o usuário já existe no banco de dados. Caso contrário, cria um novo.
+ * @param discordId - ID do usuário no Discord.
+ */
+export async function ensureUserExists(discordId: string): Promise<void> {
+  if (!db.data) {
+    throw new Error("O banco de dados não foi inicializado.");
+  }
+
+  const exists = db.data.users.some(u => u.discordId === discordId);
+  if (!exists) {
+    db.data.users.push({ discordId, lastInteraction: Date.now(), riotAccounts: [] });
+    await db.write();
+    console.log(`👤 Novo usuário salvo no banco: ${discordId}`);
+  }
+}
 
 /** Atualiza ou cria um usuário no banco de dados */
 export async function upsertUser(discordId: string, update: Partial<Omit<User, 'discordId'>>) {
@@ -28,9 +45,15 @@ export async function upsertUser(discordId: string, update: Partial<Omit<User, '
   await db.write();
 }
 
+/** Verifica se o usuário já tem um ID vinculado */
+export async function getLinkedRiotId(discordId: string): Promise<string | null> {
+  const user = db.data!.users.find(u => u.discordId === discordId);
+  return user?.riotId || null;
+}
+
 /** Vincula uma conta Riot a um usuário Discord */
 export async function linkRiotAccount(discordId: string, riotId: string, puuid: string) {
-  const account: RiotAccount = { riotId, puuid };
+  const account: RiotAccount = { riotId, puuid, gameName: '', tagLine: '' };
   
   const user = getUser(discordId);
   if (!user) {
@@ -113,21 +136,7 @@ export async function findUserByRiotName(riotName: string) {
   );
 }
 
-/** Monitorando a sala de espera */
-export async function monitorWaitingRoom(guild: Guild, waitingRoomId: string) {
-  const waitingRoom = guild.channels.cache.get(waitingRoomId) as VoiceChannel;
 
-  if (!waitingRoom || waitingRoom.members.size === 0) {
-    console.log('Nenhum jogador na sala de espera.');
-    return [];
-  }
-
-  const players = Array.from(waitingRoom.members.values());
-  return players.map(player => ({
-    discordId: player.id,
-    displayName: player.displayName,
-  }));
-}
 
 /** Verifica partidas ativas */
 export async function checkActiveMatches(players: { discordId: string }[]) {
@@ -145,7 +154,7 @@ export async function checkActiveMatches(players: { discordId: string }[]) {
 export async function handleActiveMatch(
   guild: Guild,
   waitingRoom: VoiceChannel,
-  activeMatch: { players: TeamPlayers[]; matchId: string }
+  activeMatch: { players: TeamPlayer[]; matchId: string }
 ) {
   const teamPlayers = activeMatch.players.map(player => ({
     puuid: player.puuid || 'default-puuid', // Adicione um valor padrão ou obtenha o valor correto

@@ -1,52 +1,63 @@
+/**
+ * Este arquivo gerencia o banco de dados local do projeto utilizando a biblioteca `lowdb`.
+ * Ele fornece funções para inicializar, ler, escrever e manipular dados persistentes, como
+ * estatísticas do bot, partidas ativas, relatórios de erros e usuários.
+ *
+ * Funcionalidades principais:
+ * - Inicialização e recuperação do estado do banco de dados.
+ * - Manipulação de dados relacionados a partidas, usuários e estatísticas.
+ * - Registro de erros e recuperação de estado após reinício.
+ * - Funções utilitárias para acessar estatísticas e dados específicos.
+ */
 import { Low } from 'lowdb';
 import { JSONFile } from 'lowdb/node';
-/** Estrutura completa do banco de dados */
+import { Logger } from './log.js';
 const adapter = new JSONFile('db.json');
 const defaultData = {
-    restrictedUsers: [],
-    users: [],
     reports: [],
-    matches: [],
     errors: [],
+    users: [],
+    waitingList: [],
+    matches: [],
     stats: {
         totalMatchesCreated: 0,
         totalMatchesEndedByInactivity: 0,
         playersKickedByReports: 0,
         totalMatchesEndedByPlayers: 0,
+        averageMatchDuration: 0,
+        totalMatchesEnded: 0,
     },
     logChannelId: undefined,
     waitingRoomChannelId: undefined,
     activeVoiceChannel: undefined,
     logs: [],
     systemLogs: [],
+    restrictedUsers: [],
 };
 // Instância do banco de dados
 export const db = new Low(adapter, defaultData);
 /** Inicializa o banco de dados */
 export async function initDB() {
-    console.log('[DB] Inicializando o banco de dados...');
+    Logger.info('[DB] Inicializando o banco de dados...');
     try {
         await db.read();
-        db.data || (db.data = defaultData);
+        db.data || (db.data = defaultData); // Garante que db.data seja inicializado
+        // Inicializa a lista de espera, se necessário
+        if (!db.data.waitingList) {
+            db.data.waitingList = [];
+        }
         await db.write();
-        console.log('[DB] Banco de dados inicializado com sucesso.');
+        Logger.info('[DB] Banco de dados inicializado com sucesso.');
     }
     catch (error) {
-        console.error('Erro ao inicializar o banco de dados:', error);
+        Logger.error('Erro ao inicializar o banco de dados:', error);
     }
 }
-/** Função utilitária para garantir que o banco está inicializado */
+/** Garante que o banco de dados está inicializado */
 export function ensureDBInitialized() {
     if (!db.data) {
         throw new Error('❌ Banco de dados não inicializado.');
     }
-}
-/** Função utilitária para executar uma função com o banco de dados inicializado */
-function withDBInitialized(fn) {
-    if (!db.data) {
-        throw new Error('❌ Banco de dados não inicializado.');
-    }
-    return fn();
 }
 /**
  * Recupera o estado do bot após reinício.
@@ -55,30 +66,29 @@ function withDBInitialized(fn) {
 export async function recoverState(client) {
     if (!db.data)
         return;
-    console.log('[DB] Recuperando estado do bot após reinício...');
+    Logger.info('[DB] Recuperando estado do bot após reinício...');
     for (const match of db.data.matches.filter((m) => m.isActive)) {
         try {
             const guild = await client.guilds.fetch(match.guildId);
             const channel = await guild.channels.fetch(match.channelId);
             if (!channel) {
-                console.warn(`[DB] Canal não encontrado para a partida ${match.id}. Marcando como encerrada.`);
+                Logger.warn(`[DB] Canal não encontrado para a partida ${match.id}. Marcando como encerrada.`);
                 match.isActive = false;
                 match.endedAt = new Date().toISOString();
                 match.endedBy = 'Sistema (recuperação)';
             }
         }
         catch (error) {
-            console.error(`[DB] Erro ao recuperar estado da partida ${match.id}:`, error);
+            Logger.error(`[DB] Erro ao recuperar estado da partida ${match.id}:`, error);
             match.isActive = false;
         }
     }
     await db.write();
-    console.log('[DB] Estado do bot recuperado com sucesso.');
+    Logger.info('[DB] Estado do bot recuperado com sucesso.');
 }
-/** Função para logar erros com contexto de partida */
+/** Registra erros no banco de dados */
 export async function logError(error, context) {
     ensureDBInitialized();
-    const match = db.data.matches.find((m) => m.id === context?.matchId);
     db.data.errors.push({
         timestamp: Date.now(),
         message: error.message,
@@ -87,20 +97,10 @@ export async function logError(error, context) {
     });
     await db.write();
 }
-/** Função para obter estatísticas do bot */
+/** Obtém estatísticas do bot */
 export function getBotStatistics() {
+    ensureDBInitialized();
     const data = db.data;
-    if (!data)
-        return {
-            activeUsers: 0,
-            totalMatches: 0,
-            inactiveMatches: 0,
-            reports: 0,
-            kicksByReports: 0,
-            linkedAccounts: 0,
-            currentPlayers: 0,
-            recentErrors: []
-        };
     const now = Date.now();
     const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
     return {
@@ -113,9 +113,25 @@ export function getBotStatistics() {
         currentPlayers: data.matches.find(match => match.isActive)?.players.length || 0,
         recentErrors: data.errors.filter(error => error.timestamp > twentyFourHoursAgo).map(error => ({
             time: new Date(error.timestamp).toLocaleTimeString(),
-            message: error.message
-        }))
+            message: error.message,
+        })),
     };
+}
+/** Obtém partidas ativas */
+export function getActiveMatches() {
+    ensureDBInitialized();
+    return db.data.matches.filter(match => match.isActive);
+}
+/** Função utilitária para executar uma função com o banco de dados inicializado */
+function withDBInitialized(fn) {
+    if (!db.data) {
+        throw new Error('❌ Banco de dados não inicializado.');
+    }
+    return fn();
+}
+// Inicialize a lista de espera, se necessário
+if (!db.data.waitingList) {
+    db.data.waitingList = [];
 }
 export const getTotalMatchesCreated = () => {
     return db.data?.stats.totalMatchesCreated || 0;
@@ -147,3 +163,25 @@ export const getActiveUsers = () => {
     const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
     return db.data?.users.filter(user => (user.lastInteraction ?? 0) > twentyFourHoursAgo).length || 0;
 };
+export async function getRestrictedUsers() {
+    ensureDBInitialized();
+    return db.data?.restrictedUsers || [];
+}
+export async function addOrUpdateRestrictedUser(userId, duration, reason) {
+    ensureDBInitialized();
+    const restrictedUsers = db.data?.restrictedUsers || [];
+    const existing = restrictedUsers.find((u) => u.userId === userId);
+    if (existing) {
+        existing.until = Date.now() + duration;
+        existing.reason = reason || existing.reason;
+    }
+    else {
+        restrictedUsers.push({
+            userId,
+            until: Date.now() + duration,
+            reason,
+        });
+    }
+    db.data.restrictedUsers = restrictedUsers;
+    await db.write();
+}

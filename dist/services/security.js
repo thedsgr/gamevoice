@@ -1,3 +1,8 @@
+// Este arquivo contém funções relacionadas à segurança e controle de acesso no bot.
+// Ele inclui verificações de cooldown para comandos, validação de permissões de administrador,
+// validação de Riot IDs, e outras funções auxiliares para garantir que os comandos sejam usados
+// de forma segura e dentro das regras definidas. Também implementa limites para denúncias e
+// verifica se o usuário está em um servidor antes de executar comandos.
 import { PermissionsBitField, PermissionFlagsBits } from 'discord.js';
 import { db } from '../utils/db.js'; // Certifique-se de que o banco de dados está importado corretamente
 // src/services/security.ts
@@ -19,7 +24,7 @@ export function isOnCooldown(userId, seconds) {
  * Define o cooldown para o usuário.
  * @param userId - O ID do usuário.
  */
-export function setCooldown(userId) {
+export function setCooldown(userId, commandName, seconds, cooldownTime) {
     cooldowns.set(userId, Date.now());
 }
 /**

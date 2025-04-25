@@ -1,3 +1,6 @@
+// Este comando permite que administradores definam um canal de texto para receber logs do bot.
+// O ID do canal é salvo no banco de dados para uso posterior.
+
 import { SlashCommandBuilder } from '@discordjs/builders';
 import { ChannelType, PermissionsBitField, ChatInputCommandInteraction } from 'discord.js';
 import { SlashCommand } from '../../structs/types/SlashCommand.js';
@@ -7,8 +10,8 @@ const setLogChannel: SlashCommand = {
   data: new SlashCommandBuilder()
     .setName("setlog")
     .setDescription("Define o canal de logs")
-    .addChannelOption(opt =>
-      opt
+    .addChannelOption(option =>
+      option
         .setName("canal")
         .setDescription("Canal de texto para receber logs")
         .addChannelTypes(ChannelType.GuildText)
@@ -38,15 +41,6 @@ const setLogChannel: SlashCommand = {
       // Obtém o canal selecionado
       const channel = interaction.options.getChannel("canal", true);
 
-      // Verifica se o canal é de texto
-      if (channel.type !== ChannelType.GuildText) {
-        await interaction.reply({
-          content: "❌ O canal selecionado não é um canal de texto válido.",
-          ephemeral: true,
-        });
-        return;
-      }
-
       // Salva o ID do canal no banco de dados
       db.data.logChannelId = channel.id;
       await db.write();
@@ -57,11 +51,7 @@ const setLogChannel: SlashCommand = {
         ephemeral: true,
       });
     } catch (error) {
-      if (error instanceof Error) {
-        console.error(`[setlog] Erro ao definir o canal de logs: ${error.message}`, error);
-      } else {
-        console.error(`[setlog] Erro ao definir o canal de logs:`, error);
-      }
+      console.error(`[setlog] Erro ao definir o canal de logs:`, error);
       await interaction.reply({
         content: "❌ Ocorreu um erro ao tentar definir o canal de logs. Tente novamente mais tarde.",
         ephemeral: true,

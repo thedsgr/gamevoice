@@ -5,8 +5,7 @@ export async function applyBan(target, reason) {
             reason: `Banimento permanente: ${reason || 'Infração grave'}`,
             deleteMessageDays: 7 // Apaga mensagens dos últimos 7 dias
         });
-        const logger = new Logger();
-        await logger.log(`Usuário ${target.displayName} foi banido. Motivo: ${reason || 'Infração grave'}`, 'BAN');
+        Logger.info(`Usuário ${target.displayName} foi banido. Motivo: ${reason || 'Infração grave'}`, { type: 'BAN' });
         return {
             success: true,
             message: `🔨 ${target.displayName} foi banido permanentemente`,

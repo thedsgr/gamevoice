@@ -5,6 +5,8 @@
     "moduleResolution": "NodeNext",
     "outDir": "./dist",
     "rootDir": "./src",
+    "typeRoots": ["./node_modules/@types"],
+    "types": [],
     "strict": true,
     "allowJs": true,
     "esModuleInterop": true,
@@ -17,6 +19,6 @@
       "@structs/*": ["./src/structs/*"]
     }
   },
-  "include": ["src/**/*", "src/utils/**/*"],
+  "include": ["src/**/*", "src/utils/**/*", "next-env.d.ts", " /*.ts", " /*.tsx"],
   "exclude": ["node_modules"]
 }

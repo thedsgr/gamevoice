@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export class ExtendedClient extends Client {
-  public commands: Collection<string, SlashCommand>;
+  public commands: Collection<string, any>;
 
   constructor(options: ClientOptions) {
     super(options); // Passa as opções para o construtor da classe base (Client)

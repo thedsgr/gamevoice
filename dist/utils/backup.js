@@ -1,5 +1,20 @@
+/**
+ * Este arquivo contém funções utilitárias para interagir com a API da Riot Games.
+ * Ele fornece métodos para buscar informações de contas, partidas ativas, times,
+ * monitorar a saúde da API e tratar erros de forma centralizada.
+ *
+ * Funcionalidades principais:
+ * - Comunicação com a API da Riot usando Axios.
+ * - Tratamento de erros com suporte a erros críticos e não críticos.
+ * - Monitoramento de partidas ativas e organização de jogadores.
+ * - Controle de taxa de requisições (Rate Limiting) e cache (se implementado).
+ */
 import fs from 'fs/promises';
 import path from 'path';
+import { riotClient } from './httpClient.js';
+import axios from 'axios';
+import { fetchActiveGame } from '../utils/riotAPI.js';
+import { Logger } from './log.js';
 const BACKUP_DIR = './backup';
 const DB_FILE = './db.json';
 /**
@@ -24,5 +39,54 @@ export async function createBackup() {
     }
     catch (err) {
         console.error("❌ Erro ao criar backup:", err);
+    }
+}
+/**
+ * Verifica a saúde da API da Riot
+ */
+export async function checkRiotAPIHealth() {
+    try {
+        const response = await riotClient.get('https://americas.api.riotgames.com/lol/status/v1/shard-data');
+        return response.status === 200;
+    }
+    catch (error) {
+        if (axios.isAxiosError(error)) {
+            Logger.error('Erro do Axios ao verificar a saúde da API da Riot', new Error(String(error.response?.data || error.message)));
+        }
+        else if (error instanceof Error) {
+            Logger.error('Erro desconhecido ao verificar a saúde da API da Riot', error);
+        }
+        else {
+            Logger.error('Erro desconhecido ao verificar a saúde da API da Riot', new Error(String(error)));
+        }
+        return false;
+    }
+}
+/**
+ * Monitoramento otimizado de partidas
+ */
+export async function monitorActiveGames(guildId, playerIds) {
+    try {
+        const activeGames = new Map();
+        for (const playerId of playerIds) {
+            const game = await fetchActiveGame(playerId, guildId);
+            if (game) {
+                const players = activeGames.get(game.gameId) || [];
+                activeGames.set(game.gameId, [...players, playerId]);
+            }
+        }
+        if (activeGames.size === 0) {
+            Logger.info('Nenhuma partida ativa encontrada.');
+            return [];
+        }
+        return Array.from(activeGames.entries()).map(([gameId, players]) => ({
+            gameId,
+            players,
+            teamId: players.length > 1 ? 100 : null, // Time azul se houver múltiplos jogadores
+        }));
+    }
+    catch (error) {
+        Logger.error('Falha no monitoramento de partidas', error instanceof Error ? error : new Error(String(error)));
+        return [];
     }
 }

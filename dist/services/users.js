@@ -1,5 +1,20 @@
 import { db, ensureDBInitialized } from '../utils/db.js';
-import { movePlayersToTeamRooms } from '../utils/discordUtils.js';
+import { movePlayersToTeamRooms } from './matchChannels.js';
+/**
+ * Verifica se o usuário já existe no banco de dados. Caso contrário, cria um novo.
+ * @param discordId - ID do usuário no Discord.
+ */
+export async function ensureUserExists(discordId) {
+    if (!db.data) {
+        throw new Error("O banco de dados não foi inicializado.");
+    }
+    const exists = db.data.users.some(u => u.discordId === discordId);
+    if (!exists) {
+        db.data.users.push({ discordId, lastInteraction: Date.now(), riotAccounts: [] });
+        await db.write();
+        console.log(`👤 Novo usuário salvo no banco: ${discordId}`);
+    }
+}
 /** Atualiza ou cria um usuário no banco de dados */
 export async function upsertUser(discordId, update) {
     ensureDBInitialized();
@@ -20,9 +35,14 @@ export async function upsertUser(discordId, update) {
     }
     await db.write();
 }
+/** Verifica se o usuário já tem um ID vinculado */
+export async function getLinkedRiotId(discordId) {
+    const user = db.data.users.find(u => u.discordId === discordId);
+    return user?.riotId || null;
+}
 /** Vincula uma conta Riot a um usuário Discord */
 export async function linkRiotAccount(discordId, riotId, puuid) {
-    const account = { riotId, puuid };
+    const account = { riotId, puuid, gameName: '', tagLine: '' };
     const user = getUser(discordId);
     if (!user) {
         await upsertUser(discordId, {
@@ -93,19 +113,6 @@ export async function findMember(client, playerId) {
 export async function findUserByRiotName(riotName) {
     ensureDBInitialized();
     return db.data?.users.find(u => (u.riotAccounts ?? []).some((account) => account.riotId.includes(riotName)));
-}
-/** Monitorando a sala de espera */
-export async function monitorWaitingRoom(guild, waitingRoomId) {
-    const waitingRoom = guild.channels.cache.get(waitingRoomId);
-    if (!waitingRoom || waitingRoom.members.size === 0) {
-        console.log('Nenhum jogador na sala de espera.');
-        return [];
-    }
-    const players = Array.from(waitingRoom.members.values());
-    return players.map(player => ({
-        discordId: player.id,
-        displayName: player.displayName,
-    }));
 }
 /** Verifica partidas ativas */
 export async function checkActiveMatches(players) {

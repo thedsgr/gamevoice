@@ -1,19 +1,20 @@
-import { REST, Routes, ChatInputCommandInteraction } from 'discord.js';
+// Este script registra os comandos de slash no Discord para um servidor específico.
+// Ele carrega os comandos localmente, valida sua estrutura e os registra usando a API REST do Discord.
+
+import { REST, Routes } from 'discord.js';
 import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { dirname } from 'path';
-import { loadCommands } from '../utils/commandLoader.js';
-import { ExtendedClient } from '../structs/ExtendedClient.js';
-import 'dotenv/config';
+
+dotenv.config();
 
 // Recria o comportamento de __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-dotenv.config();
-
+// Verifica se as variáveis de ambiente estão configuradas
 if (!process.env.DISCORD_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_ID) {
   console.error('❌ Variáveis de ambiente não configuradas corretamente.');
   if (!process.env.DISCORD_TOKEN) console.error('❌ DISCORD_TOKEN está ausente. Verifique o arquivo .env.');
@@ -23,26 +24,18 @@ if (!process.env.DISCORD_TOKEN || !process.env.CLIENT_ID || !process.env.GUILD_I
 }
 
 // Configuração do REST com timeout
-const REST_CONFIG = { 
-  version: '10',
-  timeout: 15000 // Timeout aumentado para 15 segundos
-};
+const rest = new REST({ version: '10', timeout: 15000 }).setToken(process.env.DISCORD_TOKEN!);
 
-const rest = new REST(REST_CONFIG).setToken(process.env.DISCORD_TOKEN!);
-
-// Inicializa o cliente estendido
-const client = new ExtendedClient({
-  intents: [], // Add the required intents here
-}) as ExtendedClient;
-
+/**
+ * Obtém todos os arquivos de comando no diretório especificado.
+ * @param dir Diretório base para buscar os arquivos.
+ * @returns Lista de caminhos para os arquivos de comando.
+ */
 function getAllCommandFiles(dir: string): string[] {
-  console.log(`📂 Verificando diretório: ${dir}`);
   const files = fs.readdirSync(dir, { withFileTypes: true });
-  console.log(`📂 Arquivos encontrados: ${files.map(file => file.name)}`);
   const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
 
   const commandFiles: string[] = [];
-
   for (const file of files) {
     const fullPath = path.join(dir, file.name);
     if (file.isDirectory()) {
@@ -55,13 +48,14 @@ function getAllCommandFiles(dir: string): string[] {
   return commandFiles;
 }
 
+/**
+ * Carrega os comandos localmente a partir do diretório de comandos.
+ * @returns Lista de comandos prontos para registro.
+ */
 async function loadCommandsLocally() {
   const commandsPath = process.env.NODE_ENV === 'production'
     ? path.join(__dirname, '../../dist/commands')
     : path.join(__dirname, '../commands');
-
-  console.log(`🔄 Ambiente de execução: ${process.env.NODE_ENV}`);
-  console.log(`📂 Diretório de comandos: ${commandsPath}`);
 
   const commandFiles = getAllCommandFiles(commandsPath);
 
@@ -70,16 +64,11 @@ async function loadCommandsLocally() {
     return [];
   }
 
-  console.log(`📂 Arquivos encontrados no diretório de comandos:`);
-  console.log(commandFiles);
-
   const loadedCommands = [];
-
   for (const filePath of commandFiles) {
     try {
       const commandModule = await import(pathToFileURL(filePath).href);
       const command = commandModule?.default;
-      console.log('🔍 Comando encontrado:', command);
 
       if (command && 'data' in command && 'execute' in command) {
         loadedCommands.push(command.data.toJSON());
@@ -92,10 +81,12 @@ async function loadCommandsLocally() {
     }
   }
 
-  console.log(`📦 Total de comandos carregados: ${loadedCommands.length}`);
   return loadedCommands;
 }
 
+/**
+ * Registra os comandos de slash no Discord.
+ */
 (async () => {
   try {
     console.log('📂 Carregando comandos...');
@@ -106,27 +97,14 @@ async function loadCommandsLocally() {
       return;
     }
 
-    console.log(`✅ ${commands.length} comandos carregados.`);
+    console.log(`🔁 Atualizando ${commands.length} comandos de slash...`);
+    await rest.put(
+      Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID!),
+      { body: commands }
+    );
 
-    try {
-      console.log(`🔁 Atualizando ${commands.length} comandos de slash...`);
-
-      await rest.put(
-        Routes.applicationGuildCommands(
-          process.env.CLIENT_ID!,
-          process.env.GUILD_ID!
-        ),
-        { body: commands }
-      );
-
-      console.log('✅ Comandos registrados com sucesso!');
-    } catch (error) {
-      console.error('❌ Falha ao registrar comandos:', error);
-      if (error instanceof Error && 'rawError' in error) {
-        console.error('Detalhes do erro:', (error as any).rawError);
-      }
-    }
+    console.log('✅ Comandos registrados com sucesso!');
   } catch (error) {
-    console.error('❌ Erro ao carregar comandos:', error);
+    console.error('❌ Erro ao registrar comandos:', error);
   }
 })();

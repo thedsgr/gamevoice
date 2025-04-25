@@ -960,6 +960,140 @@
       "message": "Serving 1 guilds",
       "action": "default_action",
       "details": {}
+    },
+    {
+      "timestamp": 1745459798102,
+      "level": "info",
+      "message": "Database initialized",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459798103,
+      "level": "info",
+      "message": "Loading commands...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459798711,
+      "level": "info",
+      "message": "Successfully loaded 3 commands",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459804391,
+      "level": "info",
+      "message": "Bot started as Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745459804392,
+      "level": "info",
+      "message": "Serving 1 guilds",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745530837451,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745530837452,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745530838038,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 3 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745530839026,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success",
+      "details": {}
+    },
+    {
+      "timestamp": 1745530839028,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action",
+      "details": {}
+    },
+    {
+      "timestamp": 1745550339926,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745550339927,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745550339928,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745550340190,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 3 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745550341033,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745550341034,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
     }
-  ]
+  ],
+  "waitingList": []
 }

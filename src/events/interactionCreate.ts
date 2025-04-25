@@ -1,84 +1,62 @@
-// src/events/interactionCreate.ts
+// Este arquivo contém a lógica para lidar com o evento "interactionCreate".
+// Quando um usuário interage com o bot (por exemplo, executando um comando slash),
+// o código verifica se o comando existe, aplica um sistema de cooldown para evitar spam
+// e executa o comando correspondente. Caso ocorra algum erro, ele é registrado no log
+// e uma mensagem de erro é enviada ao usuário.
+
 import {
   ChatInputCommandInteraction,
   Interaction,
-  MessageFlags,
-  Client,
-  Collection,
-  GatewayIntentBits,
-  ApplicationCommandType,
 } from "discord.js";
 import { ExtendedClient } from "../structs/ExtendedClient.js";
-import { isOnCooldown, setCooldown } from '../services/security.js';
-import { db } from '../utils/db.js';
+import { isOnCooldown, setCooldown } from "../services/security.js";
+import { Logger } from "../utils/log.js";
 
 const cooldownTime = 5000;
-setTimeout(() => {
-  console.log('Cooldown finalizado');
-}, cooldownTime);
 
-export default async function handleInteractionCreate(interaction: Interaction, client: ExtendedClient) {
-  // Verifique se a interação é um comando válido
-  if (!interaction.isCommand() || interaction.commandType !== ApplicationCommandType.ChatInput) {
-    return;
-  }
+export async function handleInteractionCreate(interaction: Interaction): Promise<void> {
+  if (!interaction.isCommand()) return;
 
-  const userId = interaction.user.id;
+  const commandName = interaction.commandName;
+  const client = interaction.client as ExtendedClient;
 
-  // Atualize o lastInteraction no banco de dados
-  if (db.data?.users) {
-    const user = db.data.users.find((u) => u.discordId === userId);
-    if (user) {
-      user.lastInteraction = Date.now(); // Atualiza o timestamp
-    } else {
-      // Adiciona o usuário ao banco de dados se não existir
-      db.data.users.push({
-        discordId: userId,
-        lastInteraction: Date.now(),
-        riotAccounts: [], // Add the required property
-      });
-    }
-
-    // Salve as alterações no banco de dados
-    await db.write();
-  } else {
-    console.error("❌ Banco de dados não inicializado.");
-    return;
-  }
-
-  // Obtenha o comando correspondente
-  const command = client.commands.get(interaction.commandName);
+  // Verifica se o comando existe
+  const command = client.commands.get(commandName);
   if (!command) {
-    console.warn(`⚠️ Comando ${interaction.commandName} não encontrado.`);
+    await interaction.reply({
+      content: "❌ Comando não encontrado.",
+      ephemeral: true,
+    });
+    Logger.warn(`Comando "${commandName}" não encontrado.`);
     return;
   }
 
+  // Verifica cooldown
+  const userId = interaction.user.id;
+  const commandCooldown = cooldownTime; // Default cooldown time
+  if (isOnCooldown(userId, commandCooldown)) {
+    await interaction.reply({
+      content: "⏳ Você está em cooldown. Tente novamente mais tarde.",
+      ephemeral: true,
+    });
+    return;
+  }
+
+  // Executa o comando
   try {
-    // Execute o comando
+    Logger.info(`Executando comando: ${commandName} por ${interaction.user.tag}`);
     await command.execute(interaction as ChatInputCommandInteraction);
+
+    // Define o cooldown
+    setCooldown(userId, commandName, cooldownTime / 1000, cooldownTime);
   } catch (error) {
-    console.error(`❌ Erro no comando ${interaction.commandName}:`, error);
-
-    // Tratamento de erros pós-resposta
-    if (interaction.deferred && !interaction.replied) {
-      await interaction.editReply("⚠️ Ocorreu um erro durante a execução.");
-    } else if (!interaction.replied) {
-      await interaction.reply({
-        content: "⚠️ Erro ao processar comando.",
-        ephemeral: true,
-        flags: MessageFlags.Ephemeral,
-      });
-    }
+    Logger.error(
+        `Erro ao executar o comando "${commandName}":`,
+        error instanceof Error ? error : new Error(String(error))
+    );
+    await interaction.reply({
+      content: "❌ Ocorreu um erro ao executar este comando.",
+      ephemeral: true,
+    });
   }
 }
-
-class LocalExtendedClient extends Client {
-  commands: Collection<string, { execute: (interaction: ChatInputCommandInteraction) => Promise<void> }>;
-
-  constructor() {
-    super({ intents: [GatewayIntentBits.Guilds] });
-    this.commands = new Collection();
-  }
-}
-
-const client = new LocalExtendedClient();

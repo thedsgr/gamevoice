@@ -2,31 +2,6 @@ import { Match, TeamPlayers } from './match.d.js';
 import { LogEntry, SystemLogEntry, ErrorLog } from './log.d.js';
 import { User, RestrictedUser } from './user.d.js';
 
-/** Estrutura completa do banco de dados */
-export interface DatabaseSchema {
-  users: User[]; // Lista de usuários registrados
-  /** Relatórios de denúncias */
-  reports: Report[];
-  /** Partidas criadas no sistema */
-  matches: Match[]; // Lista de partidas criadas (defina ou importe o tipo Match)
-  /** Logs de erros */
-  errors: ErrorLog[];
-  /** Estatísticas gerais do sistema */
-  stats: Stats;
-  /** ID do canal de espera */
-  waitingRoomChannelId?: string;
-  /** ID do canal de logs */
-  logChannelId?: string;
-  /** ID do canal de voz ativo */
-  activeVoiceChannel?: string;
-  /** Logs de ações realizadas */
-  logs?: LogEntry[];
-  /** Logs do sistema */
-  systemLogs?: SystemLogEntry[];
-
-  restrictedUsers?: RestrictedUser[];
-}
-
 /** Representa um relatório de denúncia */
 export interface Report {
   targetId: string;
@@ -43,13 +18,36 @@ export interface Stats {
   playersKickedByReports: number;
   totalMatchesEndedByPlayers: number;
   averageMatchDuration?: number;
+  totalMatchesEnded: number;
 }
 
 /** Estrutura padrão do banco de dados */
-export interface DefaultData extends DatabaseSchema {
-  restrictedUsers: RestrictedUser[];
+export interface DefaultData {
+  reports: Report[];
+  errors: ErrorLog[];
+  users: User[];
+  waitingList: string[];
+  reports: Report[];
   matches: Match[];
+  errors: ErrorLog[];
   stats: Stats;
+  logChannelId?: string;
+  waitingRoomChannelId?: string;
+  activeVoiceChannel?: string;
+  logs: LogEntry[];
+  systemLogs: SystemLogEntry[];
+  restrictedUsers: RestrictedUser[],
+}
+
+export interface RestrictedUser {
+  userId: string;
+  until: number;
+  reason?: string;
+}
+
+export interface WaitingListItem {
+  userId: string;
+  timestamp: number;
 }
 
 /** Estrutura estendida do banco de dados */
@@ -70,6 +68,9 @@ export declare const db: {
 export function ensureDBInitialized(): void;
 
 declare function processMatchData(data: { matchId: string; teamPlayers: TeamPlayers[] }): void;
+
+ensureDBInitialized();
+const matches = db.data.matches; // Não é necessário usar db.data?.matches
 
 interface BotStatistics {
     activeUsers: number;

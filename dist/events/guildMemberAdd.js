@@ -1,36 +1,26 @@
-import { db } from "../utils/db.js";
-export default async function guildMemberAdd(member) {
+// src/events/guildMemberAdd.ts
+import { ChannelType } from 'discord.js';
+export default async function handleGuildMemberAdd(member) {
+    // Encontrar o canal de boas-vindas
+    const welcomeChannel = member.guild.channels.cache.find((channel) => channel.name === 'boas-vindas' && channel.type === ChannelType.GuildText);
+    if (!welcomeChannel) {
+        console.error('Canal de boas-vindas não encontrado.');
+        return;
+    }
     try {
-        // Garante que o banco de dados está inicializado
-        if (!db.data) {
-            throw new Error("O banco de dados não foi inicializado.");
+        // Enviar mensagem de boas-vindas
+        await welcomeChannel.send(`🎉 Bem-vindo(a), ${member.user}! Certifique-se de ler as regras e se preparar para as partidas.`);
+        // Adicionar o cargo "Invocadores"
+        const role = member.guild.roles.cache.find((r) => r.name === 'Invocadores');
+        if (role) {
+            await member.roles.add(role);
+            console.log(`Cargo "Invocadores" atribuído a ${member.user.tag}.`);
         }
-        // Verifica se o usuário já existe no banco de dados
-        const exists = db.data.users.some(u => u.discordId === member.id);
-        if (!exists) {
-            db.data.users.push({ discordId: member.id, lastInteraction: Date.now(), riotAccounts: [] });
-            await db.write();
-            console.log(`👤 Novo usuário salvo no banco: ${member.user.username}`);
+        else {
+            console.error('Cargo "Invocadores" não encontrado.');
         }
-        // Envia DM de boas-vindas
-        await sendWelcomeMessage(member);
     }
     catch (error) {
-        console.error(`❌ Erro ao processar o evento guildMemberAdd para ${member.user.username}:`, error);
-    }
-}
-/**
- * Envia uma mensagem de boas-vindas ao membro.
- */
-async function sendWelcomeMessage(member) {
-    try {
-        await member.send({
-            content: `👋 Fala, ${member.user.username}! Bem-vindo ao servidor!  
-Para usar o Game Voice, conecte sua conta da Riot aqui: [https://login.gamevoice.gg](https://login.gamevoice.gg) 🎮🔗`
-        });
-        console.log(`📩 Mensagem de boas-vindas enviada para ${member.user.username}`);
-    }
-    catch (error) {
-        console.error(`❌ Não foi possível enviar DM para ${member.user.username}:`, error);
+        console.error('Erro ao enviar mensagem de boas-vindas:', error);
     }
 }

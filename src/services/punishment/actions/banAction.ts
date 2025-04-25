@@ -12,10 +12,9 @@ export async function applyBan(
       deleteMessageDays: 7 // Apaga mensagens dos últimos 7 dias
     });
 
-    const logger = new Logger();
-    await logger.log(
+    Logger.info(
       `Usuário ${target.displayName} foi banido. Motivo: ${reason || 'Infração grave'}`,
-      'BAN'
+      { type: 'BAN' }
     );
 
     return {

@@ -46,10 +46,9 @@ export async function applyVoiceMute(
 
     // 4. Registrar no sistema de logs
     if (client) {
-      const logger = new Logger();
-      logger.log(
+      Logger.info(
         `Usuário ${target.displayName} foi mutado. Motivo: ${reason || 'Não especificado'}. Duração: ${formatDuration(duration)}`,
-        'VOICE_MUTE'
+        { type: 'VOICE_MUTE' }
       );
     }
 

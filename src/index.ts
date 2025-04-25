@@ -1,144 +1,90 @@
+// Este arquivo inicializa o bot, configura os eventos e carrega os comandos.
+// Ele também gerencia a conexão com o banco de dados e registra os logs.
+
 import 'dotenv/config';
 import 'colors';
 import { GatewayIntentBits } from 'discord.js';
 import { ExtendedClient } from './structs/ExtendedClient.js';
-import { initDB, db } from './utils/db.js';
+import { initDB } from './utils/db.js';
 import { loadCommands } from './utils/commandLoader.js';
 import handleGuildMemberAdd from './events/guildMemberAdd.js';
-import handleInteractionCreate from './events/interactionCreate.js';
-import { handleVoiceStateUpdate } from './events/voiceStateUpdate.js';
-import handleMatchEnd from './events/matchEnd.js';
-import { monitorEmptyChannels } from './services/voice.js';
+import { handleInteractionCreate } from './events/interactionCreate.js';
 import { Logger } from './utils/log.js';
-
-const client = new ExtendedClient({
-  intents: [
-    'Guilds',
-    'GuildMessages',
-    'GuildVoiceStates',
-    'MessageContent',
-  ],
-});
-
-client.start();
-
-// Configuração de inicialização
-const BOT_CONFIG = {
-  intents: [
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildVoiceStates,
-    GatewayIntentBits.GuildMessages,
-    GatewayIntentBits.MessageContent,
-  ],
-  autoRegisterCommands: process.env.REGISTER_COMMANDS === 'true',
-};
-
-// Tratamento de erros globais
-process.on('uncaughtException', (error) => {
-  Logger.error(`Uncaught Exception: ${error.message}`, error);
-});
-
-process.on('unhandledRejection', (reason) => {
-  Logger.warn(`Unhandled Rejection: ${reason}`);
-});
 
 class BotApplication {
   private client: ExtendedClient;
 
   constructor() {
-    this.client = new ExtendedClient(BOT_CONFIG);
+    // Inicializa o cliente do Discord com os intents necessários
+    this.client = new ExtendedClient({
+      intents: [
+        GatewayIntentBits.Guilds,
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMessages,
+        GatewayIntentBits.MessageContent,
+      ],
+    });
   }
 
+  /**
+   * Inicializa o banco de dados.
+   */
   private async initializeDatabase(): Promise<void> {
     try {
-      Logger.info('Initializing database...');
+      Logger.info('Inicializando o banco de dados...');
       await initDB();
-      
-      if (!db.data) {
-        db.data = this.getDefaultDatabaseStructure();
-        await db.write();
-      }
-      
-      Logger.success('Database initialized');
+      Logger.success('Banco de dados inicializado com sucesso.');
     } catch (error) {
-      Logger.error('Failed to initialize database', error as Error);
+      Logger.error('Falha ao inicializar o banco de dados:', error as Error);
       throw error;
     }
   }
 
-  private getDefaultDatabaseStructure() {
-    return {
-      users: [],
-      reports: [],
-      matches: [],
-      errors: [],
-      stats: {
-        totalMatchesCreated: 0,
-        totalMatchesEndedByInactivity: 0,
-        playersKickedByReports: 0,
-        totalMatchesEndedByPlayers: 0,
-      },
-      restrictedUsers: [],
-      logs: [],
-      systemLogs: [],
-    };
-  }
-
+  /**
+   * Carrega e registra os comandos do bot.
+   */
   private async loadAndRegisterCommands(): Promise<void> {
     try {
-      Logger.info('Loading commands...');
+      Logger.info('Carregando comandos...');
       await loadCommands(this.client);
-      Logger.success(`Successfully loaded ${this.client.commands.size} commands`);
-
-      if (BOT_CONFIG.autoRegisterCommands) {
-        Logger.info('Registering commands with Discord...');
-        Logger.warn('Command registration skipped because "registerCommands" is not available.');
-      }
+      Logger.success(`Comandos carregados com sucesso: ${this.client.commands.size} comandos registrados.`);
     } catch (error) {
-      Logger.error('Command initialization failed', error as Error);
+      Logger.error('Falha ao carregar os comandos:', error as Error);
       throw error;
     }
   }
 
+  /**
+   * Registra os eventos do bot.
+   */
   private registerEventHandlers(): void {
-    // Eventos do cliente
     this.client.once('ready', this.onReady.bind(this));
     this.client.on('guildMemberAdd', handleGuildMemberAdd);
-    this.client.on('interactionCreate', this.handleInteraction.bind(this));
-    this.client.on('voiceStateUpdate', (oldState, newState) => 
-      handleVoiceStateUpdate(oldState, newState, this.client));
-    this.client.on('matchEnd', (matchId) => handleMatchEnd(matchId, this.client));
+    this.client.on('interactionCreate', handleInteractionCreate);
   }
 
+  /**
+   * Lógica executada quando o bot está pronto.
+   */
   private async onReady(): Promise<void> {
     if (!this.client.user) return;
 
-    Logger.success(`Bot started as ${this.client.user.tag}`);
-    Logger.info(`Serving ${this.client.guilds.cache.size} guilds`);
-
-    // Inicializa serviços pós-ready
-    monitorEmptyChannels(this.client);
+    Logger.success(`Bot iniciado como ${this.client.user.tag}`);
+    Logger.info(`Servindo ${this.client.guilds.cache.size} servidores.`);
   }
 
-  private async handleInteraction(interaction: any): Promise<void> {
-    try {
-      await handleInteractionCreate(interaction, this.client);
-    } catch (error) {
-      Logger.error('Interaction handling failed', error as Error);
-    }
-  }
-
+  /**
+   * Inicia o bot.
+   */
   public async start(): Promise<void> {
     try {
-      Logger.info('Starting bot...');
-      
+      Logger.info('Iniciando o bot...');
       await this.initializeDatabase();
       await this.loadAndRegisterCommands();
       this.registerEventHandlers();
-      
       await this.client.login(process.env.DISCORD_TOKEN);
     } catch (error) {
-      Logger.error('Bot startup failed', error as Error);
+      Logger.error('Falha ao iniciar o bot:', error as Error);
       process.exit(1);
     }
   }

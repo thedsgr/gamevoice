@@ -1,27 +1,45 @@
+/**
+ * Este arquivo contém a implementação da classe `Logger` e funções auxiliares para gerenciamento centralizado de logs.
+ * Ele permite registrar logs no console, no banco de dados e, opcionalmente, em canais de texto no Discord.
+ *
+ * Funcionalidades principais:
+ * - Registrar logs de diferentes níveis (info, warn, error, success) no console.
+ * - Salvar logs no banco de dados para auditoria e análise.
+ * - Enviar logs para canais de texto no Discord.
+ * - Formatar mensagens de log com emojis e cores para facilitar a leitura.
+ */
 import { db } from './db.js';
 /**
- * Classe Logger para gerenciamento centralizado de logs
+ * Classe Logger para gerenciamento centralizado de logs.
+ * Registra logs no console, banco de dados e, opcionalmente, em canais de texto no Discord.
  */
 export class Logger {
     /**
-     * Registra informações no console e opcionalmente no banco de dados
+     * Registra informações no console e opcionalmente no banco de dados.
+     * @param message - A mensagem do log.
+     * @param context - Contexto adicional para o log.
      */
     static info(message, context) {
-        this.Logger(message, 'INFO');
+        this.logToConsole(message, 'INFO');
         this.logToDB('info', message, context);
     }
     /**
-     * Registra avisos no console e opcionalmente no banco de dados
+     * Registra avisos no console e opcionalmente no banco de dados.
+     * @param message - A mensagem do log.
+     * @param context - Contexto adicional para o log.
      */
     static warn(message, context) {
-        this.Logger(message, 'WARN');
-        this.logToDB('warning', message, context);
+        this.logToConsole(message, 'WARN');
+        this.logToDB('warn', message, context);
     }
     /**
-     * Registra erros no console, banco de dados e opcionalmente no canal de logs
+     * Registra erros no console, banco de dados e opcionalmente no canal de logs.
+     * @param message - A mensagem do log.
+     * @param error - O erro associado ao log.
+     * @param context - Contexto adicional para o log.
      */
     static error(message, error, context) {
-        this.Logger(message, 'ERROR', error);
+        this.logToConsole(message, 'ERROR', error);
         this.logToDB('error', message, {
             ...context,
             error: error?.message,
@@ -29,13 +47,20 @@ export class Logger {
         });
     }
     /**
-     * Registra mensagens de sucesso no console
+     * Registra mensagens de sucesso no console.
+     * @param message - A mensagem do log.
      */
     static success(message) {
-        this.Logger(message, 'SUCCESS');
+        this.logToConsole(message, 'SUCCESS');
         this.logToDB('info', message, { action: 'success' });
     }
-    static Logger(message, type, error) {
+    /**
+     * Registra uma mensagem no console com formatação de cor e emoji.
+     * @param message - A mensagem do log.
+     * @param type - O tipo do log (INFO, WARN, ERROR, SUCCESS).
+     * @param error - O erro associado ao log (opcional).
+     */
+    static logToConsole(message, type, error) {
         const colors = {
             INFO: '\x1b[36m', // Cyan
             WARN: '\x1b[33m', // Yellow
@@ -52,38 +77,34 @@ export class Logger {
         if (error)
             console.error(error);
     }
+    /**
+     * Registra um log no banco de dados.
+     * @param level - O nível do log (info, warn, error).
+     * @param message - A mensagem do log.
+     * @param context - Contexto adicional para o log.
+     */
     static logToDB(level, message, context) {
         if (!db.data)
             return;
         const logEntry = {
-            timestamp: new Date(),
+            timestamp: Date.now(),
             level,
             message,
             context,
             action: typeof context?.action === 'string' ? context.action : 'default_action'
         };
         db.data.logs = db.data.logs || [];
-        db.data.logs.push({
-            ...logEntry,
-            timestamp: logEntry.timestamp.getTime(), // Convert Date to number
-            action: logEntry.action || 'default_action',
-            details: logEntry.details || {}
-        });
+        db.data.logs.push(logEntry);
         db.write().catch((err) => {
             console.error('❌ Failed to save log to DB:', err);
         });
     }
-    /**
-     * Logs a message with a specific level.
-     * @param message - The message to log.
-     * @param level - The log level (e.g., 'INFO', 'ERROR').
-     */
-    log(message, level) {
-        console.log(`[${level}] ${message}`);
-    }
 }
 /**
  * Envia uma mensagem para o canal de logs definido.
+ * @param client - O cliente do bot.
+ * @param message - A mensagem do log.
+ * @param type - O tipo do log (LOG, MOD, MATCH).
  */
 export async function sendLog(client, message, type = 'LOG') {
     const logChannelId = db.data?.logChannelId;
@@ -105,6 +126,9 @@ export async function sendLog(client, message, type = 'LOG') {
 }
 /**
  * Formata uma mensagem de log com emoji e tipo.
+ * @param message - A mensagem do log.
+ * @param type - O tipo do log (LOG, MOD, MATCH).
+ * @returns A mensagem formatada.
  */
 export function formatLogMessage(message, type = 'LOG') {
     const emojiMap = {
@@ -121,16 +145,17 @@ export function logSystemAction(action, details, userId) {
     if (!db.data)
         return;
     const entry = {
-        timestamp: new Date(),
+        timestamp: new Date().getTime(),
         action,
         userId,
         details,
-        message: `Action: ${action}`
+        message: `Action: ${action}`,
+        level: 'info'
     };
     db.data.systemLogs = db.data.systemLogs || [];
     db.data.systemLogs.push({
         ...entry,
-        timestamp: entry.timestamp.getTime(),
+        timestamp: entry.timestamp,
         level: 'info'
     });
     db.write().catch(err => {
