@@ -9,7 +9,7 @@
  * - Responder à interação informando que o usuário não tem permissões.
  */
 
-import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits } from 'discord.js';
+import { ChatInputCommandInteraction, GuildMember, PermissionFlagsBits, MessageFlags } from 'discord.js';
 import { Logger } from './log.js';
 
 /**
@@ -48,6 +48,6 @@ export function hasAdminPermissions(interaction: ChatInputCommandInteraction): b
 export async function replyNoPermission(interaction: ChatInputCommandInteraction): Promise<void> {
     await interaction.reply({
         content: "❌ Você não tem permissão para usar este comando.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
     });
 }

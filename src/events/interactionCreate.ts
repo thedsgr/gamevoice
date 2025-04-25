@@ -1,62 +1,65 @@
-// Este arquivo contém a lógica para lidar com o evento "interactionCreate".
-// Quando um usuário interage com o bot (por exemplo, executando um comando slash),
-// o código verifica se o comando existe, aplica um sistema de cooldown para evitar spam
-// e executa o comando correspondente. Caso ocorra algum erro, ele é registrado no log
-// e uma mensagem de erro é enviada ao usuário.
+import { Events, Interaction, MessageFlags } from 'discord.js';
+import { ExtendedClient } from '../structs/ExtendedClient.js';
+import { Logger } from '../utils/log.js';
+import { isOnCooldown, setCooldown } from '../services/security.js';
 
-import {
-  ChatInputCommandInteraction,
-  Interaction,
-} from "discord.js";
-import { ExtendedClient } from "../structs/ExtendedClient.js";
-import { isOnCooldown, setCooldown } from "../services/security.js";
-import { Logger } from "../utils/log.js";
+const commandCooldown = 5; // Cooldown de 5 segundos
 
-const cooldownTime = 5000;
+export function handleInteractionCreate(interaction: Interaction, client: ExtendedClient) {
+  client.on(Events.InteractionCreate, async (interaction: Interaction) => {
+    if (!interaction.isChatInputCommand()) return;
 
-export async function handleInteractionCreate(interaction: Interaction): Promise<void> {
-  if (!interaction.isCommand()) return;
+    const command = client.commands?.get(interaction.commandName);
+    if (!command) {
+      Logger.warn(`Comando "${interaction.commandName}" não encontrado.`);
+      try {
+        await interaction.reply({
+          content: '❌ Comando não encontrado.',
+          ephemeral: true,
+        });
+      } catch (error) {
+        Logger.error('Erro ao responder comando não encontrado:', error instanceof Error ? error : new Error(String(error)));
+      }
+      return;
+    }
 
-  const commandName = interaction.commandName;
-  const client = interaction.client as ExtendedClient;
+    // Verifica cooldown
+    const userId = interaction.user.id;
+    if (isOnCooldown(userId, interaction.commandName, commandCooldown)) {
+      try {
+        await interaction.reply({
+          content: '⏳ Você está em cooldown. Tente novamente mais tarde.',
+          ephemeral: true,
+        });
+      } catch (error) {
+        Logger.error('Falha ao enviar mensagem de cooldown:', error instanceof Error ? error : new Error(String(error)));
+      }
+      return;
+    }
 
-  // Verifica se o comando existe
-  const command = client.commands.get(commandName);
-  if (!command) {
-    await interaction.reply({
-      content: "❌ Comando não encontrado.",
-      ephemeral: true,
-    });
-    Logger.warn(`Comando "${commandName}" não encontrado.`);
-    return;
-  }
+    try {
+      Logger.info(`Executando comando: ${interaction.commandName}`);
+      await command.execute(interaction);
 
-  // Verifica cooldown
-  const userId = interaction.user.id;
-  const commandCooldown = cooldownTime; // Default cooldown time
-  if (isOnCooldown(userId, commandCooldown)) {
-    await interaction.reply({
-      content: "⏳ Você está em cooldown. Tente novamente mais tarde.",
-      ephemeral: true,
-    });
-    return;
-  }
+      // Define o cooldown somente após a execução bem-sucedida
+      setCooldown(userId, interaction.commandName, commandCooldown);
+    } catch (error) {
+      Logger.error(`Erro ao executar o comando "${interaction.commandName}":`, error instanceof Error ? error : new Error(String(error)));
 
-  // Executa o comando
-  try {
-    Logger.info(`Executando comando: ${commandName} por ${interaction.user.tag}`);
-    await command.execute(interaction as ChatInputCommandInteraction);
-
-    // Define o cooldown
-    setCooldown(userId, commandName, cooldownTime / 1000, cooldownTime);
-  } catch (error) {
-    Logger.error(
-        `Erro ao executar o comando "${commandName}":`,
-        error instanceof Error ? error : new Error(String(error))
-    );
-    await interaction.reply({
-      content: "❌ Ocorreu um erro ao executar este comando.",
-      ephemeral: true,
-    });
-  }
-}
+      try {
+        if (interaction.deferred || interaction.replied) {
+          await interaction.editReply({
+            content: '❌ Ocorreu um erro ao executar este comando.',
+          });
+        } else {
+          await interaction.reply({
+            content: '❌ Ocorreu um erro ao executar este comando.',
+            ephemeral: true,
+          });
+        }
+      } catch (replyError) {
+        Logger.error('Falha ao enviar mensagem de erro:', replyError instanceof Error ? replyError : new Error(String(replyError)));
+      }
+    }
+  });
+};

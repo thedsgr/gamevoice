@@ -1,20 +1,15 @@
 /**
- * Este arquivo monitora partidas e canais de voz relacionados às partidas.
- * Ele inclui funções para:
- * - Monitorar canais de voz vazios e encerrar partidas inativas.
- * - Monitorar partidas ativas na API da Riot.
- * - Gerenciar a lista de espera de jogadores.
- * - Validar jogadores em uma mesma partida.
- * - Organizar jogadores em salas de voz com base nos times.
- * As funções são projetadas para automatizar o gerenciamento de partidas no Discord.
+ * Este arquivo monitora e gerencia o ciclo de vida das partidas.
+ * Ele inclui funções para encerrar partidas, limpar recursos e monitorar canais.
  */
 import { db } from '../utils/db.js';
 import { Client, ChannelType } from 'discord.js';
 import { getTeamFromRiotAPI, fetchActiveGame } from '../utils/riotAPI.js';
-import { movePlayersToTeamRooms } from './matchChannels.js';
+import { movePlayersToChannel } from './matchChannels.js';
 import { Logger } from '../utils/log.js';
-import { MatchManager, endMatch } from './matchManager.js';
+import { MatchManager } from './matchManager.js';
 import { getLinkedRiotId } from '../services/users.js';
+const logger = new Logger();
 // Configurações
 const EMPTY_CHANNEL_TIMEOUT = 60 * 1000; // 1 minuto
 const MONITOR_INTERVAL = 10 * 1000; // 10 segundos
@@ -82,29 +77,23 @@ export async function monitorRiotMatches(guild, waitingRoomId) {
             return;
         }
         const players = Array.from(waitingRoom.members.values());
-        // Obtém os dados dos jogadores
         const playerData = await Promise.all(players.map(async (player) => ({
             summonerId: await getLinkedRiotId(player.id),
             discordId: player.id,
         })));
-        // Filtra jogadores sem um summonerId válido
         const validPlayers = playerData.filter(player => player.summonerId !== null);
-        const matchData = await validatePlayersInSameMatch(validPlayers);
+        const matchData = await validatePlayersInSameMatch(validPlayers.filter(player => player.summonerId !== null));
         if (!matchData) {
             console.log('Nenhuma partida válida encontrada.');
             return;
         }
         console.log(`Partida detectada (ID: ${matchData.matchId})`);
-        console.log(`Time Azul: ${matchData.teamBlue.map(p => p.summonerName).join(', ')}`);
-        console.log(`Time Vermelho: ${matchData.teamRed.map(p => p.summonerName).join(', ')}`);
-        // Organiza os jogadores em salas de voz com base nos times
-        await movePlayersToTeamRooms(guild, waitingRoom, {
+        await movePlayersToChannel(guild, waitingRoom, {
             teamPlayers: [...matchData.teamBlue, ...matchData.teamRed].map(player => ({
                 puuid: player.puuid,
                 riotName: player.summonerName,
                 discordId: validPlayers.find(p => p.summonerId === player.summonerId)?.discordId || '',
-            })),
-            matchId: matchData.matchId.toString(),
+            }))
         });
     }
     catch (error) {
@@ -121,8 +110,7 @@ export async function monitorRiotMatches(guild, waitingRoomId) {
  */
 export async function validatePlayersInSameMatch(players) {
     const activeGames = await Promise.all(players.map(async (player) => {
-        const playerId = player.discordId; // Certifique-se de passar uma string
-        const game = await fetchActiveGame(player.summonerId, playerId);
+        const game = await fetchActiveGame(player.summonerId, player.discordId);
         return game ? { ...game, discordId: player.discordId } : null;
     }));
     const validGames = activeGames.filter((game) => game !== null);
@@ -244,13 +232,12 @@ async function processTeamData(guild, waitingRoom, teamData) {
         return;
     }
     console.log(`Partida detectada (ID: ${teamData.matchId})`);
-    await movePlayersToTeamRooms(guild, waitingRoom, {
+    await movePlayersToChannel(guild, waitingRoom, {
         teamPlayers: teamData.teamPlayers.map((TeamPlayers) => ({
             puuid: TeamPlayers.puuid || '', // Ensure puuid is present
             riotName: TeamPlayers.riotName,
             discordId: TeamPlayers.discordId || ''
         })),
-        matchId: teamData.matchId
     });
 }
 const client = new Client({ intents: [] }); // Initialize the client with appropriate intents
@@ -318,4 +305,58 @@ export function startTracking(matchData, checkMatchStatus, endMatch, forceEndMat
         timeout,
         guild: guild // Pass the guild object directly if it's already available in the context
     });
+}
+/**
+ * Encerra uma partida normalmente.
+ */
+export async function endMatch(matchId, endedBy) {
+    if (!db.data)
+        throw new Error("Banco de dados não inicializado.");
+    const match = db.data.matches.find((m) => m.id === matchId);
+    if (!match)
+        throw new Error(`Partida ${matchId} não encontrada.`);
+    match.isActive = false;
+    match.endedAt = new Date().toISOString();
+    match.endedBy = endedBy;
+    await db.write();
+    Logger.info(`Partida ${matchId} encerrada por ${endedBy}`);
+}
+/**
+ * Força o encerramento de uma partida.
+ */
+export async function forceEndMatch(matchId) {
+    await cleanupMatch(matchId, true);
+}
+/**
+ * Limpa todos os recursos de uma partida.
+ */
+export async function cleanupMatch(matchId, forced) {
+    if (!db.data)
+        throw new Error("Banco de dados não inicializado.");
+    const match = db.data.matches.find((m) => m.id === matchId);
+    if (!match)
+        return;
+    try {
+        // Remove canais de voz
+        const guild = await client.guilds.fetch(match.guildId);
+        if (!match.team1Channel) {
+            throw new Error("team1Channel is undefined.");
+        }
+        const team1Channel = await guild.channels.fetch(match.team1Channel);
+        if (!match.team2Channel) {
+            throw new Error("team2Channel is undefined.");
+        }
+        const team2Channel = await guild.channels.fetch(match.team2Channel);
+        await Promise.all([team1Channel.delete(), team2Channel.delete()]);
+        // Atualiza o banco de dados
+        match.isActive = false;
+        match.endedAt = new Date().toISOString();
+        match.endedBy = forced ? 'system (forced)' : 'system';
+        await db.write();
+        Logger.info(`Partida ${matchId} encerrada ${forced ? 'forçadamente' : 'normalmente'}`);
+    }
+    catch (error) {
+        logger.error(`Erro ao encerrar partida ${matchId}`, error);
+        throw error;
+    }
 }

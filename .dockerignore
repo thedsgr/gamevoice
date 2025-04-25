@@ -1,4 +1,8 @@
 node_modules
-dist/
-.env
-utils/*.js
+.git
+*.md
+.DS_Store
+.env.local
+*.log
+dist/       # Ignorado no estágio inicial (será recriado)
+!src/       # Garante que o código fonte seja copiado

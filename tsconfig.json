@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "NodeNext", 
+    "moduleResolution": "node16",
     "outDir": "./dist",
     "rootDir": "./src",
     "typeRoots": ["./node_modules/@types"],
@@ -19,6 +19,6 @@
       "@structs/*": ["./src/structs/*"]
     }
   },
-  "include": ["src/**/*", "src/utils/**/*", "next-env.d.ts", " /*.ts", " /*.tsx"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }

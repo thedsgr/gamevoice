@@ -1,15 +1,64 @@
-import { SlashCommandBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, ChatInputCommandInteraction, PermissionFlagsBits, ButtonInteraction } from 'discord.js';
+// Este arquivo implementa o comando `/painel`, que exibe um painel de administração
+// para gerenciar o bot. Ele permite que administradores visualizem o status do bot,
+// forcem o início ou encerramento de partidas e monitorem informações importantes,
+// como usuários ativos, partidas criadas e erros recentes.
+
+import {
+  SlashCommandBuilder,
+  ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
+  ChatInputCommandInteraction,
+  PermissionFlagsBits,
+  ButtonInteraction,
+  MessageFlags,
+} from 'discord.js';
 import { SlashCommand } from '../../structs/types/SlashCommand.js';
 import {
   getActiveUsers,
   getTotalMatchesCreated,
   getTotalMatchesEndedByInactivity,
-  getTotalMatchesEndedByPlayers,
   getPlayersKickedByReports,
   getLinkedRiotIds,
   getPlayersInCurrentMatch,
   getRecentErrors,
 } from '../../utils/db.js';
+
+/**
+ * Gera a mensagem de status do bot.
+ * @returns Uma string formatada com o status do bot.
+ */
+async function generateStatusMessage(): Promise<string> {
+  try {
+    const activeUsers = await getActiveUsers();
+    const totalMatchesCreated = await getTotalMatchesCreated();
+    const totalMatchesEndedByInactivity = await getTotalMatchesEndedByInactivity();
+    const playersInCurrentMatch = await getPlayersInCurrentMatch();
+    const linkedRiotIds = await getLinkedRiotIds();
+    const playersKickedByReports = await getPlayersKickedByReports();
+    const recentErrors = (await getRecentErrors()) || [];
+
+    return `
+🧠 **Status do Bot**
+
+- Usuários ativos (24h): ${activeUsers}
+- Partidas criadas: ${totalMatchesCreated}
+- Partidas encerradas por inatividade: ${totalMatchesEndedByInactivity}
+- Jogadores na call atual: ${playersInCurrentMatch}
+
+🎯 **Monitoramento de Conta**
+
+- Usuários com Riot ID: ${linkedRiotIds}
+- Jogadores expulsos: ${playersKickedByReports}
+
+⚠️ **Últimos Erros**
+${recentErrors.join('\n') || 'Nenhum erro registrado.'}
+    `;
+  } catch (error) {
+    console.error('Erro ao gerar mensagem de status:', error);
+    throw new Error('❌ Ocorreu um erro ao gerar o status do bot.');
+  }
+}
 
 const painelCommand: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -36,9 +85,9 @@ const painelCommand: SlashCommand = {
     );
 
     await interaction.reply({
-      content: "🛠️ **Painel de Administração**\nEscolha uma opção:",
-      components: [row],
-      ephemeral: true,
+      content: '🛠️ **Painel de Administração**\nEscolha uma opção:',
+      components: [row as any],
+      flags: MessageFlags.Ephemeral,
     });
   },
 };
@@ -46,40 +95,16 @@ const painelCommand: SlashCommand = {
 export async function handleButtonInteraction(interaction: ButtonInteraction) {
   if (interaction.customId === 'status_bot') {
     try {
-      const activeUsers = await getActiveUsers();
-      const totalMatchesCreated = await getTotalMatchesCreated();
-      const totalMatchesEndedByInactivity = await getTotalMatchesEndedByInactivity();
-      const playersInCurrentMatch = await getPlayersInCurrentMatch();
-      const linkedRiotIds = await getLinkedRiotIds();
-      const playersKickedByReports = await getPlayersKickedByReports();
-      const recentErrors = (await getRecentErrors()) || [];
-
-      const statusMessage = `
-🧠 **Status do Bot**
-
-- Usuários ativos (24h): ${activeUsers}
-- Partidas criadas: ${totalMatchesCreated}
-- Partidas encerradas por inatividade: ${totalMatchesEndedByInactivity}
-- Jogadores na call atual: ${playersInCurrentMatch}
-
-🎯 **Monitoramento de Conta**
-
-- Usuários com Riot ID: ${linkedRiotIds}
-- Jogadores expulsos: ${playersKickedByReports}
-
-⚠️ **Últimos Erros**
-${recentErrors.join('\n') || 'Nenhum erro registrado.'}
-      `;
-
+      const statusMessage = await generateStatusMessage();
       await interaction.reply({
         content: statusMessage,
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     } catch (error) {
       console.error('Erro ao obter status do bot:', error);
       await interaction.reply({
         content: '❌ Ocorreu um erro ao obter o status do bot. Tente novamente mais tarde.',
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
       });
     }
   }

@@ -1,7 +1,7 @@
-import { Guild, VoiceChannel } from 'discord.js';
+import { Guild, VoiceChannel, GuildMember } from 'discord.js';
 import { db, ensureDBInitialized } from '../utils/db.js';
 import { ExtendedClient } from '../structs/ExtendedClient.js';
-import { movePlayersToTeamRooms } from './matchChannels.js';
+import { movePlayersToChannel } from './matchChannels.js';
 import { TeamPlayer, ActiveMatch } from '../utils/match.d.js';
 import { RiotAccount } from '../utils/shared.js';
 import { User } from '../utils/user.js';
@@ -162,9 +162,13 @@ export async function handleActiveMatch(
     discordId: player.discordId || '',
   }));
 
-  await movePlayersToTeamRooms(guild, waitingRoom, {
-    teamPlayers,
-    matchId: activeMatch.matchId,
+  const players = teamPlayers.map(player => guild.members.cache.get(player.discordId)).filter(Boolean);
+  await movePlayersToChannel(guild, waitingRoom, {
+    teamPlayers: teamPlayers.map(player => ({
+      puuid: player.puuid,
+      riotName: player.riotName,
+      discordId: player.discordId
+    }))
   });
 }
 

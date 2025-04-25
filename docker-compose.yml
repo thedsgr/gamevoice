@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  bot:
+    build: .
+    volumes:
+      - ./data:/data  # Persiste o banco de dados
+    restart: unless-stopped
+    env_file: .env

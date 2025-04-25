@@ -8,7 +8,7 @@
  * - Verificar se um usuário tem permissões administrativas.
  * - Responder à interação informando que o usuário não tem permissões.
  */
-import { GuildMember, PermissionFlagsBits } from 'discord.js';
+import { GuildMember, PermissionFlagsBits, MessageFlags } from 'discord.js';
 import { Logger } from './log.js';
 /**
  * Verifica se o usuário tem uma permissão específica.
@@ -39,6 +39,6 @@ export function hasAdminPermissions(interaction) {
 export async function replyNoPermission(interaction) {
     await interaction.reply({
         content: "❌ Você não tem permissão para usar este comando.",
-        ephemeral: true,
+        flags: MessageFlags.Ephemeral,
     });
 }

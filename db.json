@@ -1093,7 +1093,2146 @@
       "level": "info",
       "message": "Servindo 1 servidores.",
       "action": "default_action"
+    },
+    {
+      "timestamp": 1745552244660,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745552244661,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745552244662,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745552244908,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 3 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745552245920,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745552245921,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745553653845,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745553653846,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745553653846,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745553653851,
+      "level": "info",
+      "message": "✅ Comando carregado: endmatch",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745553653933,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745553654062,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745553654065,
+      "level": "error",
+      "message": "❌ Erro ao registrar comandos na API do Discord:",
+      "context": {
+        "error": "Cannot read properties of null (reading 'id')",
+        "stack": "TypeError: Cannot read properties of null (reading 'id')\n    at loadCommands (file:///C:/Users/conta/Downloads/Game%20Voice/dist/utils/commandLoader.js:48:63)\n    at async BotApplication.loadAndRegisterCommands (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:44:13)\n    at async BotApplication.start (file:///C:/Users/conta/Downloads/Game%20Voice/dist/index.js:76:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745553654066,
+      "level": "info",
+      "message": "📦 Total de comandos carregados: 3",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745553654067,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 3 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745553654945,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745553654945,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554233218,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554233219,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554233219,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554233225,
+      "level": "info",
+      "message": "🔍 Verificando comando em C:\\Users\\conta\\Downloads\\Game Voice\\dist\\commands\\endmatch.js",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554233225,
+      "level": "info",
+      "message": "✅ Comando carregado: endmatch",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554233325,
+      "level": "info",
+      "message": "🔍 Verificando comando em C:\\Users\\conta\\Downloads\\Game Voice\\dist\\commands\\report.js",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554233326,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554658826,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554658826,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554659703,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554659704,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554659704,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554659718,
+      "level": "error",
+      "message": "❌ Erro ao carregar endmatch.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554659720,
+      "level": "error",
+      "message": "❌ Erro ao carregar report.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554659722,
+      "level": "error",
+      "message": "❌ Erro ao carregar vincular.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554659930,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554659931,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 0 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554730615,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554730616,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554731401,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554731402,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554731402,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554731409,
+      "level": "error",
+      "message": "❌ Erro ao carregar endmatch.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554731410,
+      "level": "error",
+      "message": "❌ Erro ao carregar report.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554731411,
+      "level": "error",
+      "message": "❌ Erro ao carregar vincular.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554731638,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554731639,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 0 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554870808,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554870810,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554871615,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554871616,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554871617,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554871622,
+      "level": "error",
+      "message": "❌ Erro ao carregar endmatch.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554871623,
+      "level": "error",
+      "message": "❌ Erro ao carregar report.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554871624,
+      "level": "error",
+      "message": "❌ Erro ao carregar vincular.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554871847,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554871848,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 0 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554924196,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554924197,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554925108,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554925109,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554925110,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554925115,
+      "level": "error",
+      "message": "❌ Erro ao carregar endmatch.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554925117,
+      "level": "error",
+      "message": "❌ Erro ao carregar report.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554925120,
+      "level": "error",
+      "message": "❌ Erro ao carregar vincular.js:",
+      "context": {
+        "error": "Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'",
+        "stack": "Error [ERR_UNSUPPORTED_ESM_URL_SCHEME]: Only URLs with a scheme in: file, data, and node are supported by the default ESM loader. On Windows, absolute paths must be valid file:// URLs. Received protocol 'c:'\n    at throwIfUnsupportedURLScheme (node:internal/modules/esm/load:241:11)\n    at defaultLoad (node:internal/modules/esm/load:132:3)\n    at ModuleLoader.load (node:internal/modules/esm/loader:658:12)\n    at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:477:56)\n    at #createModuleJob (node:internal/modules/esm/loader:501:36)\n    at #getJobFromResolveResult (node:internal/modules/esm/loader:269:34)\n    at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:237:41)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async ModuleLoader.import (node:internal/modules/esm/loader:539:23)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554925320,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554925322,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 0 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554994351,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554994352,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554995302,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745554995303,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554995304,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554995310,
+      "level": "info",
+      "message": "✅ Comando carregado: endmatch",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554995384,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554995514,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554995871,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745554995872,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 3 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745555016541,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745555016543,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745555017347,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745555017348,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745555017349,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745555017354,
+      "level": "info",
+      "message": "✅ Comando carregado: endmatch",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745555017464,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745555017643,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745555017944,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745555017944,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 3 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745556346491,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745556346492,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745556347418,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745556347419,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745556347420,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745556347427,
+      "level": "info",
+      "message": "✅ Comando carregado: endmatch",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745556347527,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745556347668,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745556347969,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745556347970,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 3 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745557383394,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745557383395,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745557384271,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745557384272,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745557384272,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745557384277,
+      "level": "info",
+      "message": "✅ Comando carregado: endmatch",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745557384365,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745557384502,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745557384855,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745557384856,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 3 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745559268169,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745559268171,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745559269006,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745559269007,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745559269008,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745559269087,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745559269216,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745559269557,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745559269558,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 2 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745559285897,
+      "level": "warn",
+      "message": "Comando \"endmatch\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745560417289,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745560417290,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745560418108,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745560418109,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745560418111,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745560418203,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745560418348,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745560419183,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745560419184,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 2 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745563309606,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745563309607,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745563310543,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745563310545,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745563310546,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745563310633,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745563310765,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745563311054,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745563311055,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 2 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745564093294,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745564093296,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745564094122,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745564094123,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745564094124,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745564094208,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745564094366,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745564094679,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745564094680,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 2 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745565020307,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565020308,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745565021100,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745565021101,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565021102,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565021188,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565021315,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565021596,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565021597,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 2 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745565595524,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565595526,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745565596321,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745565596322,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565596323,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565596401,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565596529,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565596809,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745565596810,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 2 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745596321447,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745596321449,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745596322414,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745596322416,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745596322417,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745596322553,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745596322820,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745596323127,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745596323128,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 2 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745598132671,
+      "level": "info",
+      "message": "Executando comando: vincular por thevyni",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745598143121,
+      "level": "warn",
+      "message": "Comando \"desvincular-riotid\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745599847740,
+      "level": "warn",
+      "message": "Comando \"desvincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745600488435,
+      "level": "warn",
+      "message": "Comando \"desvincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745602340654,
+      "level": "warn",
+      "message": "Comando \"desvincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745605064926,
+      "level": "info",
+      "message": "Executando comando: vincular por thevyni",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745605065316,
+      "level": "error",
+      "message": "Erro ao executar o comando \"vincular\":",
+      "context": {
+        "error": "Unknown interaction",
+        "stack": "DiscordAPIError[10062]: Unknown interaction\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:727:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:831:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1272:22)\n    at async ChatInputCommandInteraction.deferReply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:123:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/vincular.js:32:9)\n    at async ExtendedClient.handleInteractionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:37:9)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745605090470,
+      "level": "warn",
+      "message": "Comando \"setlog\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745605554665,
+      "level": "info",
+      "message": "Executando comando: vincular por thevyni",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745605564839,
+      "level": "warn",
+      "message": "Comando \"desvincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745607577139,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745607577142,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745607578550,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745607578552,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745607578553,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745607578844,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745607578846,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 0 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745608252210,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745608252211,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745608253311,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745608253312,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745608253314,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745608253562,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745608253565,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 0 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745608283412,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745608295871,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745610698871,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745610698873,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745610699987,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745610699990,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745610699992,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745610700374,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745610700377,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 0 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745610713928,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745610717789,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745611438051,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745611438053,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745611439450,
+      "level": "info",
+      "message": "Bot iniciado como Game Voice#8243",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745611439452,
+      "level": "info",
+      "message": "Servindo 1 servidores.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745611439453,
+      "level": "info",
+      "message": "Carregando comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745611439718,
+      "level": "info",
+      "message": "📦 Comandos registrados na API do Discord.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745611439720,
+      "level": "info",
+      "message": "Comandos carregados com sucesso: 0 comandos registrados.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745615988345,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745616930760,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745616956757,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745617019931,
+      "level": "warn",
+      "message": "Comando \"desvincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745617026741,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745618060249,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745618064166,
+      "level": "warn",
+      "message": "Comando \"desvincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745621312106,
+      "level": "warn",
+      "message": "Comando \"vincular\" não encontrado.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745621326828,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745621326832,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621327973,
+      "level": "info",
+      "message": "✅ Comando carregado: painel",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621327984,
+      "level": "info",
+      "message": "✅ Comando carregado: setlog",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621328011,
+      "level": "info",
+      "message": "✅ Comando carregado: desvincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621328044,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621328330,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621856257,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745621856261,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621857296,
+      "level": "info",
+      "message": "✅ Comando carregado: painel",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621857305,
+      "level": "info",
+      "message": "✅ Comando carregado: setlog",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621857334,
+      "level": "info",
+      "message": "✅ Comando carregado: desvincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621857366,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621857635,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745621857637,
+      "level": "info",
+      "message": "🗑️ Removendo comandos antigos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745621857925,
+      "level": "info",
+      "message": "📦 Registrando 5 comandos...",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745621911372,
+      "level": "info",
+      "message": "✅ 5 comandos registrados com sucesso!",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745622052596,
+      "level": "info",
+      "message": "Executando comando: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745622073197,
+      "level": "info",
+      "message": "Executando comando: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745622079220,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de cooldown:",
+      "context": {
+        "error": "Unknown interaction",
+        "stack": "DiscordAPIError[10062]: Unknown interaction\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async handleInteractionCreate (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:31:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745622956810,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745622956812,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745622957947,
+      "level": "info",
+      "message": "✅ Comando carregado: painel",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745622957973,
+      "level": "info",
+      "message": "✅ Comando carregado: setlog",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745622957997,
+      "level": "info",
+      "message": "✅ Comando carregado: desvincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745622958028,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745622958036,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745622984483,
+      "level": "info",
+      "message": "Executando comando: desvincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745622987506,
+      "level": "error",
+      "message": "Erro ao executar o comando \"desvincular\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/user/desvincular.js:33:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745622988926,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745622989920,
+      "level": "info",
+      "message": "Executando comando: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745622989926,
+      "level": "info",
+      "message": "Executando comando: vincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623012754,
+      "level": "info",
+      "message": "✅ 5 comandos registrados globalmente",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745623053868,
+      "level": "info",
+      "message": "Executando comando: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623053872,
+      "level": "info",
+      "message": "Executando comando: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623053874,
+      "level": "info",
+      "message": "Executando comando: report",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623055573,
+      "level": "error",
+      "message": "Erro ao executar o comando \"report\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/user/report.js:61:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623055766,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623056807,
+      "level": "error",
+      "message": "Erro ao executar o comando \"report\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/user/report.js:61:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623056810,
+      "level": "error",
+      "message": "Erro ao executar o comando \"report\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/user/report.js:61:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623056992,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623058240,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623071672,
+      "level": "info",
+      "message": "Executando comando: painel",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623071677,
+      "level": "info",
+      "message": "Executando comando: painel",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623071685,
+      "level": "info",
+      "message": "Executando comando: painel",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623071688,
+      "level": "info",
+      "message": "Executando comando: painel",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623073452,
+      "level": "error",
+      "message": "Erro ao executar o comando \"painel\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/painel.js:58:9)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623073460,
+      "level": "error",
+      "message": "Erro ao executar o comando \"painel\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/painel.js:58:9)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623073665,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623074719,
+      "level": "error",
+      "message": "Erro ao executar o comando \"painel\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/painel.js:58:9)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623074758,
+      "level": "error",
+      "message": "Erro ao executar o comando \"painel\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/painel.js:58:9)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623074908,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623074942,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623076223,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623081602,
+      "level": "info",
+      "message": "Executando comando: setlog",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623081615,
+      "level": "info",
+      "message": "Executando comando: setlog",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623081618,
+      "level": "info",
+      "message": "Executando comando: setlog",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623081622,
+      "level": "info",
+      "message": "Executando comando: setlog",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623081628,
+      "level": "info",
+      "message": "Executando comando: setlog",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623084304,
+      "level": "error",
+      "message": "Erro ao executar o comando \"setlog\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/setlogchannel.js:55:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623085547,
+      "level": "error",
+      "message": "Erro ao executar o comando \"setlog\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/setlogchannel.js:55:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623085561,
+      "level": "error",
+      "message": "Erro ao executar o comando \"setlog\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/setlogchannel.js:55:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623085589,
+      "level": "error",
+      "message": "Erro ao executar o comando \"setlog\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/setlogchannel.js:55:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623085736,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623086854,
+      "level": "error",
+      "message": "Erro ao executar o comando \"setlog\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/admin/setlogchannel.js:55:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623086973,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623087003,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623087016,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623088304,
+      "level": "error",
+      "message": "Falha ao enviar mensagem de erro:",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
+      },
+      "action": "default_action"
     }
   ],
-  "waitingList": []
+  "waitingList": [],
+  "logChannelId": "1363980877104681000"
 }

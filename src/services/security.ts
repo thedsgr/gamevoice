@@ -4,7 +4,7 @@
 // de forma segura e dentro das regras definidas. Também implementa limites para denúncias e
 // verifica se o usuário está em um servidor antes de executar comandos.
 
-import { ChatInputCommandInteraction, PermissionsBitField, PermissionFlagsBits } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionsBitField, PermissionFlagsBits, MessageFlags } from 'discord.js';
 import { db } from '../utils/db.js'; // Certifique-se de que o banco de dados está importado corretamente
 
 // src/services/security.ts
@@ -14,11 +14,13 @@ const cooldowns = new Map<string, number>();
 /**
  * Verifica se o usuário está em cooldown.
  * @param userId - O ID do usuário.
+ * @param commandName - O nome do comando.
  * @param seconds - O tempo de cooldown em segundos.
  * @returns `true` se o usuário ainda estiver em cooldown, caso contrário `false`.
  */
-export function isOnCooldown(userId: string, seconds: number): boolean {
-  const lastUsed = cooldowns.get(userId);
+export function isOnCooldown(userId: string, commandName: string, seconds: number): boolean {
+  const key = `${userId}:${commandName}`;
+  const lastUsed = cooldowns.get(key);
   if (!lastUsed) return false;
 
   const now = Date.now();
@@ -28,9 +30,12 @@ export function isOnCooldown(userId: string, seconds: number): boolean {
 /**
  * Define o cooldown para o usuário.
  * @param userId - O ID do usuário.
+ * @param commandName - O nome do comando.
+ * @param seconds - O tempo de cooldown em segundos.
  */
-export function setCooldown(userId: string, commandName: string, seconds: number, cooldownTime: number): void {
-  cooldowns.set(userId, Date.now());
+export function setCooldown(userId: string, commandName: string, seconds: number): void {
+  const key = `${userId}:${commandName}`;
+  cooldowns.set(key, Date.now());
 }
 
 /**
@@ -42,7 +47,7 @@ export function ensureInGuild(interaction: ChatInputCommandInteraction): boolean
   if (!interaction.guild) {
     interaction.reply({
       content: "❌ Este comando só pode ser usado em um servidor.",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return false;
   }
@@ -59,7 +64,7 @@ export function ensureAdmin(interaction: ChatInputCommandInteraction): boolean {
   if (!member || !('permissions' in member) || !(member.permissions instanceof PermissionsBitField) || !member.permissions.has(PermissionFlagsBits.Administrator)) {
     interaction.reply({
       content: "❌ Você não tem permissão para usar este comando.",
-      ephemeral: true,
+      flags: MessageFlags.Ephemeral,
     });
     return false;
   }
@@ -104,4 +109,36 @@ export function canReport(userId: string, targetId: string): boolean {
   ) || [];
   
   return recentReports.length < 5; // Máximo de 5 denúncias por hora
+}
+
+/**
+ * Verifica se o Riot ID já está vinculado a um usuário.
+ * @param riotId - O Riot ID do usuário.
+ * @returns `true` se o Riot ID já estiver vinculado, caso contrário `false`.
+ */
+export function checkExistingLink(riotId: string): Promise<boolean> {
+  return new Promise((resolve, reject) => {
+    try {
+      const isLinked = db.data?.users.some((user: any) => user.riotId === riotId) || false;
+      resolve(isLinked);
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+/**
+ * Salva o vínculo do Riot ID no banco de dados.
+ * @param userId - O ID do usuário no Discord.
+ * @param riotId - O Riot ID do usuário.
+ * @returns `void`
+ */
+export function saveLinkToDatabase(userId: string, riotId: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    try {
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
 }

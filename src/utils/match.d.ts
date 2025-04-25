@@ -54,6 +54,8 @@ export interface Match extends MatchData {
   endedBy?: string; // ID do jogador que terminou a partida (opcional)
   id: string; // ID único da partida (UUID)
   players: string[]; // Lista de participantes da partida
+  team1Channel?: string; // ID do canal do time 1
+  team2Channel?: string; // ID do canal do time 2
 }
 
 /** Representa um jogador em uma equipe */

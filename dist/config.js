@@ -16,5 +16,9 @@ export const config = validateEnv({
     GUILD_ID: process.env.GUILD_ID,
     WAITING_ROOM_ID: process.env.WAITING_ROOM_ID
 });
+export const ROLES = {
+    DEFAULT: '1362465119539298507',
+    INVOCADORES: '1365032596978798623'
+};
 console.log('Configurações carregadas com sucesso!');
 console.log('RIOT_API_KEY:', process.env.RIOT_API_KEY);

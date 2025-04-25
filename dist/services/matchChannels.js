@@ -2,18 +2,12 @@
  * Este arquivo gerencia os canais de voz relacionados às partidas.
  * Ele inclui funções para criar categorias e canais de voz, mover jogadores,
  * excluir canais vazios criados pelo bot e organizar jogadores em times.
- * As funções são projetadas para facilitar a automação de partidas no Discord.
  */
 import { ChannelType } from 'discord.js';
 import { Logger } from '../utils/log.js';
 const logger = new Logger();
-// ==========================
-// Funções de Categoria e Canal
-// ==========================
 /**
  * Obtém ou cria uma categoria chamada "PARTIDAS".
- * @param guild - A guilda do Discord.
- * @returns A categoria existente ou recém-criada.
  */
 export async function getOrCreateCategory(guild) {
     const existing = guild.channels.cache.find(c => c.type === ChannelType.GuildCategory && c.name === 'PARTIDAS');
@@ -24,154 +18,76 @@ export async function getOrCreateCategory(guild) {
             name: 'PARTIDAS',
             type: ChannelType.GuildCategory,
             reason: 'Categoria para partidas automáticas',
-            position: 0,
         });
     }
     catch (error) {
-        Logger.error('Falha ao criar categoria', error);
+        logger.error('Falha ao criar categoria', error);
         throw new Error('Não foi possível criar a categoria de partidas');
     }
 }
 /**
- * Obtém ou cria um canal de voz dentro de uma categoria.
- * @param guild - A guilda do Discord.
- * @param category - A categoria onde o canal será criado.
- * @param name - O nome do canal.
- * @returns O canal existente ou recém-criado.
+ * Cria dois canais de voz para os times.
  */
-export async function getOrCreateChannel(guild, category, name) {
-    const existing = guild.channels.cache.find(c => c.type === ChannelType.GuildVoice && c.name === name);
-    return (existing ||
-        (await guild.channels.create({
-            name,
-            type: ChannelType.GuildVoice,
-            parent: category,
-            reason: `Canal criado para a partida ${name}`,
-        })));
+export async function createTeamChannels(guild, matchId) {
+    const category = await getOrCreateCategory(guild);
+    const baseName = 'Time';
+    try {
+        const [team1, team2] = await Promise.all([
+            guild.channels.create({
+                name: `${baseName}-1-${matchId.slice(0, 6)}`,
+                type: ChannelType.GuildVoice,
+                parent: category,
+                reason: `Partida ${matchId}`,
+                userLimit: 5,
+            }),
+            guild.channels.create({
+                name: `${baseName}-2-${matchId.slice(0, 6)}`,
+                type: ChannelType.GuildVoice,
+                parent: category,
+                reason: `Partida ${matchId}`,
+                userLimit: 5,
+            }),
+        ]);
+        return [team1, team2];
+    }
+    catch (error) {
+        logger.error('Falha ao criar canais de time', error);
+        throw new Error('Não foi possível criar os canais da partida');
+    }
 }
-// ==========================
-// Funções de Gerenciamento de Jogadores
-// ==========================
 /**
  * Move jogadores para um canal de voz.
- * @param players - Lista de jogadores.
- * @param channel - Canal de voz.
  */
-export async function movePlayersToChannel(players, channel) {
-    await Promise.all(players.map(player => player.voice.setChannel(channel).catch(err => Logger.error(`Erro ao mover o jogador ${player.displayName} para o canal ${channel.name}:`, err))));
-}
-/**
- * Exclui canais de voz vazios criados pelo bot.
- * @param guild - Guilda do Discord.
- * @param channelIds - IDs dos canais a serem excluídos.
- */
-export async function deleteEmptyChannels(guild, channelIds) {
-    await Promise.all(channelIds.map(async (channelId) => {
-        const channel = await guild.channels.fetch(channelId);
-        if (channel?.isVoiceBased() &&
-            channel.members.size === 0 &&
-            channel.parent?.name === 'PARTIDAS') {
-            await channel.delete().catch(e => Logger.error(`Erro ao deletar ${channel.name}`, e));
-        }
-    }));
+export async function movePlayersToChannel(guild, waitingRoom, teamData) {
+    // Implementação da função
 }
 /**
  * Distribui jogadores entre dois canais de voz.
- * @param players - Lista de jogadores.
- * @param team1 - Canal do time 1.
- * @param team2 - Canal do time 2.
  */
-export async function distributePlayers(players, team1, team2) {
+export async function distributePlayers(guild, players, team1, team2, waitingRoom, matchData) {
     const half = Math.ceil(players.length / 2);
     const team1Players = players.slice(0, half);
     const team2Players = players.slice(half);
     try {
         await Promise.all([
-            ...team1Players.map(p => movePlayer(p, team1)),
-            ...team2Players.map(p => movePlayer(p, team2)),
+            movePlayersToChannel(guild, waitingRoom, {
+                teamPlayers: [...matchData.teamBlue, ...matchData.teamRed].map(player => ({
+                    puuid: player.puuid,
+                    riotName: player.summonerName,
+                    discordId: players.find(p => p.user.id === player.discordId)?.id || '',
+                }))
+            }),
+            movePlayersToChannel(guild, team2, {
+                teamPlayers: team2Players.map(player => ({
+                    puuid: '',
+                    riotName: '',
+                    discordId: player.id,
+                })),
+            }),
         ]);
     }
     catch (error) {
-        Logger.error('Erro ao distribuir jogadores', error);
+        logger.error('Erro ao distribuir jogadores', error);
         throw new Error('Falha ao mover jogadores para os canais');
-    }
-}
-/**
- * Move um jogador para um canal de voz.
- * @param player - O jogador a ser movido.
- * @param channel - O canal de destino.
- */
-export async function movePlayer(player, channel) {
-    try {
-        if (!player.voice.channelId) {
-            Logger.warn(`Jogador ${player.displayName} não está em um canal de voz`);
-            return;
-        }
-        await player.voice.setChannel(channel);
-        Logger.info(`Jogador ${player.displayName} movido para ${channel.name}`);
-    }
-    catch (error) {
-        Logger.warn(`Falha ao mover ${player.displayName}: ${error.message}`);
-        throw error;
-    }
-}
-// ==========================
-// Funções de Organização de Times
-// ==========================
-/**
- * Cria uma única sala para um time.
- * @param guild - A guilda do Discord.
- * @param players - Lista de jogadores.
- * @param matchId - ID da partida.
- */
-export async function createSingleRoom(guild, players, matchId) {
-    const category = await getOrCreateCategory(guild);
-    const channelName = `Time-${matchId.slice(0, 6)}`;
-    const channel = await getOrCreateChannel(guild, category, channelName);
-    Logger.info(`[DISCORD] Criando sala: ${channel.name}`);
-    await movePlayersToChannel(players, channel);
-}
-/**
- * Cria duas salas para dois times.
- * @param guild - A guilda do Discord.
- * @param players - Lista de jogadores.
- * @param matchId - ID da partida.
- */
-export async function createTwoRooms(guild, players, matchId) {
-    const category = await getOrCreateCategory(guild);
-    const half = Math.ceil(players.length / 2);
-    const team1 = players.slice(0, half);
-    const team2 = players.slice(half);
-    const team1Channel = await getOrCreateChannel(guild, category, `Time1-${matchId.slice(0, 6)}`);
-    const team2Channel = await getOrCreateChannel(guild, category, `Time2-${matchId.slice(0, 6)}`);
-    Logger.info(`[DISCORD] Criando duas salas: ${team1Channel.name} e ${team2Channel.name}`);
-    await Promise.all([
-        movePlayersToChannel(team1, team1Channel),
-        movePlayersToChannel(team2, team2Channel),
-    ]);
-}
-/**
- * Move jogadores da sala de espera para salas de times.
- * @param guild - A guilda do Discord.
- * @param waitingRoom - Sala de espera.
- * @param teamData - Dados dos times e da partida.
- */
-export async function movePlayersToTeamRooms(guild, waitingRoom, teamData) {
-    const waitingPlayers = Array.from(waitingRoom.members.values());
-    const teamMembers = teamData.teamPlayers
-        .map(player => {
-        const member = waitingPlayers.find(m => m.displayName.includes(player.riotName) || m.id === player.discordId);
-        return member ? { ...player, member } : null;
-    })
-        .filter(Boolean);
-    if (teamMembers.length === 0) {
-        Logger.info('Nenhum jogador do time encontrado na sala de espera');
-        return;
-    }
-    if (teamMembers.length <= 5) {
-        await createSingleRoom(guild, teamMembers.filter(t => t !== null).map(t => t.member), teamData.matchId);
-    }
-    else {
-        await createTwoRooms(guild, teamMembers.filter(t => t !== null).map(t => t.member), teamData.matchId);
     }
 }

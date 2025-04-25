@@ -1,5 +1,5 @@
 import { db, ensureDBInitialized } from '../utils/db.js';
-import { movePlayersToTeamRooms } from './matchChannels.js';
+import { movePlayersToChannel } from './matchChannels.js';
 /**
  * Verifica se o usuário já existe no banco de dados. Caso contrário, cria um novo.
  * @param discordId - ID do usuário no Discord.
@@ -128,9 +128,13 @@ export async function handleActiveMatch(guild, waitingRoom, activeMatch) {
         riotName: player.riotName,
         discordId: player.discordId || '',
     }));
-    await movePlayersToTeamRooms(guild, waitingRoom, {
-        teamPlayers,
-        matchId: activeMatch.matchId,
+    const players = teamPlayers.map(player => guild.members.cache.get(player.discordId)).filter(Boolean);
+    await movePlayersToChannel(guild, waitingRoom, {
+        teamPlayers: teamPlayers.map(player => ({
+            puuid: player.puuid,
+            riotName: player.riotName,
+            discordId: player.discordId
+        }))
     });
 }
 async function fetchActiveMatches(puuids) {

@@ -15,7 +15,7 @@ import { SystemLogEntry, DBLogEntry } from './log.d.js';
 
 /**
  * Classe Logger para gerenciamento centralizado de logs.
- * Registra logs no console, banco de dados e, opcionalmente, em canais de texto no Discord.
+ * Registra logs no console, banco de dados e opcionalmente em canais de texto no Discord.
  */
 export class Logger {
     /**
@@ -108,6 +108,10 @@ export class Logger {
         db.write().catch((err) => {
             console.error('❌ Failed to save log to DB:', err);
         });
+    }
+
+    error(message: string, error: Error): void {
+        console.error(`[ERROR] ${message}`, error);
     }
 }
 
