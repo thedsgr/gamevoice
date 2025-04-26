@@ -6,3 +6,4 @@ node_modules
 *.log
 dist/       # Ignorado no estágio inicial (será recriado)
 !src/       # Garante que o código fonte seja copiado
+.env
