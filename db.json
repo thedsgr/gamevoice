@@ -3231,6 +3231,399 @@
         "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:52:21)"
       },
       "action": "default_action"
+    },
+    {
+      "timestamp": 1745623588502,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745623588503,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745623589452,
+      "level": "info",
+      "message": "✅ Comando carregado: painel",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745623589466,
+      "level": "info",
+      "message": "✅ Comando carregado: setlog",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745623589490,
+      "level": "info",
+      "message": "✅ Comando carregado: desvincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745623589523,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745623589532,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745623590201,
+      "level": "info",
+      "message": "✅ 5 comandos registrados globalmente",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745624375946,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745624375948,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745624376946,
+      "level": "info",
+      "message": "✅ Comando carregado: painel",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745624376957,
+      "level": "info",
+      "message": "✅ Comando carregado: setlog",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745624376985,
+      "level": "info",
+      "message": "✅ Comando carregado: desvincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745624377020,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745624377045,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745624377995,
+      "level": "info",
+      "message": "✅ 5 comandos registrados globalmente",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625375285,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745625375287,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625376330,
+      "level": "info",
+      "message": "✅ Comando carregado: painel",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625376345,
+      "level": "info",
+      "message": "✅ Comando carregado: setlog",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625376383,
+      "level": "info",
+      "message": "✅ Comando carregado: desvincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625376423,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625376434,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625377089,
+      "level": "info",
+      "message": "✅ 5 comandos registrados globalmente",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625623084,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745625623087,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625624287,
+      "level": "info",
+      "message": "✅ Comando carregado: painel",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625624304,
+      "level": "info",
+      "message": "✅ Comando carregado: setlog",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625624338,
+      "level": "info",
+      "message": "✅ Comando carregado: desvincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625624401,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625624415,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625626817,
+      "level": "info",
+      "message": "✅ 5 comandos registrados globalmente",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745625652810,
+      "level": "info",
+      "message": "Executando comando: desvincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745625653444,
+      "level": "error",
+      "message": "Erro ao enviar mensagem para o canal de logs:",
+      "context": {
+        "error": "Missing Permissions",
+        "stack": "DiscordAPIError[50013]: Missing Permissions\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async SequentialHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1149:23)\n    at async SequentialHandler.queueRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:980:14)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async TextChannel.send (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\TextBasedChannel.js:190:15)\n    at async sendLog (file:///C:/Users/conta/Downloads/Game%20Voice/dist/utils/log.js:124:9)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/user/desvincular.js:29:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745625659235,
+      "level": "info",
+      "message": "Executando comando: desvincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745625659237,
+      "level": "info",
+      "message": "Executando comando: desvincular",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745625659767,
+      "level": "error",
+      "message": "Erro ao executar o comando \"desvincular\":",
+      "context": {
+        "error": "Interaction has already been acknowledged.",
+        "stack": "DiscordAPIError[40060]: Interaction has already been acknowledged.\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async BurstHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:852:23)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async ChatInputCommandInteraction.reply (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\InteractionResponses.js:194:22)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/user/desvincular.js:33:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745625659790,
+      "level": "error",
+      "message": "Erro ao enviar mensagem para o canal de logs:",
+      "context": {
+        "error": "Missing Permissions",
+        "stack": "DiscordAPIError[50013]: Missing Permissions\n    at handleErrors (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:748:13)\n    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)\n    at async SequentialHandler.runRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1149:23)\n    at async SequentialHandler.queueRequest (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:980:14)\n    at async _REST.request (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\@discordjs\\rest\\dist\\index.js:1293:22)\n    at async TextChannel.send (C:\\Users\\conta\\Downloads\\Game Voice\\node_modules\\discord.js\\src\\structures\\interfaces\\TextBasedChannel.js:190:15)\n    at async sendLog (file:///C:/Users/conta/Downloads/Game%20Voice/dist/utils/log.js:124:9)\n    at async Object.execute (file:///C:/Users/conta/Downloads/Game%20Voice/dist/commands/user/desvincular.js:29:13)\n    at async ExtendedClient.<anonymous> (file:///C:/Users/conta/Downloads/Game%20Voice/dist/events/interactionCreate.js:39:13)"
+      },
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745634165117,
+      "level": "info",
+      "message": "[DB] Banco de dados inicializado com sucesso.",
+      "action": "default_action"
+    },
+    {
+      "timestamp": 1745634165119,
+      "level": "info",
+      "message": "Banco de dados inicializado com sucesso.",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745634166012,
+      "level": "info",
+      "message": "✅ Comando carregado: painel",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745634166024,
+      "level": "info",
+      "message": "✅ Comando carregado: setlog",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745634166052,
+      "level": "info",
+      "message": "✅ Comando carregado: desvincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745634166086,
+      "level": "info",
+      "message": "✅ Comando carregado: report",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745634166096,
+      "level": "info",
+      "message": "✅ Comando carregado: vincular",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
+    },
+    {
+      "timestamp": 1745634166810,
+      "level": "info",
+      "message": "✅ 5 comandos registrados globalmente",
+      "context": {
+        "action": "success"
+      },
+      "action": "success"
     }
   ],
   "waitingList": [],

@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "tsc-watch --onSuccess \"node --no-warnings --loader ./paths-loader.js dist/index.js\"",
+    "dev": "nodemon src/index.ts",
     "deploy": "npm run build && node dist/scripts/deploy-commands.js",
     "deploy:dev": "node --loader ts-node/esm src/scripts/deploy-commands.ts",
     "deploy:prod": "ts-node src/scripts/deploy-commands.ts",

@@ -21,14 +21,15 @@ function isValidCommand(command) {
  */
 async function getAllCommandFiles(dir) {
     let results = [];
-    const list = await fs.readdir(dir);
-    for (const file of list) {
-        const filePath = path.join(dir, file);
-        const stat = await fs.stat(filePath);
-        if (stat.isDirectory()) {
+    const list = await fs.readdir(dir, { withFileTypes: true });
+    for (const dirent of list) {
+        const filePath = path.join(dir, dirent.name);
+        if (dirent.isDirectory()) {
+            // Busca recursiva em subpastas
             results = results.concat(await getAllCommandFiles(filePath));
         }
-        else if (file.endsWith('.js') || file.endsWith('.ts')) {
+        else if (['.js', '.ts'].includes(path.extname(filePath).toLowerCase())) {
+            // Adiciona apenas arquivos .js ou .ts
             results.push(filePath);
         }
     }

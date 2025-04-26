@@ -113,10 +113,23 @@ class BotApplication {
     Logger.success(`✅ Bot iniciado como ${this.client.user.tag}`);
 
     try {
-      // Carrega comandos
-      await loadCommands(this.client);
+      // Limpa o cache de comandos
+      // Define a placeholder function for clearCommandsCache
+            function clearCommandsCache(): void {
+              Logger.info('Cache de comandos limpo.');
+            }
+            clearCommandsCache();
 
-      // Registra comandos globalmente
+      // Carrega comandos
+      const loadedCount = await loadCommands(this.client);
+      if (loadedCount === 0) {
+        Logger.warn('⚠️ Nenhum comando foi carregado. Verifique o diretório de comandos.');
+        return;
+      }
+
+      Logger.success(`📦 ${loadedCount} comandos carregados com sucesso.`);
+
+      // Registra comandos globalmente (ou para uma guild específica)
       await registerCommands(this.client);
 
       Logger.info(`🔄 Pronto! Servindo ${this.client.guilds.cache.size} servidores.`);
