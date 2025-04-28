@@ -24,8 +24,9 @@ export class ApiError extends Error {
 
 export function handleApiError(error: unknown, context: string): ApiError {
     if (axios.isAxiosError(error)) {
-        const statusCode = error.response?.status || 500;
-        const message = error.response?.data?.status?.message || error.message || 'Erro desconhecido';
+        const axiosError = error as AxiosError;
+        const statusCode = axiosError.response?.status || 500;
+        const message = (axiosError.response?.data as { status?: { message?: string } })?.status?.message || axiosError.message || 'Erro desconhecido';
 
         console.error(`Erro na API da Riot (${context}): ${message}`);
         if (statusCode >= 500) {

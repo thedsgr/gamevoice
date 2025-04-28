@@ -6,33 +6,30 @@ import { PunishmentCore } from './punishmentCore.js';
 import { sendLog } from '../../../utils/log.js';
 import { sendWarningDM } from '../../../utils/warningDm.js';
 export class PunishmentManager {
-    static async handleReport(target, reporter, reason, client) {
+    static async handleReport(options) {
+        const { target, reporter, reason, client } = options;
         try {
-            // 1. Registrar report
+            // Implementação do tratamento do report
             await PunishmentCore.registerReport(target.id, reporter.id, reason);
-            // 2. Verificar condições para ban imediato
-            if (await PunishmentCore.checkBanConditions(target)) {
+            const targetId = target.id; // Extrai o ID do GuildMember
+            if (await PunishmentCore.checkBanConditions(targetId)) {
                 const result = await applyBan(target, 'Infração grave');
                 if (client) {
                     await sendLog(client, `Ban imediato aplicado: ${target.user.tag} | Motivo: Infração grave`, 'MOD');
                 }
                 return result;
             }
-            // 3. Verificar contagem de reports
             const reportCount = await PunishmentCore.getRecentReports(target.id);
-            // 4. Aplicar punição correspondente
             for (let stageIndex = 0; stageIndex < this.STAGES.length; stageIndex++) {
                 const stage = this.STAGES[stageIndex];
                 if (reportCount >= stage.threshold) {
                     const result = await stage.action(target, reason, client);
-                    // Log adicional
                     if (client) {
                         await sendLog(client, `Report processado: ${target.user.tag} | Estágio ${stageIndex + 1} | Resultado: ${result.success ? '✅' : '❌'}`, 'MOD');
                     }
                     return result;
                 }
             }
-            // 5. Nenhuma punição aplicada, apenas registrar o report
             if (client) {
                 await sendLog(client, `Report registrado: ${target.user.tag} | Motivo: ${reason}`, 'MOD');
             }

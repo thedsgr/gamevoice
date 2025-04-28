@@ -1,187 +1,143 @@
 /**
- * Este arquivo gerencia o banco de dados local do projeto utilizando a biblioteca `lowdb`.
- * Ele fornece funções para inicializar, ler, escrever e manipular dados persistentes, como
- * estatísticas do bot, partidas ativas, relatórios de erros e usuários.
- *
- * Funcionalidades principais:
- * - Inicialização e recuperação do estado do banco de dados.
- * - Manipulação de dados relacionados a partidas, usuários e estatísticas.
- * - Registro de erros e recuperação de estado após reinício.
- * - Funções utilitárias para acessar estatísticas e dados específicos.
+ * Este arquivo implementa a lógica para manipulação do banco de dados do sistema.
+ * Objetivos principais:
+ * 1. Inicializar e garantir a existência do arquivo de banco de dados JSON.
+ * 2. Fornecer funções utilitárias para leitura e escrita no banco de dados.
+ * 3. Garantir que o banco de dados esteja sempre em um estado consistente.
+ * 4. Centralizar a lógica de manipulação do banco de dados para facilitar a manutenção.
  */
-import { Low } from 'lowdb';
-import { JSONFile } from 'lowdb/node';
 import { Logger } from './log.js';
-const adapter = new JSONFile('db.json');
+import { join, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { existsSync, writeFileSync } from 'fs';
+import fs from 'fs';
+import knex from 'knex';
+// Verifica se o arquivo db.json existe, caso contrário, cria um arquivo vazio
+if (!fs.existsSync('db.json')) {
+    fs.writeFileSync('db.json', JSON.stringify({ users: [] }, null, 2));
+}
+// Configuração de caminhos absolutos
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const DB_PATH = join(__dirname, '../../db.json');
 const defaultData = {
+    guilds: [],
+    users: [],
     reports: [],
     errors: [],
-    users: [],
     waitingList: [],
     matches: [],
+    settings: {},
+    logs: [],
     stats: {
         totalMatchesCreated: 0,
         totalMatchesEndedByInactivity: 0,
         playersKickedByReports: 0,
         totalMatchesEndedByPlayers: 0,
-        averageMatchDuration: 0,
         totalMatchesEnded: 0,
     },
-    logChannelId: undefined,
-    waitingRoomChannelId: undefined,
-    activeVoiceChannel: undefined,
-    logs: [],
     systemLogs: [],
     restrictedUsers: [],
+    links: [],
 };
-// Instância do banco de dados
-export const db = new Low(adapter, defaultData);
-/** Inicializa o banco de dados */
-export async function initDB() {
-    Logger.info('[DB] Inicializando o banco de dados...');
+// Verifica e cria o arquivo se não existir
+export async function ensureDBFileExists() {
     try {
-        await db.read();
-        db.data || (db.data = defaultData); // Garante que db.data seja inicializado
-        // Inicializa a lista de espera, se necessário
-        if (!db.data.waitingList) {
-            db.data.waitingList = [];
+        if (!existsSync(DB_PATH)) {
+            writeFileSync(DB_PATH, JSON.stringify(defaultData, null, 2));
+            Logger.info(`Arquivo db.json criado em ${DB_PATH}`);
         }
-        await db.write();
-        Logger.info('[DB] Banco de dados inicializado com sucesso.');
     }
     catch (error) {
-        Logger.error('Erro ao inicializar o banco de dados:', error);
+        Logger.error('Falha ao verificar/criar arquivo db.json:', error);
+        throw error;
     }
 }
-/** Garante que o banco de dados está inicializado */
-export function ensureDBInitialized() {
-    if (!db.data) {
-        throw new Error('❌ Banco de dados não inicializado.');
+// Adiciona validação de dados ao carregar o banco de dados
+function validateDatabaseData(data) {
+    // Exemplo de validação simples
+    if (!Array.isArray(data.guilds) || !Array.isArray(data.users)) {
+        Logger.error('[DB] Dados do banco de dados estão corrompidos ou inválidos.');
+        return false;
     }
+    return true;
 }
-/**
- * Recupera o estado do bot após reinício.
- * @param client - O cliente do bot.
- */
-export async function recoverState(client) {
-    if (!db.data)
-        return;
-    Logger.info('[DB] Recuperando estado do bot após reinício...');
-    for (const match of db.data.matches.filter((m) => m.isActive)) {
-        try {
-            const guild = await client.guilds.fetch(match.guildId);
-            const channel = await guild.channels.fetch(match.channelId);
-            if (!channel) {
-                Logger.warn(`[DB] Canal não encontrado para a partida ${match.id}. Marcando como encerrada.`);
-                match.isActive = false;
-                match.endedAt = new Date().toISOString();
-                match.endedBy = 'Sistema (recuperação)';
-            }
-        }
-        catch (error) {
-            Logger.error(`[DB] Erro ao recuperar estado da partida ${match.id}:`, error);
-            match.isActive = false;
-        }
-    }
-    await db.write();
-    Logger.info('[DB] Estado do bot recuperado com sucesso.');
-}
-/** Registra erros no banco de dados */
-export async function logError(error, context) {
-    ensureDBInitialized();
-    db.data.errors.push({
-        timestamp: Date.now(),
-        message: error.message,
-        stack: error.stack,
-        matchId: context?.matchId,
-    });
-    await db.write();
-}
-/** Obtém estatísticas do bot */
-export function getBotStatistics() {
-    ensureDBInitialized();
-    const data = db.data;
-    const now = Date.now();
-    const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
-    return {
-        activeUsers: data.users.filter(user => (user.lastInteraction ?? 0) > twentyFourHoursAgo).length,
-        totalMatches: data.stats.totalMatchesCreated || 0,
-        inactiveMatches: data.stats.totalMatchesEndedByInactivity || 0,
-        reports: data.reports.length || 0,
-        kicksByReports: data.stats.playersKickedByReports || 0,
-        linkedAccounts: data.users.filter(user => (user.riotAccounts?.length ?? 0) > 0).length,
-        currentPlayers: data.matches.find(match => match.isActive)?.players.length || 0,
-        recentErrors: data.errors.filter(error => error.timestamp > twentyFourHoursAgo).map(error => ({
-            time: new Date(error.timestamp).toLocaleTimeString(),
-            message: error.message,
-        })),
-    };
-}
-/** Obtém partidas ativas */
-export function getActiveMatches() {
-    ensureDBInitialized();
-    return db.data.matches.filter(match => match.isActive);
-}
-/** Função utilitária para executar uma função com o banco de dados inicializado */
-function withDBInitialized(fn) {
-    if (!db.data) {
-        throw new Error('❌ Banco de dados não inicializado.');
-    }
-    return fn();
-}
-// Inicialize a lista de espera, se necessário
-if (!db.data.waitingList) {
-    db.data.waitingList = [];
-}
-export const getTotalMatchesCreated = () => {
-    return db.data?.stats.totalMatchesCreated || 0;
-};
-export const getPlayersKickedByReports = () => {
-    return db.data?.stats.playersKickedByReports || 0;
-};
-export const getTotalMatchesEndedByInactivity = () => {
-    return db.data?.stats.totalMatchesEndedByInactivity || 0;
-};
-export const getLinkedRiotIds = () => {
-    return db.data?.users.filter(user => (user.riotAccounts?.length ?? 0) > 0).length || 0;
-};
-export const getPlayersInCurrentMatch = () => {
-    return db.data?.matches.find(match => match.isActive)?.players.length || 0;
-};
-export const getRecentErrors = () => {
-    const now = Date.now();
-    const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
-    return db.data?.errors
-        .filter(error => error.timestamp > twentyFourHoursAgo)
-        .map(error => `${new Date(error.timestamp).toLocaleTimeString()} - ${error.message}`) || [];
-};
-export const getTotalMatchesEndedByPlayers = () => {
-    return db.data?.stats.totalMatchesEndedByPlayers || 0;
-};
-export const getActiveUsers = () => {
-    const now = Date.now();
-    const twentyFourHoursAgo = now - 24 * 60 * 60 * 1000;
-    return db.data?.users.filter(user => (user.lastInteraction ?? 0) > twentyFourHoursAgo).length || 0;
-};
-export async function getRestrictedUsers() {
-    ensureDBInitialized();
-    return db.data?.restrictedUsers || [];
-}
-export async function addOrUpdateRestrictedUser(userId, duration, reason) {
-    ensureDBInitialized();
-    const restrictedUsers = db.data?.restrictedUsers || [];
-    const existing = restrictedUsers.find((u) => u.userId === userId);
-    if (existing) {
-        existing.until = Date.now() + duration;
-        existing.reason = reason || existing.reason;
-    }
-    else {
-        restrictedUsers.push({
-            userId,
-            until: Date.now() + duration,
-            reason,
+// Cria a instância do banco de dados
+const db = knex({
+    client: 'sqlite3',
+    connection: {
+        filename: join(__dirname, '../../data/database.sqlite'),
+    },
+    useNullAsDefault: true,
+});
+// Ajustando os logs para evitar duplicações
+async function createTables() {
+    const hasUsersTable = await db.schema.hasTable('users');
+    if (!hasUsersTable) {
+        await db.schema.createTable('users', (table) => {
+            table.string('id').primary();
+            table.string('name');
+            table.string('email');
+            table.timestamps(true, true);
         });
+        Logger.info('Tabela users criada com sucesso.');
     }
-    db.data.restrictedUsers = restrictedUsers;
-    await db.write();
+    const hasMatchesTable = await db.schema.hasTable('matches');
+    if (!hasMatchesTable) {
+        await db.schema.createTable('matches', (table) => {
+            table.string('id').primary();
+            table.string('status');
+            table.string('winner');
+            table.timestamps(true, true);
+        });
+        Logger.info('Tabela matches criada com sucesso.');
+    }
+    const hasLogsTable = await db.schema.hasTable('logs');
+    if (!hasLogsTable) {
+        await db.schema.createTable('logs', (table) => {
+            table.increments('id').primary();
+            table.string('action').notNullable();
+            table.text('context');
+            table.string('level').notNullable();
+            table.text('message').notNullable();
+            table.bigInteger('timestamp').notNullable();
+        });
+        Logger.info('Tabela logs criada com sucesso.');
+    }
+    const hasSystemLogsTable = await db.schema.hasTable('systemLogs');
+    if (!hasSystemLogsTable) {
+        await db.schema.createTable('systemLogs', (table) => {
+            table.increments('id').primary();
+            table.string('action').notNullable();
+            table.string('level').notNullable();
+            table.string('message').notNullable();
+            table.timestamp('timestamp').notNullable();
+        });
+        Logger.info('Tabela systemLogs criada com sucesso.');
+    }
 }
+createTables();
+export default db;
+/**
+ * Garante que o banco de dados esteja inicializado e consistente.
+ */
+export async function ensureDBInitialized() {
+    await ensureDBFileExists(); // Garante que o arquivo exista
+    if (!validateDatabaseData(defaultData)) {
+        Logger.warn('[DB] Restaurando dados padrão devido a inconsistências.');
+    }
+    Logger.success('[DB] Banco de dados inicializado com sucesso');
+}
+// Exemplo de uso do Knex para interagir com o banco de dados
+export async function getUsers() {
+    return await db('users').select('*');
+}
+export async function addUser(user) {
+    return await db('users').insert(user);
+}
+export async function getMatches() {
+    return await db('matches').select('*');
+}
+export async function addMatch(match) {
+    return await db('matches').insert(match);
+}
+export { createTables };

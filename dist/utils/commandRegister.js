@@ -6,6 +6,9 @@ import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { SlashCommandBuilder } from '@discordjs/builders';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const logger = new Logger();
+// Cache de comandos já registrados
+const registeredCommandsCache = new Set();
 /**
  * Valida a estrutura de um comando.
  */
@@ -80,42 +83,45 @@ export async function loadCommands(client) {
     }
     return loadedCount;
 }
-// Cache de comandos já registrados
-const registeredCommandsCache = new Set();
-export async function registerCommands(client, guildId) {
+/**
+ * Registra comandos no Discord, evitando duplicações com o uso de cache.
+ * @param client - O cliente do Discord.
+ * @param guildId - ID da guilda (opcional, para registro local).
+ * @returns `true` se os comandos foram registrados com sucesso, `false` caso contrário.
+ */
+export async function registerGuildCommands(client, guildId) {
     if (!client.user?.id) {
-        Logger.error('❌ Client não autenticado');
+        Logger.error('❌ Client não autenticado. Certifique-se de que o bot está logado.');
         return false;
     }
     if (client.commands.size === 0) {
-        Logger.warn('⚠️ Nenhum comando para registrar');
+        Logger.warn('⚠️ Nenhum comando para registrar. Certifique-se de que os comandos foram carregados.');
         return false;
     }
-    const cacheKey = guildId ? `${client.user.id}-${guildId}` : `${client.user.id}-global`;
+    const cacheKey = `${client.user.id}-${guildId}`;
     if (registeredCommandsCache.has(cacheKey)) {
-        Logger.info('ℹ️ Comandos já registrados. Ignorando registro duplicado.');
+        Logger.info(`ℹ️ Comandos já registrados para a guilda ${guildId}. Ignorando registro duplicado.`);
         return true;
     }
     try {
         const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
         const commandsData = Array.from(client.commands.values()).map(c => c.data.toJSON());
-        // Limpa comandos existentes primeiro
-        await rest.put(guildId
-            ? Routes.applicationGuildCommands(client.user.id, guildId)
-            : Routes.applicationCommands(client.user.id), { body: [] });
-        // Registra os novos comandos
-        await rest.put(guildId
-            ? Routes.applicationGuildCommands(client.user.id, guildId)
-            : Routes.applicationCommands(client.user.id), { body: commandsData });
+        Logger.info(`📤 Iniciando registro de ${commandsData.length} comandos na guilda ${guildId}...`);
+        // Remove comandos existentes e registra os novos
+        await rest.put(Routes.applicationGuildCommands(client.user.id, guildId), { body: commandsData });
         registeredCommandsCache.add(cacheKey);
-        Logger.success(`✅ ${commandsData.length} comandos registrados ${guildId ? 'na guild' : 'globalmente'}`);
+        Logger.success(`✅ ${commandsData.length} comandos registrados com sucesso na guilda ${guildId}.`);
         return true;
     }
     catch (error) {
-        Logger.error('❌ Erro no registro:', error instanceof Error ? error : new Error(String(error)));
+        Logger.error(`❌ Erro ao registrar comandos na guilda ${guildId}:`, error instanceof Error ? error : new Error(String(error)));
         return false;
     }
 }
+/**
+ * Limpa o cache de comandos registrados.
+ */
 export function clearCommandsCache() {
     registeredCommandsCache.clear();
+    Logger.info('ℹ️ Cache de comandos registrados limpo.');
 }

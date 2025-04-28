@@ -1,9 +1,29 @@
-node_modules
+# Arquivos sensíveis
+.env
+database.sqlite
+private-key.pem
+cert-request.csr
+db.json
+
+# Dependências
+node_modules/
+
+# Logs
+logs/
+*.log
+
+# Build
+build/
+dist/
+
+# Configurações do sistema
+.DS_Store
+Thumbs.db
+
+# Outros
+*.tmp
+*.temp
 .git
 *.md
-.DS_Store
 .env.local
-*.log
-dist/       # Ignorado no estágio inicial (será recriado)
 !src/       # Garante que o código fonte seja copiado
-.env

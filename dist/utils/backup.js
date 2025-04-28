@@ -51,7 +51,8 @@ export async function checkRiotAPIHealth() {
     }
     catch (error) {
         if (axios.isAxiosError(error)) {
-            Logger.error('Erro do Axios ao verificar a saúde da API da Riot', new Error(String(error.response?.data || error.message)));
+            const axiosError = error;
+            Logger.error('Erro do Axios ao verificar a saúde da API da Riot', new Error(String(axiosError.response?.data || axiosError.message)));
         }
         else if (error instanceof Error) {
             Logger.error('Erro desconhecido ao verificar a saúde da API da Riot', error);

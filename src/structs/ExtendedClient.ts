@@ -5,11 +5,13 @@
 import { Client, ClientOptions, Collection } from "discord.js";
 import { SlashCommand } from "../structs/types/SlashCommand.js";
 import dotenv from "dotenv";
+import { Team } from '../types/team.d.js';
 dotenv.config();
 
 export class ExtendedClient extends Client {
   // Coleção para armazenar os comandos carregados
   public commands: Collection<string, SlashCommand>;
+  public teams?: Collection<string, Team>;
 
   constructor(options: ClientOptions) {
     super(options); // Passa as opções para o construtor da classe base (Client)

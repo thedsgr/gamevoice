@@ -1,24 +1,15 @@
 import 'dotenv/config';
-// Validação das variáveis de ambiente
-function validateEnv(config) {
-    const missingVars = Object.entries(config)
-        .filter(([_, value]) => !value)
-        .map(([key]) => key);
-    if (missingVars.length > 0) {
-        throw new Error(`As seguintes variáveis estão faltando no .env: ${missingVars.join(', ')}`);
-    }
-    return config;
-}
+import { validateEnvVars } from './utils/utils.js';
+// Valida as variáveis de ambiente necessárias
+validateEnvVars(['DISCORD_TOKEN', 'RIOT_API_KEY', 'GUILD_ID', 'LOBBY_ID']);
 // Configurações exportadas
-export const config = validateEnv({
+export const config = {
     DISCORD_TOKEN: process.env.DISCORD_TOKEN,
     RIOT_API_KEY: process.env.RIOT_API_KEY,
     GUILD_ID: process.env.GUILD_ID,
-    WAITING_ROOM_ID: process.env.WAITING_ROOM_ID
-});
+    LOBBY_ID: process.env.LOBBY_ID
+};
 export const ROLES = {
     DEFAULT: '1362465119539298507',
     INVOCADORES: '1365032596978798623'
 };
-console.log('Configurações carregadas com sucesso!');
-console.log('RIOT_API_KEY:', process.env.RIOT_API_KEY);

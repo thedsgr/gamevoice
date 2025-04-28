@@ -1,9 +1,37 @@
+# Dependências locais
 node_modules
+
+# Controle de versão
 .git
+
+# Documentação e arquivos de texto
 *.md
+
+# Arquivos do sistema
 .DS_Store
+
+# Configurações locais
 .env.local
+
+# Logs
 *.log
+logs/
+
+# Diretórios de build
+build/
 dist/       # Ignorado no estágio inicial (será recriado)
+
+# Código-fonte
 !src/       # Garante que o código fonte seja copiado
+
+# Arquivos sensíveis
 .env
+database.sqlite
+private-key.pem
+cert-request.csr
+db.json
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.bak

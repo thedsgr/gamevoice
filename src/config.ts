@@ -1,40 +1,26 @@
 import 'dotenv/config';
+import { validateEnvVars } from './utils/utils.js';
 
 // Interface para tipagem das configurações
 interface AppConfig {
   DISCORD_TOKEN: string;
   RIOT_API_KEY: string;
   GUILD_ID: string;
-  WAITING_ROOM_ID: string;
+  LOBBY_ID: string;
 }
 
-// Validação das variáveis de ambiente
-function validateEnv(config: Partial<AppConfig>): AppConfig {
-  const missingVars = Object.entries(config)
-    .filter(([_, value]) => !value)
-    .map(([key]) => key);
-
-  if (missingVars.length > 0) {
-    throw new Error(
-      `As seguintes variáveis estão faltando no .env: ${missingVars.join(', ')}`
-    );
-  }
-
-  return config as AppConfig;
-}
+// Valida as variáveis de ambiente necessárias
+validateEnvVars(['DISCORD_TOKEN', 'RIOT_API_KEY', 'GUILD_ID', 'LOBBY_ID']);
 
 // Configurações exportadas
-export const config: AppConfig = validateEnv({
-  DISCORD_TOKEN: process.env.DISCORD_TOKEN,
-  RIOT_API_KEY: process.env.RIOT_API_KEY,
-  GUILD_ID: process.env.GUILD_ID,
-  WAITING_ROOM_ID: process.env.WAITING_ROOM_ID
-});
+export const config: AppConfig = {
+  DISCORD_TOKEN: process.env.DISCORD_TOKEN!,
+  RIOT_API_KEY: process.env.RIOT_API_KEY!,
+  GUILD_ID: process.env.GUILD_ID!,
+  LOBBY_ID: process.env.LOBBY_ID!
+};
 
 export const ROLES = {
   DEFAULT: '1362465119539298507',
   INVOCADORES: '1365032596978798623'
 };
-
-console.log('Configurações carregadas com sucesso!');
-console.log('RIOT_API_KEY:', process.env.RIOT_API_KEY);

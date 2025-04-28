@@ -3,13 +3,13 @@
 // necessária e forneçam uma função de execução.
 
 import { SlashCommandBuilder } from '@discordjs/builders';
-import { ChatInputCommandInteraction } from 'discord.js';
+import { CommandInteraction } from 'discord.js';
 
 /**
  * Representa um comando de slash no Discord.
  * Todos os comandos devem implementar esta interface.
  */
-export interface SlashCommand {
+export type SlashCommand = {
   /**
    * Estrutura do comando, incluindo nome, descrição e opções.
    * Utiliza o `SlashCommandBuilder` para definir a configuração do comando.
@@ -20,5 +20,5 @@ export interface SlashCommand {
    * Função executada quando o comando é chamado.
    * @param interaction - A interação do comando de slash.
    */
-  execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
-}
+  execute: (interaction: CommandInteraction) => Promise<void>;
+};

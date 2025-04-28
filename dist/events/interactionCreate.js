@@ -1,6 +1,7 @@
-import { Events } from 'discord.js';
+import { Events, MessageFlags } from 'discord.js';
 import { Logger } from '../utils/log.js';
 import { isOnCooldown, setCooldown } from '../services/security.js';
+import { Messages } from '../utils/messageUtils.js';
 const commandCooldown = 5; // Cooldown de 5 segundos
 export function handleInteractionCreate(interaction, client) {
     client.on(Events.InteractionCreate, async (interaction) => {
@@ -11,8 +12,8 @@ export function handleInteractionCreate(interaction, client) {
             Logger.warn(`Comando "${interaction.commandName}" não encontrado.`);
             try {
                 await interaction.reply({
-                    content: '❌ Comando não encontrado.',
-                    ephemeral: true,
+                    content: Messages.commandNotFound,
+                    flags: MessageFlags.Ephemeral,
                 });
             }
             catch (error) {
@@ -25,8 +26,8 @@ export function handleInteractionCreate(interaction, client) {
         if (isOnCooldown(userId, interaction.commandName, commandCooldown)) {
             try {
                 await interaction.reply({
-                    content: '⏳ Você está em cooldown. Tente novamente mais tarde.',
-                    ephemeral: true,
+                    content: Messages.cooldownActive,
+                    flags: MessageFlags.Ephemeral,
                 });
             }
             catch (error) {
@@ -45,13 +46,13 @@ export function handleInteractionCreate(interaction, client) {
             try {
                 if (interaction.deferred || interaction.replied) {
                     await interaction.editReply({
-                        content: '❌ Ocorreu um erro ao executar este comando.',
+                        content: Messages.commandError,
                     });
                 }
                 else {
                     await interaction.reply({
-                        content: '❌ Ocorreu um erro ao executar este comando.',
-                        ephemeral: true,
+                        content: Messages.commandError,
+                        flags: MessageFlags.Ephemeral,
                     });
                 }
             }

@@ -41,7 +41,7 @@ const rest = new REST({ version: '10', timeout: Number(process.env.REST_TIMEOUT)
  */
 function getAllCommandFiles(dir: string): string[] {
   const files = fs.readdirSync(dir, { withFileTypes: true });
-  const extension = process.env.NODE_ENV === 'production' ? '.js' : '.ts';
+  const extension = '.js'; // Força a extensão correta para produção
 
   const commandFiles: string[] = [];
   for (const file of files) {

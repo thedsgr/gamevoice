@@ -1,24 +1,27 @@
 {
   "compilerOptions": {
     "target": "ES2020",
-    "module": "NodeNext", 
-    "moduleResolution": "node16",
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "typeRoots": ["./node_modules/@types"],
-    "types": [],
+    "module": "ESNext",
     "strict": true,
-    "allowJs": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "moduleResolution": "Node",
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "paths": {
-      "../../utils/*": ["src/utils/*"],
-      "@services/*": ["./src/services/*"],
-      "@structs/*": ["./src/structs/*"]
-    }
+      "@utils/*": ["src/utils/*"],
+      "@services/*": ["src/services/*"],
+      "@structs/*": ["src/structs/*"],
+      "@types/*": ["src/types/*"],
+      "@commands/*": ["src/commands/*"],
+      "@events/*": ["src/events/*"]
+    },
+    "types": ["node", "jest"],
+    "declaration": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules"]
+  "include": ["src/**/*", "src/**/*.js"],
+  "exclude": ["node_modules", "dist"]
 }

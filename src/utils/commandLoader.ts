@@ -4,99 +4,52 @@
  * de comandos, valida sua estrutura e os adiciona à coleção de comandos do cliente.
  */
 
-import { fileURLToPath, pathToFileURL } from 'url';
+import { Collection } from 'discord.js';
+import { fileURLToPath } from 'url';
 import path from 'path';
 import fs from 'fs/promises';
-import { Collection, Client } from 'discord.js';
 import { Logger } from './log.js';
+import { SlashCommand } from '../structs/types/SlashCommand.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-interface ExtendedClient extends Client {
-    commands: Collection<string, any>;
-}
+export async function loadCommands(client: { commands: Collection<string, SlashCommand> }): Promise<number> {
+  const commandsPath = path.join(__dirname, '../commands');
+  Logger.info(`🔍 Carregando comandos de: ${commandsPath}`);
 
-/**
- * Busca todos os arquivos em um diretório de forma recursiva.
- * @param dir Diretório base.
- * @returns Lista de caminhos completos para os arquivos encontrados.
- */
-async function getAllCommandFiles(dir: string): Promise<string[]> {
-    let results: string[] = [];
-    const list = await fs.readdir(dir, { withFileTypes: true });
+  try {
+    const commandFiles = (await fs.readdir(commandsPath))
+      .filter(file => ['.js', '.ts'].includes(path.extname(file).toLowerCase()));
 
-    for (const dirent of list) {
-        const filePath = path.join(dir, dirent.name);
-        if (dirent.isDirectory()) {
-            results = results.concat(await getAllCommandFiles(filePath));
-        } else if (['.js', '.ts'].includes(path.extname(filePath).toLowerCase())) {
-            results.push(filePath);
-        }
+    if (commandFiles.length === 0) {
+      Logger.warn('⚠️ Nenhum comando encontrado');
+      return 0;
     }
-
-    return results;
-}
-
-/**
- * Carrega os comandos do bot localmente e os adiciona à coleção do cliente.
- * @param client - O cliente do Discord.
- * @returns O número de comandos carregados.
- */
-export async function loadCommands(client: ExtendedClient): Promise<number> {
-    if (!client.user?.id) {
-        throw new Error('Client não está autenticado. Chame loadCommands após o evento ready.');
-    }
-
-    // Não sobrescreve a coleção se já existir
-    if (!client.commands) {
-        client.commands = new Collection();
-    }
-
-    const commandsPath = path.resolve(__dirname, '../commands');
-    console.log(`🔍 Procurando comandos em: ${commandsPath}`);
-
-    try {
-        await fs.access(commandsPath); // Verifica se o diretório existe
-    } catch {
-        console.error(`❌ Diretório não encontrado: ${commandsPath}`);
-        return 0;
-    }
-
-    // Busca todos os arquivos de comando de forma recursiva
-    const commandFiles = await getAllCommandFiles(commandsPath);
-    console.log('Arquivos encontrados:', commandFiles);
 
     let loadedCount = 0;
 
     for (const file of commandFiles) {
-        try {
-            const commandUrl = pathToFileURL(file).href;
-            const commandModule = await import(commandUrl);
+      try {
+        const filePath = path.join(commandsPath, file);
+        const commandUrl = new URL(`file://${filePath}`).href;
+        const { default: command } = await import(commandUrl);
 
-            if (!commandModule?.default) {
-                Logger.warn(`⚠️ Arquivo ${file} não exporta default`);
-                continue;
-            }
-
-            const command = commandModule.default;
-
-            // Verifica duplicatas
-            if (client.commands.has(command.data.name)) {
-                Logger.warn(`⚠️ Comando duplicado: ${command.data.name}`);
-                continue;
-            }
-
-            if (command.data && command.execute) {
-                client.commands.set(command.data.name, command);
-                Logger.success(`✅ Comando carregado: ${command.data.name}`);
-                loadedCount++;
-            } else {
-                Logger.warn(`⚠️ Estrutura inválida em ${file}`);
-            }
-        } catch (error) {
-            Logger.error(`❌ Falha ao carregar ${file}:`, error instanceof Error ? error : new Error(String(error)));
+        if (!command?.data || !command?.execute) {
+          Logger.warn(`⚠️ Estrutura inválida em ${file}. Certifique-se de que o comando exporta 'data' e 'execute'.`);
+          continue;
         }
+
+        client.commands.set(command.data.name, command);
+        Logger.success(`✅ ${command.data.name}`);
+        loadedCount++;
+      } catch (error) {
+        Logger.error(`❌ Erro em ${file}:`, error as Error);
+      }
     }
 
     return loadedCount;
+  } catch (error) {
+    Logger.error('❌ Erro ao carregar comandos:', error as Error);
+    return 0;
+  }
 }

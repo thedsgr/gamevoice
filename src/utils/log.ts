@@ -10,108 +10,52 @@
  */
 
 import { Client, TextChannel } from 'discord.js';
-import { db } from './db.js';
-import { SystemLogEntry, DBLogEntry } from './log.d.js';
+import db from '../utils/db.js'; // Corrigido para usar a exportação padrão
+import { SystemLogEntry, DBLogEntry } from '../types/log.d.js';
+import { ConsoleLogger } from './consoleLogger.js';
+import { DBLogger } from './dbLogger.js';
+
 
 /**
  * Classe Logger para gerenciamento centralizado de logs.
  * Registra logs no console, banco de dados e opcionalmente em canais de texto no Discord.
  */
 export class Logger {
-    /**
-     * Registra informações no console e opcionalmente no banco de dados.
-     * @param message - A mensagem do log.
-     * @param context - Contexto adicional para o log.
-     */
     static info(message: string, context?: Record<string, unknown>) {
-        this.logToConsole(message, 'INFO');
-        this.logToDB('info', message, context);
+        ConsoleLogger.log(message, 'INFO');
+        DBLogger.log('info', message, context);
     }
 
-    /**
-     * Registra avisos no console e opcionalmente no banco de dados.
-     * @param message - A mensagem do log.
-     * @param context - Contexto adicional para o log.
-     */
     static warn(message: string, context?: Record<string, unknown>) {
-        this.logToConsole(message, 'WARN');
-        this.logToDB('warn', message, context);
+        ConsoleLogger.log(message, 'WARN');
+        DBLogger.log('warn', message, context);
     }
 
-    /**
-     * Registra erros no console, banco de dados e opcionalmente no canal de logs.
-     * @param message - A mensagem do log.
-     * @param error - O erro associado ao log.
-     * @param context - Contexto adicional para o log.
-     */
     static error(message: string, error?: Error, context?: Record<string, unknown>) {
-        this.logToConsole(message, 'ERROR', error);
-        this.logToDB('error', message, { 
-            ...context, 
+        ConsoleLogger.log(message, 'ERROR', error);
+        DBLogger.log('error', message, {
+            ...context,
             error: error?.message,
-            stack: error?.stack 
+            stack: error?.stack
         });
     }
 
-    /**
-     * Registra mensagens de sucesso no console.
-     * @param message - A mensagem do log.
-     */
     static success(message: string) {
-        this.logToConsole(message, 'SUCCESS');
-        this.logToDB('info', message, { action: 'success' });
+        ConsoleLogger.log(message, 'SUCCESS');
+        DBLogger.log('info', message, { action: 'success' });
     }
 
-    /**
-     * Registra uma mensagem no console com formatação de cor e emoji.
-     * @param message - A mensagem do log.
-     * @param type - O tipo do log (INFO, WARN, ERROR, SUCCESS).
-     * @param error - O erro associado ao log (opcional).
-     */
-    private static logToConsole(message: string, type: 'INFO' | 'WARN' | 'ERROR' | 'SUCCESS', error?: Error) {
-        const colors = {
-            INFO: '\x1b[36m', // Cyan
-            WARN: '\x1b[33m', // Yellow
-            ERROR: '\x1b[31m', // Red
-            SUCCESS: '\x1b[32m', // Green
-        };
-        const emoji = {
-            INFO: 'ℹ️',
-            WARN: '⚠️',
-            ERROR: '❌',
-            SUCCESS: '✅',
-        };
-        console.log(`${colors[type]}${emoji[type]} [${type}] ${message}\x1b[0m`);
-        if (error) console.error(error);
+    static debug(message: string, context?: Record<string, unknown>) {
+        ConsoleLogger.log(message, 'DEBUG');
+        DBLogger.log('debug', message, context);
     }
 
-    /**
-     * Registra um log no banco de dados.
-     * @param level - O nível do log (info, warn, error).
-     * @param message - A mensagem do log.
-     * @param context - Contexto adicional para o log.
-     */
-    private static logToDB(level: 'info' | 'warn' | 'error', message: string, context?: Record<string, unknown>) {
-        if (!db.data) return;
-
-        const logEntry: DBLogEntry = {
-            timestamp: Date.now(),
-            level,
-            message,
-            context,
-            action: typeof context?.action === 'string' ? context.action : 'default_action'
-        };
-
-        db.data.logs = db.data.logs || [];
-        db.data.logs.push(logEntry);
-
-        db.write().catch((err) => {
-            console.error('❌ Failed to save log to DB:', err);
-        });
+    error(message: string, error?: Error): void {
+        console.error(message, error);
     }
 
-    error(message: string, error: Error): void {
-        console.error(`[ERROR] ${message}`, error);
+    debug(message: string): void {
+        console.debug(message);
     }
 }
 
@@ -122,7 +66,8 @@ export class Logger {
  * @param type - O tipo do log (LOG, MOD, MATCH).
  */
 export async function sendLog(client: Client, message: string, type: 'LOG' | 'MOD' | 'MATCH' = 'LOG'): Promise<void> {
-    const logChannelId = db.data?.logChannelId;
+    const logChannelData = await db('settings').select('logChannelId').first() as { logChannelId: string } | undefined;
+    const logChannelId = logChannelData?.logChannelId;
 
     if (!logChannelId) {
         Logger.warn("Canal de logs não definido. Use o comando /setlog para configurá-lo.");
@@ -162,8 +107,6 @@ export function formatLogMessage(message: string, type: 'LOG' | 'MOD' | 'MATCH' 
  * Registra uma ação específica do sistema no banco de dados
  */
 export function logSystemAction(action: string, details: Record<string, unknown>, userId?: string): void {
-    if (!db.data) return;
-
     const entry: SystemLogEntry = {
         timestamp: new Date().getTime(),
         action,
@@ -173,16 +116,20 @@ export function logSystemAction(action: string, details: Record<string, unknown>
         level: 'info'
     };
 
-    db.data.systemLogs = db.data.systemLogs || [];
-    db.data.systemLogs.push({
-            ...entry,
+    db('systemLogs')
+        .insert({
             timestamp: entry.timestamp,
-            level: 'info'
+            action: entry.action,
+            userId: entry.userId,
+            details: JSON.stringify(entry.details),
+            message: entry.message,
+            level: entry.level
+        })
+        .catch((err: any) => {
+            Logger.error("Falha ao registrar ação no sistema:", err);
         });
 
-    db.write().catch(err => {
-        Logger.error("Falha ao registrar ação no sistema:", err);
-    });
+    Logger.info(`Ação do sistema registrada: ${action}`);
 
     Logger.info(`Ação do sistema registrada: ${action}`);
 }

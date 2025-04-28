@@ -5,9 +5,7 @@
 // verifica se o usuário está em um servidor antes de executar comandos.
 
 import { ChatInputCommandInteraction, PermissionsBitField, PermissionFlagsBits, MessageFlags } from 'discord.js';
-import { db } from '../utils/db.js'; // Certifique-se de que o banco de dados está importado corretamente
-
-// src/services/security.ts
+import db from '../utils/db.js'; // Corrigido para usar a exportação padrão
 
 const cooldowns = new Map<string, number>();
 
@@ -101,12 +99,11 @@ export function hasLinkedRiotId(discordId: string, db: any): boolean {
  * @param targetId - O ID do usuário alvo da denúncia.
  * @returns `true` se o usuário puder realizar a denúncia, caso contrário `false`.
  */
-export function canReport(userId: string, targetId: string): boolean {
+export async function canReport(userId: string, targetId: string): Promise<boolean> {
   const lastHour = Date.now() - 3600000; // Última hora em milissegundos
-  const recentReports = db.data?.reports.filter(r => 
-    r.reporterId === userId && 
-    r.timestamp > lastHour
-  ) || [];
+  const recentReports = await db('reports')
+    .where('reporterId', userId)
+    .andWhere('timestamp', '>', lastHour);
   
   return recentReports.length < 5; // Máximo de 5 denúncias por hora
 }
@@ -116,15 +113,13 @@ export function canReport(userId: string, targetId: string): boolean {
  * @param riotId - O Riot ID do usuário.
  * @returns `true` se o Riot ID já estiver vinculado, caso contrário `false`.
  */
-export function checkExistingLink(riotId: string): Promise<boolean> {
-  return new Promise((resolve, reject) => {
-    try {
-      const isLinked = db.data?.users.some((user: any) => user.riotId === riotId) || false;
-      resolve(isLinked);
-    } catch (error) {
-      reject(error);
-    }
-  });
+export async function checkExistingLink(riotId: string): Promise<boolean> {
+  try {
+    const isLinked = await db('users').where({ riotId }).first() !== undefined;
+    return isLinked;
+  } catch (error) {
+    throw error;
+  }
 }
 
 /**

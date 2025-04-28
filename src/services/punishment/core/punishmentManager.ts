@@ -7,6 +7,13 @@ import { PunishmentCore } from './punishmentCore.js';
 import { sendLog } from '../../../utils/log.js';
 import { sendWarningDM } from '../../../utils/warningDm.js';
 
+interface ReportOptions {
+  target: GuildMember;
+  reporter: GuildMember;
+  reason: string;
+  client?: Client;
+}
+
 export class PunishmentManager {
   private static readonly STAGES = [
     {
@@ -36,18 +43,20 @@ export class PunishmentManager {
     },
   ];
 
-  public static async handleReport(
-    target: GuildMember,
-    reporter: GuildMember,
-    reason: string,
-    client?: Client
-  ): Promise<PunishmentResult> {
+  public static async handleReport(options: {
+    target: GuildMember;
+    reporter: GuildMember;
+    reason: string;
+    client: Client;
+  }): Promise<{ success: boolean; message?: string }> {
+    const { target, reporter, reason, client } = options;
+
     try {
-      // 1. Registrar report
+      // Implementação do tratamento do report
       await PunishmentCore.registerReport(target.id, reporter.id, reason);
 
-      // 2. Verificar condições para ban imediato
-      if (await PunishmentCore.checkBanConditions(target)) {
+      const targetId = target.id; // Extrai o ID do GuildMember
+      if (await PunishmentCore.checkBanConditions(targetId)) {
         const result = await applyBan(target, 'Infração grave');
         if (client) {
           await sendLog(
@@ -59,16 +68,13 @@ export class PunishmentManager {
         return result;
       }
 
-      // 3. Verificar contagem de reports
       const reportCount = await PunishmentCore.getRecentReports(target.id);
 
-      // 4. Aplicar punição correspondente
       for (let stageIndex = 0; stageIndex < this.STAGES.length; stageIndex++) {
         const stage = this.STAGES[stageIndex];
         if (reportCount >= stage.threshold) {
           const result = await stage.action(target, reason, client);
 
-          // Log adicional
           if (client) {
             await sendLog(
               client,
@@ -83,7 +89,6 @@ export class PunishmentManager {
         }
       }
 
-      // 5. Nenhuma punição aplicada, apenas registrar o report
       if (client) {
         await sendLog(
           client,

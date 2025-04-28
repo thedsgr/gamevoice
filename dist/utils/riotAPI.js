@@ -25,29 +25,67 @@ const limiter = new Bottleneck({
     reservoirRefreshInterval: API_CONFIG.RATE_LIMIT.interval,
     reservoirRefreshAmount: API_CONFIG.RATE_LIMIT.reservoir,
 });
+// Adicionando monitoramento do cache
+setInterval(() => {
+    const keys = cache.keys();
+    const size = keys.length;
+    if (size > 100) {
+        Logger.warn(`O cache contém ${size} itens, considere revisar a política de limpeza.`, { cacheSize: size });
+    }
+}, 60000); // Verifica a cada 60 segundos
+// Adicionando limpeza automática ao monitoramento do cache
+setInterval(() => {
+    const keys = cache.keys();
+    const size = keys.length;
+    if (size > 100) {
+        Logger.warn(`O cache contém ${size} itens, iniciando limpeza automática.`);
+        keys.slice(0, size - 100).forEach(key => cache.del(key));
+    }
+}, 60000); // Verifica a cada 60 segundos
+// Adicionando logs para monitorar o uso do rate limiter
+limiter.on('depleted', () => {
+    Logger.warn('O limite de taxa foi atingido. Aguardando recarga do reservatório.', {
+        reservoir: API_CONFIG.RATE_LIMIT.reservoir,
+        interval: API_CONFIG.RATE_LIMIT.interval
+    });
+});
 /**
  * Busca conta Riot com tratamento de erros robusto
  */
+async function fetchRiotAccountWithRetry(riotId, attempts = 0) {
+    const MAX_ATTEMPTS = 3;
+    try {
+        return await fetchRiotAccount(riotId);
+    }
+    catch (error) {
+        if (isRateLimitError(error) && attempts < MAX_ATTEMPTS) {
+            Logger.warn(`Rate limit excedido. Tentativa ${attempts + 1} de ${MAX_ATTEMPTS}.`, {
+                riotId,
+                attempt: attempts + 1,
+                maxAttempts: MAX_ATTEMPTS
+            });
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return fetchRiotAccountWithRetry(riotId, attempts + 1);
+        }
+        Logger.error('Erro ao buscar conta Riot após múltiplas tentativas.', error instanceof Error ? error : new Error(String(error)), { riotId, attempts });
+        throw error;
+    }
+}
 export async function fetchRiotAccount(riotId) {
     const [gameName, tagLine] = riotId.split('#');
     if (!gameName || !tagLine)
         throw new Error('Formato de Riot ID inválido');
     const cacheKey = `account:${riotId}`;
     return limiter.schedule(async () => {
+        const cached = cache.get(cacheKey);
+        if (cached)
+            return cached;
         try {
-            const cached = cache.get(cacheKey);
-            if (cached)
-                return cached;
             const response = await riotClient.get(`https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}`);
             cache.set(cacheKey, response.data);
             return response.data;
         }
         catch (error) {
-            if (isRateLimitError(error)) {
-                Logger.warn('Rate limit excedido na API da Riot');
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                return fetchRiotAccount(riotId); // Retry
-            }
             throw handleApiError(error, 'fetchRiotAccount');
         }
     });
@@ -68,13 +106,63 @@ export async function fetchRiotPuuid(riotId) {
 /**
  * Busca partida ativa com verificação de time
  */
-export async function fetchActiveGame(summonerId, discordUserId) {
+export async function fetchActiveGame(summonerId, guildId) {
+    const apiKey = process.env.RIOT_API_KEY;
+    if (!apiKey) {
+        throw new Error('❌ [ERROR] A chave da API da Riot (RIOT_API_KEY) não está configurada.');
+    }
+    console.info(`ℹ️ [INFO] Usando a chave de API: ${apiKey}`);
+    console.info(`ℹ️ [INFO] Endpoint acessado: https://br1.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${summonerId}`);
     try {
-        const response = await riotClient.get(`/lol/spectator/v4/active-games/by-summoner/${summonerId}`);
-        return { ...response.data, discordUserId };
+        console.info(`ℹ️ [INFO] Buscando partida ativa para o Summoner ID: ${summonerId}`);
+        const response = await axios.get(`https://br1.api.riotgames.com/lol/spectator/v5/active-games/by-summoner/${summonerId}`, {
+            headers: {
+                'X-Riot-Token': apiKey,
+            },
+        });
+        return response.data;
     }
     catch (error) {
-        throw handleApiError(error, 'fetchActiveGame');
+        if (error.response?.status === 403) {
+            console.error('❌ [ERROR] Acesso negado. Verifique se a chave da API é válida e tem as permissões corretas.');
+        }
+        else if (error.response?.status === 404) {
+            console.warn('⚠️ [WARN] Nenhuma partida ativa encontrada para o Summoner ID fornecido.');
+        }
+        else {
+            console.error('❌ [ERROR] Erro inesperado ao buscar partida ativa:', error.message);
+        }
+        throw error;
+    }
+}
+/**
+ * Busca o Summoner ID usando o nome do invocador
+ */
+export async function fetchSummonerId(summonerName) {
+    const apiKey = process.env.RIOT_API_KEY;
+    if (!apiKey) {
+        throw new Error('❌ [ERROR] A chave da API da Riot (RIOT_API_KEY) não está configurada.');
+    }
+    try {
+        console.info(`ℹ️ [INFO] Buscando Summoner ID para o nome do invocador: ${summonerName}`);
+        const response = await axios.get(`https://br1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${encodeURIComponent(summonerName)}`, {
+            headers: {
+                'X-Riot-Token': apiKey,
+            },
+        });
+        return response.data.id; // O campo "id" é o Summoner ID
+    }
+    catch (error) {
+        if (error.response?.status === 403) {
+            console.error('❌ [ERROR] Acesso negado. Verifique se a chave da API é válida e tem as permissões corretas.');
+        }
+        else if (error.response?.status === 404) {
+            console.warn('⚠️ [WARN] Nome do invocador não encontrado.');
+        }
+        else {
+            console.error('❌ [ERROR] Erro inesperado ao buscar Summoner ID:', error.message);
+        }
+        throw error;
     }
 }
 /**
@@ -87,7 +175,8 @@ export async function checkRiotAPIHealth() {
     }
     catch (error) {
         if (axios.isAxiosError(error)) {
-            Logger.error('Erro do Axios ao verificar a saúde da API da Riot', new Error(String(error.response?.data || error.message)));
+            const axiosError = error;
+            Logger.error('Erro do Axios ao verificar a saúde da API da Riot', new Error(String(axiosError.response?.data || axiosError.message)));
         }
         else if (error instanceof Error) {
             Logger.error('Erro desconhecido ao verificar a saúde da API da Riot', error);
@@ -156,4 +245,22 @@ export async function getTeamFromRiotAPI(teamIds) {
     return results
         .filter((result) => result.status === 'fulfilled')
         .map((result) => result.value);
+}
+/**
+ * Registra um Webhook na API da Riot para notificações em tempo real.
+ */
+export async function registerRiotWebhook() {
+    const webhookUrl = 'https://seu-servidor.com/webhook/riot'; // Substitua pela URL real do seu servidor
+    try {
+        await axios.post('https://api.riotgames.com/webhooks', {
+            url: webhookUrl,
+            eventType: 'playerJoinedGame', // Exemplo de evento
+        }, {
+            headers: { 'Authorization': `Bearer ${process.env.RIOT_API_KEY}` }
+        });
+        console.log('Webhook registrado com sucesso');
+    }
+    catch (error) {
+        console.error('Erro ao registrar webhook:', error);
+    }
 }

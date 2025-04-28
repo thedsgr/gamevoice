@@ -11,30 +11,38 @@
 
 import { Client, GuildMember } from 'discord.js';
 import { PunishmentResult } from '../types/punishmentTypes.js';
-import { db, ensureDBInitialized } from '../../../utils/db.js';
+import db from '../../../utils/db.js';
 import { Logger } from '../../../utils/log.js';
 import { formatDuration } from '../../../utils/formatters.js';
 
 /**
  * Remove restrições expiradas do banco de dados.
+ * @throws Lança um erro se a operação no banco de dados falhar.
  */
-function cleanExpiredRestrictions() {
-    ensureDBInitialized();
-    const now = Date.now();
-    db.data!.restrictedUsers = db.data!.restrictedUsers.filter((u) => u.until > now);
-    db.write();
+async function cleanExpiredRestrictions() {
+    try {
+        const now = Date.now();
+        await db('restrictedUsers').where('until', '<', now).del();
+    } catch (error) {
+        Logger.error('Erro ao limpar restrições expiradas:', error instanceof Error ? error : new Error(String(error)));
+        throw new Error('Não foi possível limpar as restrições expiradas.');
+    }
 }
 
 /**
  * Verifica se um usuário está restrito de usar comandos.
  * @param userId - O ID do usuário a ser verificado.
  * @returns `true` se o usuário estiver restrito, caso contrário `false`.
+ * @throws Lança um erro se a operação no banco de dados falhar.
  */
-export function isUserRestricted(userId: string): boolean {
-    ensureDBInitialized();
-    cleanExpiredRestrictions();
-    const restrictedUser = db.data?.restrictedUsers.find((u) => u.userId === userId);
-    return restrictedUser ? restrictedUser.until > Date.now() : false;
+export async function isUserRestricted(userId: string): Promise<boolean> {
+    try {
+        const restrictedUser = await db('restrictedUsers').where({ userId }).first();
+        return !!restrictedUser && restrictedUser.until > Date.now();
+    } catch (error) {
+        Logger.error(`Erro ao verificar restrição para o usuário ${userId}:`, error instanceof Error ? error : new Error(String(error)));
+        throw new Error('Não foi possível verificar a restrição do usuário.');
+    }
 }
 
 /**
@@ -42,30 +50,36 @@ export function isUserRestricted(userId: string): boolean {
  * @param userId - O ID do usuário a ser restrito.
  * @param duration - A duração da restrição em milissegundos.
  * @param reason - O motivo da restrição (opcional).
+ * @throws Lança um erro se os parâmetros forem inválidos ou a operação no banco de dados falhar.
  */
 async function upsertRestrictedUser(userId: string, duration: number, reason?: string) {
-    ensureDBInitialized();
-
-    const restrictedUsers = db.data?.restrictedUsers || [];
-    const existing = restrictedUsers.find((u) => u.userId === userId);
-
-    if (existing && existing.until > Date.now()) {
-        throw new Error('O usuário já está restrito de comandos.');
+    if (!userId || typeof userId !== 'string') {
+        throw new Error('O ID do usuário é inválido.');
+    }
+    if (typeof duration !== 'number' || duration <= 0) {
+        throw new Error('A duração deve ser um número maior que zero.');
     }
 
-    if (existing) {
-        existing.until = Date.now() + duration;
-        existing.reason = reason || existing.reason;
-    } else {
-        restrictedUsers.push({
-            userId,
-            until: Date.now() + duration,
-            reason,
-        });
-    }
+    try {
+        const now = Date.now();
+        const existing = await db('restrictedUsers').where({ userId }).first();
 
-    db.data!.restrictedUsers = restrictedUsers;
-    await db.write();
+        if (existing) {
+            await db('restrictedUsers').where({ userId }).update({
+                until: now + duration,
+                reason: reason || existing.reason,
+            });
+        } else {
+            await db('restrictedUsers').insert({
+                userId,
+                until: now + duration,
+                reason,
+            });
+        }
+    } catch (error) {
+        Logger.error(`Erro ao adicionar ou atualizar restrição para o usuário ${userId}:`, error instanceof Error ? error : new Error(String(error)));
+        throw new Error('Não foi possível adicionar ou atualizar a restrição do usuário.');
+    }
 }
 
 /**

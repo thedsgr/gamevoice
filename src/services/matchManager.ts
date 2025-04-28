@@ -1,343 +1,357 @@
 /**
- * Este arquivo gerencia o ciclo de vida das partidas no servidor.
- * Ele inclui funções para criar, encerrar e monitorar partidas, além de gerenciar
- * canais de voz e distribuir jogadores entre os times. Também implementa lógica
- * para limpar partidas inativas e monitorar o status das partidas em tempo real.
+ * Gerencia o ciclo de vida completo das partidas e os canais relacionados.
  */
-
-import { CategoryChannel, ChannelType, Guild, VoiceChannel, GuildMember } from 'discord.js';
-import { db } from '../utils/db.js';
+import { Guild, VoiceChannel, GuildMember, ChannelType, Client } from 'discord.js';
 import { Logger } from '../utils/log.js';
-import { Match } from '../utils/match.js';
+import { getLinkedRiotId } from '../services/users.js';
+import { monitorLobby } from './matchMonitor.js';
+import { fetchActiveGame, fetchRiotAccount } from '../utils/riotAPI.js';
+import { MatchType } from '../types/match.d.js';
 
 const logger = new Logger();
+const activeMatches = new Map<string, MatchData>();
+function getVoiceChannels(guild: Guild): VoiceChannel[] {
+  return [...guild.channels.cache.filter((c): c is VoiceChannel => c.type === ChannelType.GuildVoice).values()];
+}
+
+interface MatchData {
+  guild: Guild;
+  lobbyChannel: VoiceChannel;
+  teamChannels: VoiceChannel[];
+  players: GuildMember[];
+  matchType: MatchType; // Adiciona o tipo de partida
+  checkInterval: NodeJS.Timeout;
+  createdAt: number;
+}
+
+/* ==========================
+   Gerenciamento de Partidas
+   ========================== */
 
 /**
- * Cria uma nova partida no banco de dados.
- * @param guildId - ID do servidor Discord.
- * @param players - IDs dos jogadores participantes.
- * @returns ID da partida criada.
+ * Valida se os jogadores estão na mesma partida ativa.
  */
-export async function createMatch(guildId: string, players: string[]): Promise<string> {
-  if (!db.data) throw new Error("Banco de dados não inicializado.");
+export async function validatePlayersInSameMatch(
+  players: { discordId: string; summonerId: string }[]
+): Promise<{ matchId: string } | null> {
+  try {
+    if (players.length < 2) {
+      Logger.debug('Número insuficiente de jogadores para validar partida');
+      return null;
+    }
 
-  const matchId = Date.now().toString(36) + Math.random().toString(36).substring(2);
-  const newMatch: Match = {
-    id: matchId, // Adiciona a propriedade 'id'
-    matchId: matchId,
-    guildId,
-    teamPlayers: players.map((playerId) => ({
-      id: playerId,
-      puuid: '', // Preencha com o valor adequado
-      riotName: '', // Preencha com o valor adequado
-      discordId: playerId, // Supondo que o ID do Discord seja o mesmo
-    })),
-    players, // Adiciona a propriedade 'players'
-    isActive: true,
-    lastActivity: Date.now(),
-    channelId: "", // Pode ser atualizado posteriormente
-    startedAt: new Date().toISOString(),
-    startedBy: 'system', // Pode ser substituído pelo ID do usuário que iniciou
-  };
-
-  db.data.matches.push(newMatch);
-  await db.write();
-
-  Logger.info(`Partida criada: ${matchId}`);
-  return matchId;
+    // TODO: Implementar lógica real de verificação
+    return { matchId: `match_${Date.now()}` };
+  } catch (error) {
+    Logger.error('Falha na validação da partida:', error as Error);
+    return null;
+  }
 }
 
 /**
- * Encerra uma partida existente no banco de dados.
- * @param matchId - ID da partida.
- * @param endedBy - ID do usuário que finalizou a partida.
+ * Inicia o gerenciamento de uma nova partida.
  */
-export async function endMatch(matchId: string, endedBy: string): Promise<void> {
-  if (!db.data) throw new Error("Banco de dados não inicializado.");
-
-  const match = db.data.matches.find((m) => m.id === matchId);
-  if (!match) throw new Error(`Partida ${matchId} não encontrada.`);
-
-  match.isActive = false;
-  match.endedAt = new Date().toISOString();
-  match.endedBy = endedBy;
-
-  await db.write();
-  Logger.info(`Partida encerrada: ${matchId}`);
-}
-
-/**
- * Limpa partidas inativas com base no tempo de inatividade.
- * @param maxInactiveMinutes - Tempo máximo de inatividade em minutos.
- * @returns IDs das partidas encerradas.
- */
-export async function cleanupInactiveMatches(maxInactiveMinutes = 30): Promise<string[]> {
-  if (!db.data) throw new Error("Banco de dados não inicializado.");
-
-  const now = Date.now();
-  const inactiveMatches = db.data.matches.filter(
-    (m) => m.isActive && now - m.lastActivity > maxInactiveMinutes * 60 * 1000
-  );
-
-  await Promise.all(inactiveMatches.map((m) => endMatch(m.id, 'system')));
-  return inactiveMatches.map((m) => m.id);
-}
-
-export class MatchManager {
-  static activeMatches: Map<string, any> = new Map();
-
-  /**
-   * Adiciona uma partida ativa ao mapa de partidas.
-   * @param matchId - ID da partida.
-   * @param matchData - Dados da partida.
-   */
-  static addActiveMatch(matchId: string, matchData: any): void {
-    this.activeMatches.set(matchId, matchData);
+export async function startMatch(
+  guild: Guild,
+  lobbyChannel: VoiceChannel,
+  players: GuildMember[]
+): Promise<string | null> {
+  if (players.length < 2) {
+    Logger.info('Mínimo de 2 jogadores necessário para iniciar partida');
+    return null;
   }
 
-  /**
-   * Inicia uma nova partida e configura todos os recursos necessários.
-   * @param guild - A guilda do Discord.
-   * @param players - Lista de jogadores.
-   * @returns ID da partida criada.
-   */
-  public static async startMatch(guild: Guild, players: GuildMember[]): Promise<string> {
-    try {
-      if (!guild || !players?.length) {
-        throw new Error('Parâmetros inválidos para startMatch');
-      }
+  try {
+    Logger.info(`Iniciando partida com ${players.length} jogadores no lobby: ${lobbyChannel.name}`);
 
-      // Cria registro no banco de dados
-      const matchId = await createMatch(
-        guild.id,
-        players.map((p) => p.id)
-      );
+    const stopMonitoring = monitorLobby(guild.client, lobbyChannel.id, async (updatedPlayers) => {
+      Logger.info(`Jogadores atualizados no lobby: ${updatedPlayers.map(p => p.user.tag).join(', ')}`);
 
-      // Cria canais de voz para os times
-      const [team1Channel, team2Channel] = await this.createTeamChannels(guild, matchId);
+      if (updatedPlayers.length >= 2) {
+        Logger.info('Condições atendidas para iniciar a partida');
+        stopMonitoring();
 
-      // Distribui os jogadores nos canais
-      await this.distributePlayers(players, team1Channel, team2Channel);
+        const riotAccounts = await Promise.all(
+          updatedPlayers.map(async (p) => {
+            const riotId = await getLinkedRiotId(p.id).catch(() => null);
+            if (!riotId) {
+              Logger.warn(`Jogador ${p.user.tag} não possui conta Riot vinculada.`);
+              return null;
+            }
 
-      // Inicia o monitoramento da partida
-      this.startTracking({
-        matchId,
-        team1Channel: team1Channel.id,
-        team2Channel: team2Channel.id,
-        players: players.map((p) => p.id),
-        guild,
-      });
+            try {
+              const riotAccount = await fetchRiotAccount(riotId);
+              Logger.info(`Conta Riot encontrada para ${p.user.tag}: ${riotAccount.puuid}`);
+              return { discordId: p.id, summonerId: riotAccount.puuid };
+            } catch (error) {
+              Logger.error(`Erro ao buscar Summoner ID para Riot ID: ${riotId}`, error instanceof Error ? error : new Error(String(error)));
+              return null;
+            }
+          })
+        );
 
-      Logger.info(`Partida ${matchId} iniciada com sucesso`);
-      return matchId;
-    } catch (error) {
-      Logger.error('Falha ao iniciar partida', error as Error);
-      throw error;
-    }
-  }
-
-  /**
-   * Cria canais de voz para os times.
-   */
-  private static async createTeamChannels(guild: Guild, matchId: string): Promise<[VoiceChannel, VoiceChannel]> {
-    const category = await this.getOrCreateCategory(guild);
-    const baseName = 'Time';
-
-    try {
-      const [team1, team2] = await Promise.all([
-        guild.channels.create({
-          name: `${baseName}-1-${matchId.slice(0, 6)}`,
-          type: ChannelType.GuildVoice,
-          parent: category,
-          reason: `Partida ${matchId}`,
-          userLimit: 5,
-        }),
-        guild.channels.create({
-          name: `${baseName}-2-${matchId.slice(0, 6)}`,
-          type: ChannelType.GuildVoice,
-          parent: category,
-          reason: `Partida ${matchId}`,
-          userLimit: 5,
-        }),
-      ]);
-
-      return [team1, team2];
-    } catch (error) {
-      Logger.error('Falha ao criar canais de time', error as Error);
-      throw new Error('Não foi possível criar os canais da partida');
-    }
-  }
-
-  /**
-   * Obtém ou cria a categoria para partidas.
-   */
-  private static async getOrCreateCategory(guild: Guild): Promise<CategoryChannel> {
-    const existing = guild.channels.cache.find(
-      (c) => c.type === ChannelType.GuildCategory && c.name === 'PARTIDAS'
-    ) as CategoryChannel;
-
-    if (existing) return existing;
-
-    try {
-      return await guild.channels.create({
-        name: 'PARTIDAS',
-        type: ChannelType.GuildCategory,
-        reason: 'Categoria para partidas automáticas',
-        position: 0,
-      });
-    } catch (error) {
-      Logger.error('Falha ao criar categoria', error as Error);
-      throw new Error('Não foi possível criar a categoria de partidas');
-    }
-  }
-
-  /**
-   * Distribui jogadores entre os canais dos times.
-   */
-  private static async distributePlayers(players: GuildMember[], team1: VoiceChannel, team2: VoiceChannel): Promise<void> {
-    const half = Math.ceil(players.length / 2);
-    const team1Players = players.slice(0, half);
-    const team2Players = players.slice(half);
-
-    try {
-      await Promise.all([
-        ...team1Players.map((p) => this.movePlayer(p, team1)),
-        ...team2Players.map((p) => this.movePlayer(p, team2)),
-      ]);
-    } catch (error) {
-      Logger.error('Erro ao distribuir jogadores', error as Error);
-      throw new Error('Falha ao mover jogadores para os canais');
-    }
-  }
-
-  /**
-   * Move um jogador para um canal com tratamento de erro.
-   */
-  private static async movePlayer(player: GuildMember, channel: VoiceChannel): Promise<void> {
-    try {
-      if (!player.voice.channelId) {
-        Logger.warn(`Jogador ${player.displayName} não está em um canal de voz`);
-        return;
-      }
-      await player.voice.setChannel(channel);
-      Logger.info(`Jogador ${player.displayName} movido para ${channel.name}`);
-    } catch (error) {
-      Logger.warn(`Falha ao mover ${player.displayName}: ${(error as Error).message}`);
-      throw error;
-    }
-  }
-
-  /**
-   * Inicia o monitoramento da partida.
-   */
-  private static startTracking(matchData: Omit<{ matchId: string; team1Channel: string; team2Channel: string; players: string[]; guild: Guild; }, 'checkInterval' | 'timeout'>): void {
-    // Verificação periódica do status da partida
-    const checkInterval = setInterval(async () => {
-      try {
-        const shouldEnd = await this.checkMatchStatus(matchData.matchId);
-        if (shouldEnd) {
-          await this.endMatch(matchData.matchId);
+        const validPlayers = updatedPlayers.filter((p) => p.voice.channel).map((p) => p as GuildMember);
+        if (validPlayers.length < 2) {
+          Logger.info('Número insuficiente de jogadores com canais de voz válidos');
+          return;
         }
-      } catch (error) {
-        Logger.error(`Erro ao verificar partida ${matchData.matchId}`, error as Error);
+
+        const matchInfo = await validatePlayersInSameMatch(riotAccounts.filter((account) => account !== null) as { discordId: string; summonerId: string }[]);
+        if (!matchInfo) {
+          Logger.warn('Jogadores não estão na mesma partida ativa.');
+          return;
+        }
+
+        Logger.info(`Partida iniciada com ID: ${matchInfo.matchId}`);
       }
-    }, 30000); // A cada 30 segundos
-
-    // Timeout de segurança
-    const timeout = setTimeout(() => {
-      this.forceEndMatch(matchData.matchId);
-    }, 2 * 60 * 60 * 1000); // 2 horas
-
-    this.activeMatches.set(matchData.matchId, { 
-      ...matchData, 
-      checkInterval,
-      timeout
     });
-  }
 
-  /**
-   * Verifica o status da partida na API da Riot.
-   */
-  private static async checkMatchStatus(matchId: string): Promise<boolean> {
-    // Implemente a lógica real de verificação aqui
-    // Retorna true se a partida deve ser encerrada
+    return null;
+  } catch (error) {
+    Logger.error('Falha ao iniciar partida:', error as Error);
+    return null;
+  }
+}
+
+/**
+ * Verifica o status da partida.
+ */
+async function checkMatchStatus(matchId: string): Promise<void> {
+  const matchData = activeMatches.get(matchId);
+  if (!matchData) return;
+
+  try {
+    const matchDuration = Date.now() - matchData.createdAt;
+    if (matchDuration > 3600000) {
+      await endMatch(matchId);
+    }
+  } catch (error) {
+    Logger.error(`Erro ao verificar partida ${matchId}:`, error as Error);
+  }
+}
+
+/**
+ * Finaliza uma partida.
+ */
+export async function endMatch(matchId: string): Promise<boolean> {
+  const matchData = activeMatches.get(matchId);
+  if (!matchData) return false;
+
+  try {
+    clearInterval(matchData.checkInterval);
+    await movePlayersToLobby(matchData);
+    await cleanupChannels(matchData.teamChannels);
+    activeMatches.delete(matchId);
+    Logger.info(`Partida finalizada: ${matchId}`);
+    return true;
+  } catch (error) {
+    Logger.error(`Erro ao finalizar partida ${matchId}:`, error as Error);
     return false;
   }
+}
 
-  /**
-   * Encerra uma partida normalmente.
-   */
-  public static async endMatch(matchId: string): Promise<void> {
-    await this.cleanupMatch(matchId, false);
+/* ==========================
+   Gerenciamento de Canais
+   ========================== */
+
+/**
+ * Cria canais de voz para os times.
+ */
+async function createTeamChannels(guild: Guild): Promise<[VoiceChannel, VoiceChannel]> {
+  const category = await getOrCreateCategory(guild);
+  const team1 = await guild.channels.create({
+    name: 'Time 1',
+    type: ChannelType.GuildVoice, // Especifica explicitamente que é um canal de voz
+    parent: category.id,
+    userLimit: 5
+  }) as VoiceChannel; // Garante que o TypeScript trate como VoiceChannel
+
+  const team2 = await guild.channels.create({
+    name: 'Time 2',
+    type: ChannelType.GuildVoice, // Especifica explicitamente que é um canal de voz
+    parent: category.id,
+    userLimit: 5
+  }) as VoiceChannel;
+
+  return [team1, team2];
+}
+
+/**
+ * Move jogadores para os canais de times.
+ */
+async function movePlayersToTeams(
+  players: GuildMember[],
+  team1: VoiceChannel,
+  team2: VoiceChannel
+): Promise<void> {
+  if (players.length <= 5) {
+    Logger.warn('Número insuficiente de jogadores para formar dois times. Movendo todos para o Time 1.');
+    await Promise.all(players.map(p => p.voice.setChannel(team1)));
+    return;
   }
 
-  /**
-   * Força o encerramento de uma partida.
-   */
-  public static async forceEndMatch(matchId: string): Promise<void> {
-    await this.cleanupMatch(matchId, true);
-  }
+  const half = Math.ceil(players.length / 2);
+  const team1Players = players.slice(0, half);
+  const team2Players = players.slice(half);
 
-  /**
-   * Limpa todos os recursos de uma partida.
-   */
-  private static async cleanupMatch(matchId: string, forced: boolean): Promise<void> {
-    const match = this.activeMatches.get(matchId);
-    if (!match) return;
+  await Promise.all([
+    ...team1Players.map(p => p.voice.setChannel(team1)),
+    ...team2Players.map(p => p.voice.setChannel(team2))
+  ]);
+}
 
-    try {
-      // Encerra no banco de dados
-      await endMatch(matchId, 'system');
+/**
+ * Move jogadores de volta para o lobby.
+ */
+async function movePlayersToLobby(matchData: MatchData): Promise<void> {
+  const { guild, teamChannels, lobbyChannel } = matchData;
 
-      // Remove canais de voz
-      const team1Channel = await match.guild.channels.fetch(match.team1Channel) as VoiceChannel;
-      const team2Channel = await match.guild.channels.fetch(match.team2Channel) as VoiceChannel;
-      await this.deleteChannels([team1Channel, team2Channel]);
-
-      // Limpa timers
-      clearInterval(match.checkInterval);
-      clearTimeout(match.timeout);
-      
-      // Remove do mapa de partidas ativas
-      this.activeMatches.delete(matchId);
-
-      Logger.info(`Partida ${matchId} encerrada ${forced ? 'forçadamente' : 'normalmente'}`);
-
-    } catch (error) {
-      Logger.error(`Erro ao encerrar partida ${matchId}`, error as Error);
-      throw error;
+  for (const channel of teamChannels) {
+    const members = [...channel.members.values()];
+    for (const member of members) {
+      try {
+        await member.voice.setChannel(lobbyChannel);
+      } catch (error) {
+        Logger.error(
+          `Erro ao mover jogador ${member.user.tag} para o lobby:`,
+          error as Error
+        );
+      }
     }
   }
+}
 
-  /**
-   * Deleta canais com tratamento de erro.
-   */
-  private static async deleteChannels(channels: VoiceChannel[]): Promise<void> {
-    await Promise.all(
-      channels.map(channel => 
-        channel.delete()
-          .catch(e => Logger.error(`Erro ao deletar ${channel.name}`, e))
-    ));
+/**
+ * Limpa os canais de times.
+ */
+async function cleanupChannels(channels: VoiceChannel[]): Promise<void> {
+  await Promise.all(channels.map(channel => channel.delete()));
+}
+
+/**
+ * Obtém ou cria a categoria de canais para partidas.
+ */
+async function getOrCreateCategory(guild: Guild): Promise<any> {
+  const categoryId = '1364647928089542667';
+  const category = guild.channels.cache.get(categoryId);
+
+  if (category && category.type === 4) {
+    return category;
   }
 
-  /**
-   * Obtém informações de uma partida ativa.
-   */
-  public static getMatch(matchId: string): { matchId: string; team1Channel: string; team2Channel: string; players: string[]; guild: Guild; checkInterval: NodeJS.Timeout; timeout: NodeJS.Timeout } | undefined {
-    return this.activeMatches.get(matchId);
-  }
+  throw new Error(`Categoria com ID ${categoryId} não encontrada. Certifique-se de que a categoria existe.`);
+}
 
-  /**
-   * Remove uma partida ativa do mapa de partidas.
-   */
-  public static removeActiveMatch(matchId: string): void {
-    this.activeMatches.delete(matchId);
-  }
+/**
+ * Processa os canais de voz.
+ */
+async function processVoiceChannels(guild: Guild): Promise<void> {
+  const voiceChannels = guild.channels.cache.filter(
+    (c): c is VoiceChannel => c.type === ChannelType.GuildVoice
+  );
 
-  /**
-   * Obtém uma partida ativa pelo ID.
-   */
-  public static getActiveMatch(matchId: string): { matchId: string; team1Channel: string; team2Channel: string; players: string[]; guild: Guild; checkInterval: NodeJS.Timeout; timeout: NodeJS.Timeout } | undefined {
-    return this.activeMatches.get(matchId);
+  console.log(voiceChannels);
+}
+
+/**
+ * Monitora o status dos jogadores no League of Legends e gerencia o ciclo de vida das partidas.
+ */
+export async function monitorPlayerStatus(guild: Guild, lobbyChannel: VoiceChannel): Promise<void> {
+  const players = Array.from(lobbyChannel.members.values());
+
+  Logger.info(`Monitorando status dos jogadores no lobby ${lobbyChannel.name}.`);
+
+  for (const player of players) {
+    const riotId = await getLinkedRiotId(player.id);
+    if (!riotId) continue;
+
+    Logger.info(`Monitorando status do jogador ${player.user.tag} no lobby.`);
+
+    try {
+      Logger.debug(`Verificando status do jogador ${player.user.tag} com Riot ID: ${riotId}`);
+      const activeGame = await fetchActiveGame(riotId, player.id);
+
+      if (activeGame) {
+        Logger.info(`Jogador ${player.user.tag} está em uma partida ativa. Movendo para o canal do time.`);
+        const [team1Channel, team2Channel] = await createTeamChannels(guild);
+        await movePlayersToTeams([player], team1Channel, team2Channel);
+
+        const interval = setInterval(async () => {
+          const gameStatus = await fetchActiveGame(riotId, player.id);
+          if (!gameStatus) {
+            Logger.debug(`Jogador ${player.user.tag} não está em uma partida ativa.`);
+            clearInterval(interval);
+            await movePlayersToLobby({
+              guild,
+              teamChannels: [team1Channel, team2Channel],
+              lobbyChannel,
+              players: [],
+              matchType: MatchType.CUSTOM,
+              checkInterval: setInterval(() => {}, 0),
+              createdAt: Date.now()
+            });
+            await cleanupChannels([team1Channel, team2Channel]);
+          }
+        }, 30000);
+      }
+    } catch (error) {
+      Logger.error(`Erro ao monitorar status do jogador ${player.user.tag}:`, error instanceof Error ? error : new Error(String(error)));
+    }
   }
 }
+
+/**
+ * Move um jogador para o canal de voz do time correspondente.
+ * @param playerId - O ID do jogador no Discord.
+ * @param gameId - O ID da partida.
+ */
+export async function moveToTeamVoiceChannel(playerId: string, gameId: string): Promise<void> {
+  try {
+    // Obtém a guilda do cliente (substitua pelo ID correto da guilda)
+    const client = new Client({ intents: [] }); // Certifique-se de usar o cliente correto
+    const guild = client.guilds.cache.get(process.env.GUILD_ID!);
+
+    if (!guild) {
+      throw new Error(`Guilda com ID ${process.env.GUILD_ID} não encontrada.`);
+    }
+
+    const member = guild.members.cache.get(playerId);
+
+    if (!member) {
+      throw new Error(`Jogador com ID ${playerId} não encontrado.`);
+    }
+
+    // Determina o canal do time com base no gameId (exemplo simplificado)
+    const teamChannel = guild.channels.cache.find(
+      (channel) => channel.name === `Time-${gameId}` && channel.isVoiceBased()
+    ) as VoiceChannel | undefined;
+
+    if (!teamChannel) {
+      throw new Error(`Canal de voz para o jogo ${gameId} não encontrado.`);
+    }
+
+    await member.voice.setChannel(teamChannel);
+    Logger.info(`Jogador ${member.user.tag} movido para o canal do time no jogo ${gameId}.`);
+  } catch (error) {
+    Logger.error(`Erro ao mover jogador para o canal do time:`, error as Error);
+    throw error;
+  }
+}
+
+// Ensure MatchManager is defined and exported
+export class MatchManager {
+  // Class implementation
+
+  static async forceStartMatch(guild: any): Promise<void> {
+    // Logic to force start a match
+    console.log(`Force starting a match for guild: ${guild.id}`);
+    // Add your implementation here
+  }
+
+  static async forceEndAllMatches(guild: any): Promise<void> {
+    // Implement logic to forcefully end all matches for the given guild
+    console.log(`Forcefully ending all matches for guild: ${guild.id}`);
+    // Add your logic here
+  }
+}
+
